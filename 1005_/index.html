@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cash Scan Explore</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles/home.css">
+  <link id="page-style" rel="stylesheet" href="styles/home.css">
+  <!-- Vue.js 3のCDN -->
+  <script src="https://unpkg.com/vue@3"></script>
+</head>
+<body>
+  <!-- 背景動画 -->
+  <video autoplay muted loop id="bg-video">
+    <source src="assets/CSEvideo.mp4" type="video/mp4">
+    お使いのブラウザは動画タグに対応していません。
+  </video>
+
+  <!-- Vue.jsアプリケーションのルート要素 -->
+  <div id="app">
+    <Intro v-if="showIntro" @intro-completed="handleIntroCompleted"></Intro>
+    <MainContent v-else @navigate-home="handleNavigateHome"></MainContent>
+  </div>
+
+
+  <!-- Vue.jsのスクリプト -->
+  <script src="app.js"></script>
+</body>
+
+</html>

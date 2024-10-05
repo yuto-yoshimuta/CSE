@@ -1,0 +1,153 @@
+/* exchangeRate.css */
+
+/* 全体のスタイル */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: #333;
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Fredoka One', cursive;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: linear-gradient(45deg, #2196F3, #21CBF3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.header-buttons a {
+    text-decoration: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 30px;
+    transition: background 0.3s, transform 0.3s;
+    font-weight: bold;
+    margin-left: 5px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.header-buttons a i {
+    margin-right: 5px;
+}
+
+/* 各ボタンのスタイル */
+.btn-mitei {
+    background: #FF5722;
+}
+
+.btn-mitei:hover {
+    background: #E64A19;
+    transform: scale(1.05);
+}
+
+.btn-exchange {
+    background: #4CAF50;
+}
+
+.btn-exchange:hover {
+    background: #388E3C;
+    transform: scale(1.05);
+}
+
+.btn-recognition {
+    background: #FFC107;
+    color: #333;
+}
+
+.btn-recognition:hover {
+    background: #FFA000;
+    transform: scale(1.05);
+}
+
+.btn-money {
+    background: #9C27B0;
+}
+
+.btn-money:hover {
+    background: #7B1FA2;
+    transform: scale(1.05);
+}
+
+/* フッターのスタイル */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+}
+
+/* コンテナのスタイル */
+.container {
+    max-width: 500px;
+    margin: 80px auto;
+    padding: 30px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    font-size: 16px;
+}
+
+button {
+    padding: 12px 20px;
+    background-color: #2196F3;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background 0.3s, transform 0.3s;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #1976D2;
+    transform: scale(1.05);
+}
+
+#result {
+    margin-top: 20px;
+    font-size: 18px;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* アニメーション */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
