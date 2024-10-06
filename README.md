@@ -83,7 +83,25 @@ git push origin main
 
 </details>
 
+<details><summary><h1>昔のコミット状態に戻す方法</h1></summary>
 
+## 前のコミット状態に戻す方法
+```
+git reset --hard <コミットハッシュ>
+```
+
+### 例（2つ前の情報に戻したい場合）
+```
+git reset --hard HEAD~2
+```
+
+* コミットハッシュを確認する方法
+```
+git log
+```
+
+
+</details>
 
 [MDチートシートその1](https://qiita.com/kamorits/items/6f342da395ad57468ae3)
 [MDチートシートその2](https://qiita.com/Qiita/items/c686397e4a0f4f11683d)
