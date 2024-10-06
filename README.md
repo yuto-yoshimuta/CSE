@@ -22,7 +22,8 @@ git push origin --delete 新しいブランチ名
 git add .
 git commit -m "コミットメッセージ"
 ```
-[コミットメッセージの書き方(参考)](https://zenn.dev/itosho/articles/git-commit-message-2023)
+[コミットメッセージの書き方(参考)](https://qiita.com/konatsu_p/items/dfe199ebe3a7d2010b3e)
+[絵文字](https://gitmoji.dev/)
 
 * リモートに新しいブランチをプッシュする
 ```
@@ -47,7 +48,7 @@ git marge 新しいブランチ名
 ```
 </details>
 
-<details open><summary><h1>その他git関連(必読)</h1></summary>
+<details><summary><h1>その他git関連(必読)</h1></summary>
 
 ## 競合があった場合の解決
 1. 競合のあったファイルを手動で修正
@@ -66,7 +67,7 @@ git push origin main
 
 ---
 
-## マージするのが怖い場合はPull Request(以降PR)をする
+## マージするのが怖い場合はPull Requestをする
 
 以降はリモートにプッシュした後の流れ
 
