@@ -1,4 +1,3 @@
-
 /* リセットCSS */
 * {
   margin: 0;
@@ -27,7 +26,7 @@ body {
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Fredoka One', cursive; 
   color: #fff;
   transition: background 2s ease;
   overflow-x: hidden;
@@ -96,33 +95,26 @@ body {
   transition: width 0.2s ease;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-}
-
 /* ヘッダーのスタイル */
 header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 0; /* 左右の余白をなくす */
+  padding: 20px 0;
   background-color: rgba(255, 255, 255, 0.8);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 0;
   width: 100%;
-  margin: 0;
-  position: fixed; /* ヘッダーを固定 */
-  top: 0; /* ページの上部に配置 */
+  position: fixed;
+  top: 0;
   left: 0;
-  z-index: 10; /* 他の要素の上に表示 */
+  z-index: 10;
 }
 
 /* ロゴのスタイル */
 .logo {
   display: flex;
   align-items: center;
-  padding: 0 20px; /* 内側に余白を追加 */
+  padding: 0 20px;
 }
 
 .logo img {
@@ -142,7 +134,7 @@ header {
 .header-buttons {
   display: flex;
   align-items: center;
-  padding: 0 20px; /* 内側に余白を追加 */
+  padding: 0 20px;
 }
 
 .header-buttons a {
@@ -162,28 +154,38 @@ header {
 
 /* 各ボタンのスタイル */
 .btn-mitei {
-  background: linear-gradient(45deg, #ffcccc, #ff9999);
+  background: #FF5722;
 }
 .btn-mitei:hover {
-  background: linear-gradient(45deg, #ff9999, #ffcccc);
+  background: #E64A19;
+  transform: scale(1.05);
 }
 .btn-exchange {
-  background: linear-gradient(45deg, #ffddcc, #ffbb99);
+  background: #4CAF50;
 }
+
 .btn-exchange:hover {
-  background: linear-gradient(45deg, #ffbb99, #ffddcc);
+  background: #388E3C;
+  transform: scale(1.05);
 }
+
 .btn-recognition {
-  background: linear-gradient(45deg, #cceeff, #99ccff);
+  background: #FFC107;
+  color: #333;
 }
+
 .btn-recognition:hover {
-  background: linear-gradient(45deg, #99ccff, #cceeff);
+  background: #FFA000;
+  transform: scale(1.05);
 }
+
 .btn-money {
-  background: linear-gradient(45deg, #ccffcc, #99ff99);
+  background: #6495ED;
 }
+
 .btn-money:hover {
-  background: linear-gradient(45deg, #99ff99, #ccffcc);
+  background: #1f4da2;
+  transform: scale(1.05);
 }
 
 /* メインタイトルのスタイル */
@@ -246,7 +248,7 @@ header {
 }
 .button-section .button-box {
   width: 24%;
-  margin: 0; 
+  margin: 0;
   box-sizing: border-box;
   background: rgba(255, 255, 255, 0.9);
   padding: 20px;
@@ -276,25 +278,9 @@ footer {
   bottom: 0;
   width: 100%;
   text-align: center;
-  padding: 20px 0; /* 左右の余白をなくす */
+  padding: 20px 0;
   background-color: rgba(0, 0, 0, 0.8);
   color: #fff;
-  border-radius: 0; /* 角をなくす */
+  border-radius: 0;
   margin: 0;
-}
-
-@media (max-width: 600px) {
-  #progress-container {
-    width: 80%;
-    height: 10px;
-  }
-
-  .header-buttons a {
-    padding: 8px 16px;
-    font-size: 14px;
-  }
-
-  .button-section .button-box {
-    width: 48%; /* 2列レイアウト */
-  }
 }

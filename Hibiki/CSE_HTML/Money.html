@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Explanation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/money.css">
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="logo">
+            <img src="assets/logo.jpg" alt="ロゴ" width="50" height="50">
+            <a href="index.html?skipIntro=true" id="home-link">Cash Scan Explore</a>
+        </div>
+        <div class="header-buttons">
+            <a href="#mitei" class="btn-mitei">未定</a>
+            <a href="ExchangeR.html" class="btn-exchange">Exchange Rate</a>
+            <a href="#image-recognition" class="btn-recognition">Image Recognition</a>
+            <a href="#types-of-money" class="btn-money">Types of Money</a>
+        </div>
+    </header>
+    
+    <!-- メインコンテンツ -->
+    <div class="container">
+        <div class="row align-items-start">
+            <!-- JPY Section -->
+            <div class="col-2">
+                <div class="dropdown" id="space">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="yellow">
+                        JPY
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-white">
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('jpy1')">1 JPY</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('jpy5')">5 JPY</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('jpy10')">10 JPY</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('jpy50')">50 JPY</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('jpy100')">100 JPY</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('jpy500')">500 JPY</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('jpy1000')">1000 JPY</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('jpy5000')">5000 JPY</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('jpy10000')">10000 JPY</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- NTD Section -->
+            <div class="col-2">
+                <div class="dropdown" id="space">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="blue">
+                        NTD
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-white">
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('twd1')">1 NTD</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('twd5')">5 NTD</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('twd10')">10 NTD</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('twd50')">50 NTD</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('twd100')">100 NTD</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('twd500')">500 NTD</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('twd1000')">1000 NTD</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Currency Display Section -->
+            <div class="col-8">
+                <div class="card mb-3" id="space">
+                    <img id="currencyImage" src="assets/JPY/1.jpg" class="card-img-top" alt="picture">
+                    <div class="card-body">
+                        <h5 class="card-title" id="currencyTitle">1 JPY</h5>
+                        <p class="card-text" id="currencyText">The one yen coin is the smallest denomination coin in Japan, made of aluminum. It is very light, weighing 1 gram. It features "1 yen" on the obverse side and a design of young trees on the reverse.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <h1>2024 Uni</h1>
+    </footer>
+
+    <script src="scripts/money.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

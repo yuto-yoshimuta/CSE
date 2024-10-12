@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cash Scan Explore</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles/home.css">
-  <link id="page-style" rel="stylesheet" href="styles/home.css">
-  <!-- Vue.js 3のCDN -->
-  <script src="https://unpkg.com/vue@3"></script>
 </head>
 <body>
   <!-- 背景動画 -->
@@ -17,15 +15,68 @@
     お使いのブラウザは動画タグに対応していません。
   </video>
 
-  <!-- Vue.jsアプリケーションのルート要素 -->
+  <!-- アプリケーションのルート要素 -->
   <div id="app">
-    <Intro v-if="showIntro" @intro-completed="handleIntroCompleted"></Intro>
-    <MainContent v-else @navigate-home="handleNavigateHome"></MainContent>
+    <div id="intro">
+      <h1>ARE U READY?</h1>
+      <button id="intro-btn">OK</button>
+      <div id="progress-container" style="display: none;">
+        <div id="progress-bar"></div>
+      </div>
+    </div>
+
+    <div id="main-content" style="display: none;">
+      <header>
+        <div class="logo">
+          <img src="assets/image.png" alt="ロゴ"/>
+          <a href="#" id="home-link">Cash Scan Explore</a>
+        </div>
+        <div class="header-buttons">
+          <a href="#mitei" class="btn-mitei">未定</a>
+          <a href="ExchangeR.html" class="btn-exchange">Exchange Rate</a>
+          <a href="#image-recognition" class="btn-recognition">Image Recognition</a>
+          <a href="Money.html" class="btn-money">Types of Money</a>
+        </div>
+      </header>
+
+      <main>
+        <h1 class="main-title">Cash Scan Explore</h1>
+        <div class="description-box">
+          説明説明説明説明説明説明説明説明説明説明説明説明説明説明説明
+        </div>
+        <div class="graph-space">
+          <img src="assets/output.png" alt="Exchange Rate Plot"/>
+        </div>
+        <div class="button-section">
+          <a class="button-box" href="#mitei">
+            <h2>未定</h2>
+            <img src="assets/news-image.png" alt="未定"/>
+            <p>未定についての説明文</p>
+          </a>
+          <a class="button-box" href="ExchangeR.html">
+            <h2>Exchange Rate</h2>
+            <img src="assets/news-image.png" alt="Exchange Rate"/>
+            <p>為替レートについての説明文</p>
+          </a>
+          <a class="button-box" href="#image-recognition">
+            <h2>Image Recognition</h2>
+            <img src="assets/image-recognition-image.png" alt="Image Recognition"/>
+            <p>画像認識技術についての説明文</p>
+          </a>
+          <a class="button-box" href="Money.html">
+            <h2>Types of Money</h2>
+            <img src="assets/money-explanation-image.png" alt="Types of Money"/>
+            <p>日本と台湾のお金の歴史についての説明文</p>
+          </a>
+        </div>
+      </main>
+
+      <footer>
+        <h1>2024 Uni</h1>
+      </footer>
+    </div>
   </div>
 
-
-  <!-- Vue.jsのスクリプト -->
-  <script src="app.js"></script>
+  <script src="scripts/app.js"></script>
 </body>
-
 </html>
