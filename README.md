@@ -99,7 +99,23 @@ git reset --hard HEAD~2
 ```
 git log
 ```
+</details>
 
+<details>
+<summary><h1>gitのコマンド操作</h1></summary>
+
+1. Docker Desktop がインストールされていること
+    * [公式サイト](https://www.docker.com/ja-jp/products/docker-desktop/)よりインストール
+
+2. 指定のパスに移動
+    * ~/cse-back or ~/cse-front のどちらかに移動
+
+3. 指定のコマンド入力
+    ```
+    docker-compose up
+    ```
+
+※Docker fileはもしかしたら途中で
 
 </details>
 
