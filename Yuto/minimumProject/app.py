@@ -1,27 +1,30 @@
-from flask import Flask, Response, render_template
+from flask import Flask, Response, render_template, request
 import cv2
 from roboflow import Roboflow
+import numpy as np
 
 app = Flask(__name__)
 
-# RoboflowのAPIキーとモデル情報
 rf = Roboflow(api_key="xZ3p0chUutwYSK3igU04")
 project = rf.workspace().project("ttwdd")
-model = project.version(1).model  # MODEL_ENDPOINT と VERSION に置き換える
+model = project.version(1).model
 
-# カメラのキャプチャ設定を起動時にはしない（ボタン押下時にのみ起動）
 cap = None
 
 @app.route('/')
 def index():
-    # トップページの表示（カメラ許可ボタン付き）
     return render_template('index.html')
 
 @app.route('/start_camera')
 def start_camera():
     global cap
-    cap = cv2.VideoCapture(0)  # 指定カメラのキャプチャを開始
-    return "Camera started"
+    if cap:
+        cap.release()
+    cap = cv2.VideoCapture(1)  # デフォルトのカメラID（0）を指定
+    if cap.isOpened():
+        return "Camera started"
+    else:
+        return "Failed to start camera", 500
 
 def generate_frames():
     global cap
@@ -33,11 +36,18 @@ def generate_frames():
         if not success:
             break
 
-        # OpenCVでフレームを画像として保存
-        cv2.imwrite("current_frame.jpg", frame)
+        # OpenCVでフレームをJPEGエンコード
+        ret, buffer = cv2.imencode('.jpg', frame)
+        if not ret:
+            continue
+
+        # エンコードされたフレームデータをRoboflowのモデルに直接送信
+        frame_bytes = buffer.tobytes()
+        np_frame = np.frombuffer(frame_bytes, dtype=np.uint8)
+        image = cv2.imdecode(np_frame, cv2.IMREAD_COLOR)
 
         # Roboflowで予測を行う
-        prediction = model.predict("current_frame.jpg", confidence=40, overlap=30).json()
+        prediction = model.predict(image, confidence=40, overlap=30).json()
 
         # 予測結果に基づいて矩形を描画
         for detection in prediction['predictions']:
