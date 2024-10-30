@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>リアルタイム物体検知</title>
+    <script>
+        async function startCamera() {
+            // カメラの許可を要求
+            try {
+                await navigator.mediaDevices.getUserMedia({ video: true });
+                // 許可が得られたら、Flaskサーバーにリクエストを送信してカメラを起動
+                fetch('/start_camera')
+                    .then(response => {
+                        if (response.ok) {
+                            document.getElementById('camera_feed').src = "/video_feed";
+                        } else {
+                            alert("カメラの起動に失敗しました。");
+                        }
+                    });
+            } catch (error) {
+                alert("カメラの許可が必要です。");
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>リアルタイム物体検知</h1>
+    <button onclick="startCamera()">カメラの許可と起動</button>
+    <div>
+        <!-- リアルタイム認識映像の表示 -->
+        <img id="camera_feed" style="width: 100%; max-width: 640px;" alt="Video Feed">
+    </div>
+</body>
+</html>
