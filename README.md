@@ -102,7 +102,7 @@ git log
 </details>
 
 <details>
-<summary><h1>gitのコマンド操作</h1></summary>
+<summary><h1>Docker setup</h1></summary>
 
 1. Docker Desktop をインストール
     * [公式サイト](https://www.docker.com/ja-jp/products/docker-desktop/)よりインストール
