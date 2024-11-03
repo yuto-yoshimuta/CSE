@@ -99,7 +99,24 @@ git reset --hard HEAD~2
 ```
 git log
 ```
+</details>
 
+<details>
+<summary><h1>Docker setup</h1></summary>
+
+1. Docker Desktop をインストール
+    * [公式サイト](https://www.docker.com/ja-jp/products/docker-desktop/)よりインストール
+    * Dockerのバージョンがターミナルで表示できるようになればOK
+
+2. 指定のパスに移動
+    * ~/cse-back or ~/cse-front に移動
+
+3. 指定のコマンド入力
+    ```
+    docker-compose up
+    ```
+
+※Docker fileはもしかしたら途中で変更する可能性あり
 
 </details>
 
