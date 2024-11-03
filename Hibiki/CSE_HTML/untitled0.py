@@ -48,16 +48,22 @@ def update_html(image_path, template_path, output_path):
 
 def open_in_browser(html_path):
     webbrowser.open('file://' + os.path.realpath(html_path))
- 
-html_dir = "assets"
-image_path = os.path.join(os.path.abspath("assets"), "output.png")
 
+html_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
+if not os.path.exists(html_dir ):
+    os.makedirs(html_dir )
+
+image_path = os.path.join(html_dir, "output.png")
 
 plot_data(usd_jpy, image_path=image_path)
 
 
-template_path = os.path.join("index.html")
-output_path = os.path.join("index.html")
+script_dir = os.path.dirname(os.path.abspath(__file__))
+template_path = os.path.join(script_dir, "index.html")
+output_path = os.path.join(script_dir, "index.html")
+
 update_html(image_path, template_path, output_path)
 
 open_in_browser(output_path)
+
+
