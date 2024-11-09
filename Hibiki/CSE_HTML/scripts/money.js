@@ -1,8 +1,10 @@
-// money.jsに追加するJavaScriptコード
-
 function setCurrency(currency) {
     const currencyData = {
-        jpy1: { title: '1 JPY', text: 'The one yen coin is the smallest denomination coin in Japan, made of aluminum. It is very light, weighing 1 gram. It features "1 yen" on the obverse side and a design of young trees on the reverse.', image: 'assets/JPY/1.jpg' },
+        jpy1: { 
+            title: '1 JPY', 
+            text: 'Japan\'s currency system was completely revamped in 1871 during the Meiji era as part of the broader modernization reforms.<br><br>Prior to this, complex forms of currency such as "mon" and "ryō" were used during the Edo period.<br>However, with the push for modernization, new units for currency such as "yen," "sen," and "rin" were introduced, drawing influence from Western currency systems to streamline domestic and international transactions.', 
+            image: 'assets/JPY/1.jpg' 
+          },
         jpy5: { title: '5 JPY', text: 'The five yen coin is made of brass and has a distinctive hole in the center. It depicts ears of rice, waves, and a gear on the obverse side, symbolizing agriculture, fisheries, and industry in Japan.', image: 'assets/JPY/5.jpg' },
         jpy10: { title: '10 JPY', text: 'The ten yen coin is made of bronze and features the Byodo-in Phoenix Hall on the obverse side. There are both milled and smooth edge variations.', image: 'assets/JPY/10.jpg' },
         jpy50: { title: '50 JPY', text: 'The fifty yen coin is made of cupronickel and has a central hole. It features a chrysanthemum flower on the obverse.', image: 'assets/JPY/50.jpg' },
@@ -21,6 +23,6 @@ function setCurrency(currency) {
     };
     
     document.getElementById('currencyTitle').innerText = currencyData[currency].title;
-    document.getElementById('currencyText').innerText = currencyData[currency].text;
+    document.getElementById('currencyText').innerHTML = currencyData[currency].text; // innerHTMLを使用
     document.getElementById('currencyImage').src = currencyData[currency].image;
 }

@@ -246,6 +246,7 @@ header {
   margin: 40px 20px;
   gap: 2%;
 }
+
 .button-section .button-box {
   width: 24%;
   margin: 0;
@@ -258,7 +259,15 @@ header {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
   animation: fadeInCard 1.5s ease-in-out;
+  text-decoration: none; /* ここで下線を消す */
 }
+
+
+.button-box-explain{
+  font-family: Arial, sans-serif !important; 
+
+}
+
 .button-section .button-box:hover {
   transform: translateY(-10px);
 }
