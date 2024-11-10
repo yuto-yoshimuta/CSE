@@ -1,6 +1,84 @@
 # CashScanExplorer
 <details><summary><h1>Project開発スタートアップ</h1></summary>
 
+# プロジェクトのセットアップ手順
+
+このドキュメントでは、MACとWindows環境でプロジェクトをセットアップする手順を説明します。
+
+## MAC版の手順
+
+### 前提条件
+- Dockerがインストールされていること
+- VSCodeがインストールされていること
+
+### 手順
+1. ターミナルを開き、プロジェクトのディレクトリに移動します。
+   ```
+   cd ~/CSE_Project
+   ```
+
+2. 以下のコマンドを実行して、Dockerイメージをビルドします。
+   ```
+   docker build -t myproject .
+   ```
+
+3. ビルドが完了したら、以下のコマンドでDockerコンテナを起動します。
+   ```
+   docker run -it -v $(pwd):/app -p 8080:8080 myproject
+   ```
+
+4. VSCodeを開き、「ファイル」メニューから「フォルダを開く」を選択します。
+
+5. プロジェクトのディレクトリ（~/CSE_Project）を選択して開きます。
+
+6. VSCodeの拡張機能タブを開き、「Dev Containers」拡張機能を検索してインストールします。
+
+7. コマンドパレット（Cmd + Shift + P）を開き、「Dev Containers: Attach to Running Container」を選択します。
+
+8. 起動中のDockerコンテナを選択し、VSCodeでコンテナに接続します。
+
+9. 必要なファイルを編集し、変更を加えます。
+
+10. ターミナルでコンテナ内のシェルを開き、プロジェクトに関連するコマンドを実行します。
+
+## Windows版の手順
+
+### 前提条件
+- Docker Desktopがインストールされていること
+- VSCodeがインストールされていること
+
+### 手順
+1. コマンドプロンプトを開き、プロジェクトのディレクトリに移動します。
+   ```
+   cd C:\Users\YourUsername\CSE_Project
+   ```
+
+2. 以下のコマンドを実行して、Dockerイメージをビルドします。
+   ```
+   docker build -t myproject .
+   ```
+
+3. ビルドが完了したら、以下のコマンドでDockerコンテナを起動します。
+   ```
+   docker run -it -v %cd%:/app -p 8080:8080 myproject
+   ```
+
+4. VSCodeを開き、「ファイル」メニューから「フォルダを開く」を選択します。
+
+5. プロジェクトのディレクトリ（C:\Users\YourUsername\CSE_Project）を選択して開きます。
+
+6. VSCodeの拡張機能タブを開き、「Dev Containers」拡張機能を検索してインストールします。
+
+7. コマンドパレット（Ctrl + Shift + P）を開き、「Dev Containers: Attach to Running Container」を選択します。
+
+8. 起動中のDockerコンテナを選択し、VSCodeでコンテナに接続します。
+
+9. 必要なファイルを編集し、変更を加えます。
+
+10. コマンドプロンプトでコンテナ内のシェルを開き、プロジェクトに関連するコマンドを実行します。
+
+以上の手順に従って、MACとWindows環境でプロジェクトをセットアップし、Dev Containersを使用してDockerコンテナ内で開発を行うことができます。問題がある場合は、Yutoに連絡してください。
+
 </details>
 
 <details><summary><h1>gitのコマンド操作</h1></summary>
@@ -105,23 +183,6 @@ git log
 </details>
 
 <details>
-<summary><h1>Docker setup</h1></summary>
-
-1. Docker Desktop をインストール
-    * [公式サイト](https://www.docker.com/ja-jp/products/docker-desktop/)よりインストール
-    * Dockerのバージョンがターミナルで表示できるようになればOK
-
-2. 指定のパスに移動
-    * ~/cse-back or ~/cse-front に移動
-
-3. 指定のコマンド入力
-    ```
-    docker-compose up
-    ```
-
-※Docker fileはもしかしたら途中で変更する可能性あり
-
-</details>
 
 [MDチートシートその1](https://qiita.com/kamorits/items/6f342da395ad57468ae3)
 [MDチートシートその2](https://qiita.com/Qiita/items/c686397e4a0f4f11683d)
