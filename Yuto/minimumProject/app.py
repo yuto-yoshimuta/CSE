@@ -5,9 +5,9 @@ import numpy as np
 
 app = Flask(__name__)
 
-rf = Roboflow(api_key="xZ3p0chUutwYSK3igU04")
-project = rf.workspace().project("ttwdd")
-model = project.version(1).model
+rf = Roboflow(api_key="X6ALu0a2v4EeuHuJoa0V")
+project = rf.workspace().project("jpdtwd")
+model = project.version(3).model
 
 cap = None
 
@@ -20,7 +20,7 @@ def start_camera():
     global cap
     if cap:
         cap.release()
-    cap = cv2.VideoCapture(1)  # デフォルトのカメラID（0）を指定
+    cap = cv2.VideoCapture(0)  # デフォルトのカメラID（0）を指定
     if cap.isOpened():
         return "Camera started"
     else:

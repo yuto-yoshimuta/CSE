@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マネーディテクター</title>
+    <style>
+        /* 前回のスタイルをそのまま維持 */
+        /* スタイルの内容は省略 - 前回のものを使用 */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>マネーディテクター</h1>
+        </div>
+
+        <div class="controls">
+            <select id="cameraSelect">
+                <option value="">カメラを選択してください</option>
+            </select>
+            <button id="startButton" onclick="startCamera()">カメラ開始</button>
+        </div>
+
+        <div class="video-container">
+            <video id="video_preview" autoplay playsinline></video>
+            <img id="processed_video">
+        </div>
+
+        <div class="detection-results">
+            <div class="money-counter">
+                <div>合計金額（日本円）: <span id="jpyTotal">0</span>円</div>
+                <div>合計金額（台湾ドル）: <span id="twdTotal">0</span>TWD</div>
+            </div>
+            <div class="detected-items" id="detectedItems"></div>
+        </div>
+
+        <div id="errorMessage"></div>
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <script>
+        let stream = null;
+        let videoElement = document.getElementById('video_preview');
+        let processedVideo = document.getElementById('processed_video');
+        let canvas = document.getElementById('canvas');
+        let streamInterval;
+        let isProcessing = false;
+
+        async function enumerateDevices() {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                const select = document.getElementById('cameraSelect');
+                
+                select.innerHTML = '<option value="">カメラを選択してください</option>';
+                
+                videoDevices.forEach(device => {
+                    const option = document.createElement('option');
+                    option.value = device.deviceId;
+                    option.text = device.label || `カメラ ${select.length}`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error("デバイス列挙エラー:", error);
+                showError("カメラの列挙に失敗しました。");
+            }
+        }
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                stream.getTracks().forEach(track => track.stop());
+                return enumerateDevices();
+            })
+            .catch(error => {
+                console.error("カメラアクセスエラー:", error);
+                showError("カメラへのアクセスに失敗しました。");
+            });
+
+        async function startCamera() {
+            const deviceId = document.getElementById('cameraSelect').value;
+            if (!deviceId) {
+                showError("カメラを選択してください。");
+                return;
+            }
+
+            try {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        deviceId: deviceId ? { exact: deviceId } : undefined,
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    }
+                });
+                
+                videoElement.srcObject = stream;
+                videoElement.style.display = 'block';
+                processedVideo.style.display = 'block';
+                
+                videoElement.onloadedmetadata = () => {
+                    canvas.width = videoElement.videoWidth;
+                    canvas.height = videoElement.videoHeight;
+                    startStreaming();
+                };
+                
+                const response = await fetch('/start_camera');
+                if (!response.ok) {
+                    throw new Error('Failed to start camera on server');
+                }
+                
+                document.getElementById('errorMessage').style.display = 'none';
+                
+            } catch (error) {
+                console.error("カメラアクセスエラー:", error);
+                showError("カメラへのアクセスに失敗しました。");
+            }
+        }
+
+        function startStreaming() {
+            const ctx = canvas.getContext('2d');
+            
+            if (streamInterval) {
+                clearInterval(streamInterval);
+            }
+            
+            streamInterval = setInterval(async () => {
+                if (isProcessing) return;
+                
+                try {
+                    isProcessing = true;
+                    
+                    // ビデオフレームをキャンバスに描画
+                    ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+                    
+                    // キャンバスの内容をBlobに変換
+                    const blob = await new Promise(resolve => {
+                        canvas.toBlob(resolve, 'image/jpeg', 0.8);
+                    });
+                    
+                    // フレームを送信して処理結果を取得
+                    const response = await fetch('/video_feed/stream1', {
+                        method: 'POST',
+                        body: blob
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Server responded with ${response.status}`);
+                    }
+
+                    // レスポンスの種類を確認
+                    const contentType = response.headers.get('content-type');
+                    console.log('Response content type:', contentType);
+
+                    if (contentType && contentType.includes('multipart/x-mixed-replace')) {
+                        // マルチパートレスポンスの処理
+                        const reader = response.body.getReader();
+                        while (true) {
+                            const { done, value } = await reader.read();
+                            if (done) break;
+                            
+                            // バイナリデータを文字列に変換
+                            const text = new TextDecoder().decode(value);
+                            const parts = text.split('\r\n\r\n');
+                            
+                            parts.forEach(part => {
+                                if (part.includes('Content-Type: image/jpeg')) {
+                                    // 画像の処理
+                                    const base64Image = btoa(part.split('\r\n')[1]);
+                                    processedVideo.src = `data:image/jpeg;base64,${base64Image}`;
+                                } else if (part.includes('Content-Type: application/json')) {
+                                    // JSON データの処理
+                                    try {
+                                        const jsonData = JSON.parse(part);
+                                        updateDetectionResults(jsonData);
+                                    } catch (e) {
+                                        console.error('JSON parse error:', e);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        // 通常のJSONレスポンスの処理
+                        const data = await response.json();
+                        console.log('Response data:', data);
+                        updateDetectionResults(data);
+                        
+                        if (data.image) {
+                            processedVideo.src = `data:image/jpeg;base64,${data.image}`;
+                        }
+                    }
+                    
+                } catch (error) {
+                    console.error("フレーム処理エラー:", error);
+                } finally {
+                    isProcessing = false;
+                }
+                
+            }, 100); // 10FPSで処理
+        }
+
+        function updateDetectionResults(data) {
+            console.log('Updating detection results:', data);
+            
+            let jpyTotal = 0;
+            let twdTotal = 0;
+            const detectedItems = document.getElementById('detectedItems');
+            detectedItems.innerHTML = '';
+
+            if (data.predictions && Array.isArray(data.predictions)) {
+                data.predictions.forEach(pred => {
+                    // 検出されたアイテムを表示
+                    const item = document.createElement('div');
+                    item.className = 'detected-item';
+                    item.textContent = `${pred.class} (${(pred.confidence * 100).toFixed(1)}%)`;
+                    detectedItems.appendChild(item);
+
+                    // 金額の計算
+                    const label = pred.class;
+                    if (label.match(/^\d+$/)) {
+                        // 日本円の場合
+                        jpyTotal += parseInt(label);
+                    } else if (label.match(/^twd_\$\d+$/)) {
+                        // 台湾ドルの場合
+                        const amount = parseInt(label.match(/\d+/)[0]);
+                        twdTotal += amount;
+                    }
+                });
+            }
+
+            // 合計金額の更新
+            document.getElementById('jpyTotal').textContent = jpyTotal.toLocaleString();
+            document.getElementById('twdTotal').textContent = twdTotal.toLocaleString();
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        // クリーンアップ処理
+        window.onbeforeunload = function() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            if (streamInterval) {
+                clearInterval(streamInterval);
+            }
+        };
+    </script>
+</body>
+</html>

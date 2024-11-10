@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>リアルタイム物体検知</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 20px 0;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .video-container {
+            width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+        #video_preview {
+            width: 100%;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background-color: #000;
+        }
+        #processed_video {
+            width: 100%;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        #errorMessage {
+            color: red;
+            margin: 10px 0;
+            text-align: center;
+            display: none;
+        }
+        canvas {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>リアルタイム物体検知</h1>
+
+    <button id="startButton" onclick="startCamera()">カメラ開始</button>
+    
+    <div class="video-container">
+        <video id="video_preview" autoplay playsinline></video>
+        <img id="processed_video" style="display: none;">
+    </div>
+    
+    <canvas id="canvas"></canvas>
+    <div id="errorMessage"></div>
+
+    <script>
+        let stream = null;
+        let videoElement = document.getElementById('video_preview');
+        let processedVideo = document.getElementById('processed_video');
+        let canvas = document.getElementById('canvas');
+        let streamInterval;
+        let isProcessing = false;
+
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'environment',
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    }
+                });
+                
+                videoElement.srcObject = stream;
+                videoElement.style.display = 'block';
+                processedVideo.style.display = 'block';
+                
+                // ビデオのメタデータが読み込まれた後にキャンバスサイズを設定
+                videoElement.onloadedmetadata = () => {
+                    canvas.width = videoElement.videoWidth;
+                    canvas.height = videoElement.videoHeight;
+                    startStreaming();
+                };
+                
+                const response = await fetch('/start_camera');
+                if (!response.ok) {
+                    throw new Error('Failed to start camera on server');
+                }
+                
+                document.getElementById('errorMessage').style.display = 'none';
+                
+            } catch (error) {
+                console.error("カメラアクセスエラー:", error);
+                showError("カメラへのアクセスに失敗しました。");
+            }
+        }
+
+        function startStreaming() {
+            const ctx = canvas.getContext('2d');
+            
+            streamInterval = setInterval(async () => {
+                if (isProcessing) return; // 前回の処理が完了していない場合はスキップ
+                
+                try {
+                    isProcessing = true;
+                    
+                    // ビデオフレームをキャンバスに描画
+                    ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+                    
+                    // キャンバスの内容をBlobに変換
+                    const blob = await new Promise(resolve => {
+                        canvas.toBlob(resolve, 'image/jpeg', 0.8);
+                    });
+                    
+                    // フレームを送信して処理結果を取得
+                    const response = await fetch('/video_feed/stream1', {
+                        method: 'POST',
+                        body: blob
+                    });
+                    
+                    if (response.ok) {
+                        const imageBlob = await response.blob();
+                        processedVideo.src = URL.createObjectURL(imageBlob);
+                    }
+                    
+                } catch (error) {
+                    console.error("フレーム処理エラー:", error);
+                } finally {
+                    isProcessing = false;
+                }
+                
+            }, 100); // 10FPSで処理
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        // クリーンアップ処理
+        window.onbeforeunload = function() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            if (streamInterval) {
+                clearInterval(streamInterval);
+            }
+        };
+    </script>
+</body>
+</html>
