@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マネーディテクター</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        select, button {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .video-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .video-box {
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .video-box h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        video, img {
+            width: 100%;
+            border-radius: 5px;
+            background-color: #eee;
+        }
+
+        .detection-results {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .money-counter {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .money-counter div {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .detected-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .detected-item {
+            background-color: #e1f5fe;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+
+        #errorMessage {
+            display: none;
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        canvas {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .video-container {
+                grid-template-columns: 1fr;
+            }
+
+            .money-counter {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>マネーディテクター</h1>
+        </div>
+
+        <div class="controls">
+            <select id="cameraSelect">
+                <option value="">カメラを選択してください</option>
+            </select>
+            <button id="startButton" onclick="startCamera()">カメラ開始</button>
+        </div>
+
+        <div class="video-container">
+            <div class="video-box">
+                <h3>カメラ映像</h3>
+                <video id="video_preview" autoplay playsinline></video>
+            </div>
+            <div class="video-box">
+                <h3>認識結果</h3>
+                <img id="processed_video">
+            </div>
+        </div>
+
+        <div class="detection-results">
+            <div class="money-counter">
+                <div>合計金額（日本円）: <span id="jpyTotal">0</span>円</div>
+                <div>合計金額（台湾ドル）: <span id="twdTotal">0</span>TWD</div>
+            </div>
+            <div class="detected-items" id="detectedItems"></div>
+        </div>
+
+        <div id="errorMessage"></div>
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <script>
+        let stream = null;
+        let videoElement = document.getElementById('video_preview');
+        let processedVideo = document.getElementById('processed_video');
+        let canvas = document.getElementById('canvas');
+        let streamInterval;
+        let isProcessing = false;
+
+        async function enumerateDevices() {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                const select = document.getElementById('cameraSelect');
+                
+                select.innerHTML = '<option value="">カメラを選択してください</option>';
+                
+                videoDevices.forEach(device => {
+                    const option = document.createElement('option');
+                    option.value = device.deviceId;
+                    option.text = device.label || `カメラ ${select.length}`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error("デバイス列挙エラー:", error);
+                showError("カメラの列挙に失敗しました。");
+            }
+        }
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                stream.getTracks().forEach(track => track.stop());
+                return enumerateDevices();
+            })
+            .catch(error => {
+                console.error("カメラアクセスエラー:", error);
+                showError("カメラへのアクセスに失敗しました。");
+            });
+
+        async function startCamera() {
+            const deviceId = document.getElementById('cameraSelect').value;
+            if (!deviceId) {
+                showError("カメラを選択してください。");
+                return;
+            }
+
+            try {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        deviceId: deviceId ? { exact: deviceId } : undefined,
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    }
+                });
+                
+                videoElement.srcObject = stream;
+                
+                videoElement.onloadedmetadata = () => {
+                    canvas.width = videoElement.videoWidth;
+                    canvas.height = videoElement.videoHeight;
+                    startStreaming();
+                };
+                
+                const response = await fetch('/start_camera');
+                if (!response.ok) {
+                    throw new Error('Failed to start camera on server');
+                }
+                
+                document.getElementById('errorMessage').style.display = 'none';
+                
+            } catch (error) {
+                console.error("カメラアクセスエラー:", error);
+                showError("カメラへのアクセスに失敗しました。");
+            }
+        }
+
+        function startStreaming() {
+            const ctx = canvas.getContext('2d');
+            
+            if (streamInterval) {
+                clearInterval(streamInterval);
+            }
+            
+            streamInterval = setInterval(async () => {
+                if (isProcessing) return;
+                
+                try {
+                    isProcessing = true;
+                    
+                    ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+                    
+                    const blob = await new Promise(resolve => {
+                        canvas.toBlob(resolve, 'image/jpeg', 0.8);
+                    });
+                    
+                    const response = await fetch('/video_feed/stream1', {
+                        method: 'POST',
+                        body: blob
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Server responded with ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('Response data:', data);
+                    
+                    if (data.image) {
+                        processedVideo.src = `data:image/jpeg;base64,${data.image}`;
+                    }
+                    
+                    updateDetectionResults(data);
+                    
+                } catch (error) {
+                    console.error("フレーム処理エラー:", error);
+                } finally {
+                    isProcessing = false;
+                }
+                
+            }, 100);
+        }
+
+        function updateDetectionResults(data) {
+            let jpyTotal = 0;
+            let twdTotal = 0;
+            const detectedItems = document.getElementById('detectedItems');
+            detectedItems.innerHTML = '';
+
+            if (data.predictions && Array.isArray(data.predictions)) {
+                data.predictions.forEach(pred => {
+                    const item = document.createElement('div');
+                    item.className = 'detected-item';
+                    item.textContent = `${pred.class} (${(pred.confidence * 100).toFixed(1)}%)`;
+                    detectedItems.appendChild(item);
+
+                    const label = pred.class;
+                    if (label.match(/^\d+$/)) {
+                        jpyTotal += parseInt(label);
+                    } else if (label.match(/^twd_\$\d+$/)) {
+                        const amount = parseInt(label.match(/\d+/)[0]);
+                        twdTotal += amount;
+                    }
+                });
+            }
+
+            document.getElementById('jpyTotal').textContent = jpyTotal.toLocaleString();
+            document.getElementById('twdTotal').textContent = twdTotal.toLocaleString();
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        window.onbeforeunload = function() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            if (streamInterval) {
+                clearInterval(streamInterval);
+            }
+        };
+    </script>
+</body>
+</html>
