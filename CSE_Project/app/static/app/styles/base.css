@@ -1,0 +1,114 @@
+/* base.css */
+body {
+    font-family: 'Fredoka One', cursive;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: #333;
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Fredoka One', cursive;
+}
+
+/* ヘッダーのスタイル */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.logo a {
+    font-size: 1.5em;
+    color: #333;
+    text-decoration: none;
+}
+
+/* ヘッダーのボタンスタイル */
+.header-buttons {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.header-buttons a {
+    text-decoration: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 30px;
+    transition: background 0.3s, transform 0.3s;
+    font-weight: bold;
+    text-shadow: -0.5px -0.5px 0 #444, 0.5px -0.5px 0 #444, -0.5px 0.5px 0 #444, 0.5px 0.5px 0 #444;
+    margin-left: 10px;
+}
+
+/* 各ボタンのスタイル */
+.btn-mitei {
+    background: #FF5722;
+}
+.btn-mitei:hover {
+    background: #E64A19;
+    transform: scale(1.05);
+}
+.btn-exchange {
+    background: #4CAF50;
+}
+.btn-exchange:hover {
+    background: #388E3C;
+    transform: scale(1.05);
+}
+.btn-recognition {
+    background: #FFC107;
+}
+.btn-recognition:hover {
+    background: #FFA000;
+    transform: scale(1.05);
+}
+.btn-money {
+    background: #6495ED;
+}
+.btn-money:hover {
+    background: #1f4da2;
+    transform: scale(1.05);
+}
+
+/* フッター */
+footer {
+    position: relative;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+}
+
+/* メインコンテンツ */
+main {
+    padding-top: 100px;
+    min-height: calc(100vh - 140px);
+}

@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>{% block title %}Cash Scan Explore{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <link href="{% static 'app/styles/base.css' %}" rel="stylesheet"/>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% block bg_video %}{% endblock %}
+
+    <header>
+        <div class="logo">
+            <img src="{% static 'app/assets/image.png' %}" alt="ロゴ">
+            <a href="{% url 'app:index' %}" id="home-link">Cash Scan Explore</a>
+        </div>
+        <div class="header-buttons">
+            <a href="{% url 'app:mitei' %}" class="btn-mitei">
+                <i class="fas fa-question-circle"></i>未定
+            </a>
+            <a href="{% url 'app:exchange_rate' %}" class="btn-exchange">
+                <i class="fas fa-exchange-alt"></i>Exchange Rate
+            </a>
+            <a href="{% url 'app:image_recognition' %}" class="btn-recognition">
+                <i class="fas fa-camera"></i>Image Recognition
+            </a>
+            <a href="{% url 'app:money' %}" class="btn-money">
+                <i class="fas fa-coins"></i>Types of Money
+            </a>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <h1>2024 Uni</h1>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

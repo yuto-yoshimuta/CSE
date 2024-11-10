@@ -1,0 +1,174 @@
+/* 背景動画のスタイル */
+#bg-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -1;
+    filter: brightness(0.7);
+}
+
+/* イントロセクション */
+#intro {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    color: white;
+}
+
+#intro h1 {
+    font-size: 4em;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#intro-btn {
+    padding: 15px 50px;
+    font-size: 1.5em;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+#intro-btn:hover {
+    transform: scale(1.1);
+    background-color: #45a049;
+}
+
+/* メインコンテンツ */
+.main-title {
+    text-align: center;
+    color: white;
+    font-size: 3em;
+    margin: 30px 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.description-box {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    margin: 20px auto;
+    max-width: 800px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* グラフスペース */
+.graph-space {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ボタンセクション */
+.button-section {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4列に固定 */
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.button-box {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 15px;
+  text-decoration: none;
+  color: #333;
+  transition: transform 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;           /* フレックスボックスを追加 */
+  flex-direction: column;  /* 縦方向に配置 */
+  height: 100%;           /* 高さを統一 */
+}
+
+/* レスポンシブデザインの調整 */
+@media (max-width: 1200px) {
+  .button-section {
+      grid-template-columns: repeat(2, 1fr); /* タブレットサイズでは2列 */
+  }
+}
+
+@media (max-width: 768px) {
+  .button-section {
+      grid-template-columns: 1fr; /* モバイルサイズでは1列 */
+  }
+}
+
+.button-box:hover {
+    transform: translateY(-5px);
+}
+
+.button-box h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.button-box img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.button-box p {
+    text-align: center;
+    margin: 0;
+}
+
+.button-box-explain {
+    font-size: 0.9em;
+    line-height: 1.6;
+}
+
+/* プログレスバー */
+#progress-container {
+    width: 300px;
+    height: 20px;
+    background-color: #ddd;
+    border-radius: 10px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+#progress-bar {
+    width: 0%;
+    height: 100%;
+    background-color: #4CAF50;
+    transition: width 0.3s ease-in-out;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    .button-section {
+        grid-template-columns: 1fr;
+    }
+
+    .main-title {
+        font-size: 2em;
+    }
+
+    #intro h1 {
+        font-size: 2.5em;
+    }
+}

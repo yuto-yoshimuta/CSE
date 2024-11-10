@@ -1,0 +1,42 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block title %}Exchange Rate - Cash Scan Explore{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/styles/exchange_rate.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Currency Converter</h2>
+    <form id="conversion-form">
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required placeholder="Enter amount">
+        
+        <label for="from_currency">From Currency:</label>
+        <select id="from_currency" name="from_currency">
+            <option value="JPY">Japanese Yen (JPY)</option>
+            <option value="TWD">Taiwan Dollar (TWD)</option>
+        </select>
+        
+        <label for="to_currency">To Currency:</label>
+        <select id="to_currency" name="to_currency">
+            <option value="TWD">Taiwan Dollar (TWD)</option>
+            <option value="JPY">Japanese Yen (JPY)</option>
+            <option value="USD">US Dollar (USD)</option>
+            <option value="EUR">Euro (EUR)</option>
+            <option value="GBP">British Pound (GBP)</option>
+        </select>
+        
+        <button type="submit">Convert</button>
+    </form>
+    
+    <div id="result"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'app/scripts/exchange_rate.js' %}"></script>
+{% endblock %}

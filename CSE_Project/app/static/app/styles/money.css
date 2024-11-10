@@ -1,0 +1,150 @@
+/* リセットCSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* アプリケーション全体のスタイル */
+body {
+    font-family: 'Fredoka One', cursive;
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    color: #333; /* デフォルトのテキストカラーを追加 */
+}
+
+/* メインコンテンツのスタイル */
+.container {
+    margin-top: 100px;
+    flex: 1;
+    padding: 20px; /* コンテンツの余白を追加 */
+    max-width: 1200px; /* 最大幅を設定 */
+    width: 100%; /* レスポンシブ対応 */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* カードのスタイル追加 */
+.card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-img-top {
+    max-height: 400px;
+    object-fit: contain;
+    padding: 20px;
+    background: white;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+.card-text {
+    line-height: 1.6;
+    color: #34495e;
+}
+
+/* ドロップダウンボタンのスタイル改善 */
+.dropdown {
+    margin: 20px 0;
+}
+
+#blue, #yellow {
+    display: inline-block;
+    padding: 0.5em 1em;
+    text-decoration: none;
+    color: #FFF;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    width: 100%; /* ボタンの幅を統一 */
+    text-align: center;
+    font-weight: bold;
+    border: none; /* 元のボーダーを削除 */
+}
+
+#blue {
+    background: #4a90e2;
+    box-shadow: 0 4px 6px rgba(74, 144, 226, 0.2);
+}
+
+#yellow {
+    background: #f5b843;
+    box-shadow: 0 4px 6px rgba(245, 184, 67, 0.2);
+}
+
+#blue:hover, #yellow:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ドロップダウンメニューのスタイル改善 */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 8px 0;
+}
+
+.dropdown-item {
+    padding: 8px 20px;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .card-img-top {
+        max-height: 300px;
+    }
+
+    #blue, #yellow {
+        padding: 0.4em 0.8em;
+    }
+
+    .header-buttons a {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+}
+
+/* アニメーション */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.5s ease-out;
+}

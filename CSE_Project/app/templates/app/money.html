@@ -1,0 +1,67 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block title %}Types of Money - Cash Scan Explore{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'app/styles/money.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row align-items-start">
+        <div class="col-2">
+            <div class="dropdown" id="space">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="yellow">
+                    JPY
+                </button>
+                <ul class="dropdown-menu dropdown-menu-white">
+                    {% for value in currency_types.JPY.denominations %}
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('jpy{{ value }}')">{{ value }} JPY</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-2">
+            <div class="dropdown" id="space">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="blue">
+                    TWD
+                </button>
+                <ul class="dropdown-menu dropdown-menu-white">
+                    {% for value in currency_types.TWD.denominations %}
+                        <li><a class="dropdown-item" href="#" onclick="setCurrency('twd{{ value }}')">{{ value }} TWD</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-8">
+            <div class="card mb-3" id="space">
+                <img id="currencyImage" 
+                     src="{% static 'app/assets/JPY/1.jpg' %}" 
+                     class="card-img-top" 
+                     alt="currency"
+                     data-placeholder="{% static 'app/assets/placeholder.jpg' %}">
+                <div class="card-body">
+                    <h5 class="card-title" id="currencyTitle">1 JPY</h5>
+                    <p class="card-text" id="currencyText">
+                        <!-- Initial text will be set by JavaScript -->
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 画像のベースURLをJavaScriptに渡す
+    const STATIC_URL = "{% static 'app/assets/' %}";
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+<script src="{% static 'app/scripts/money.js' %}"></script>
+{% endblock %}
