@@ -79,16 +79,24 @@
 
 
 - コンテナを停止
+```
 docker-compose down
+```
 
 - コンテナのログを表示
+```
 docker-compose logs
+```
 
 - コンテナ内でコマンドを実行
+```
 docker-compose exec web bash
+```
 
 - コンテナとイメージを完全に削除（クリーンアップ）
+```
 docker-compose down --rmi all
+```
 
 
 以上の手順に従って、MACとWindows環境でプロジェクトをセットアップし、Dev Containersを使用してDockerコンテナ内で開発を行うことができます。問題がある場合は、Yutoに連絡してください。
