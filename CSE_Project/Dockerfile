@@ -33,7 +33,7 @@ RUN chown -R appuser:appuser /app
 USER appuser
 
 # ポートの公開
-EXPOSE 8000
+EXPOSE 8080
 
 # 起動コマンド
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
