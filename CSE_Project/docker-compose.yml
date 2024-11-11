@@ -6,15 +6,20 @@ services:
     command: python manage.py runserver 0.0.0.0:8080
     volumes:
       - .:/app
+      - /tmp/.X11-unix:/tmp/.X11-unix  # X11 socket for display
     ports:
       - "8080:8080"
     environment:
       - DEBUG=1
       - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
       - PYTHONUNBUFFERED=1
-    devices:
-      - /dev/video0:/dev/video0
-    # rootlessで動作させるための設定
-    security_opt:
-      - no-new-privileges:true
-    user: appuser
+      - DISPLAY=${DISPLAY}  # X11 display
+    # Windowsでは devices セクションをコメントアウト
+    # devices:
+    #   - /dev/video0:/dev/video0
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
