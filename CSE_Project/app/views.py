@@ -3,11 +3,34 @@ from django.core.cache import cache
 from datetime import datetime, timedelta
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
+from roboflow import Roboflow
+import cv2
+import numpy as np
 import yfinance as yf
 import matplotlib.pyplot as plt
 import io
 import base64
 from .models import ExchangeRate
+import logging
+import json
+
+# ログ設定
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+# Roboflowの初期化
+try:
+    rf = Roboflow(api_key="X6ALu0a2v4EeuHuJoa0V")
+    project = rf.workspace().project("jpdtwd")
+    model = project.version(3).model
+    logger.info("Roboflow model loaded successfully")
+except Exception as e:
+    logger.error(f"Failed to initialize Roboflow: {e}")
+    raise
+
+def image_recognition(request):
+    return render(request, 'app/image_recognition.html')
 
 #home
 def get_exchange_rate_data():
@@ -162,9 +185,81 @@ def money(request):
     }
     return render(request, 'app/money.html', {'currency_types': currency_types})
 
+# お金認識機能
+@csrf_exempt
+def start_camera(request):
+    try:
+        logger.info("Camera access requested")
+        return JsonResponse({"status": "success", "message": "Camera access granted"})
+    except Exception as e:
+        logger.error(f"Error in start_camera: {e}")
+        return JsonResponse({"status": "error", "message": str(e)}, status=500)
 
+@csrf_exempt
+def video_feed(request, stream_id):
+    if request.method == 'POST':
+        try:
+            logger.debug("Received POST request for video feed")
+            
+            # POSTされたフレームデータを取得
+            frame_data = request.body
+            logger.debug(f"Received frame data size: {len(frame_data)} bytes")
+            
+            # バイナリデータをnumpy配列に変換
+            nparr = np.frombuffer(frame_data, np.uint8)
+            frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            
+            if frame is None:
+                logger.error("Failed to decode frame data")
+                return JsonResponse({"error": "Invalid frame data"}, status=400)
+            
+            # Roboflowで予測
+            prediction_result = model.predict(frame, confidence=40, overlap=30).json()
+            
+            # 予測結果の処理
+            processed_predictions = []
+            for detection in prediction_result['predictions']:
+                x = int(detection['x'] - detection['width'] / 2)
+                y = int(detection['y'] - detection['height'] / 2)
+                width = int(detection['width'])
+                height = int(detection['height'])
+                
+                cv2.rectangle(frame, (x, y), (x + width, y + height), (0, 255, 0), 2)
+                cv2.putText(frame, 
+                           f"{detection['class']} ({detection['confidence']:.2f})", 
+                           (x, y - 10), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 
+                           0.5, (0, 255, 0), 2)
+                
+                processed_predictions.append({
+                    "class": detection['class'],
+                    "confidence": detection['confidence'],
+                    "x": x,
+                    "y": y,
+                    "width": width,
+                    "height": height
+                })
+            
+            # 処理済みフレームをBase64エンコード
+            _, buffer = cv2.imencode('.jpg', frame)
+            image_base64 = base64.b64encode(buffer).decode('utf-8')
+            
+            return JsonResponse({
+                "status": "success",
+                "predictions": processed_predictions,
+                "image": image_base64
+            })
+            
+        except Exception as e:
+            logger.error(f"Error processing frame: {e}", exc_info=True)
+            return JsonResponse({
+                "status": "error",
+                "message": str(e),
+                "type": "processing_error"
+            }, status=500)
+
+    return JsonResponse({"status": "error", "message": "GET method not supported"}, status=405)
+
+# AIchat機能
 def mitei(request):
     return render(request, 'app/mitei.html')
-
-def image_recognition(request):
-    return render(request, 'app/image_recognition.html')
