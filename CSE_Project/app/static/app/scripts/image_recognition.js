@@ -1,6 +1,6 @@
 // image_recognition.js
 
-// CSRF tokenの取得関数
+// Function to get CSRF token
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -14,59 +14,59 @@ function getCookie(name) {
         }
     }
     return cookieValue;
-}
-
-const csrftoken = getCookie('csrftoken');
-
-let stream = null;
-let videoElement = document.getElementById('video_preview');
-let processedVideo = document.getElementById('processed_video');
-let canvas = document.getElementById('canvas');
-let streamInterval;
-let isProcessing = false;
-
-async function enumerateDevices() {
+ }
+ 
+ const csrftoken = getCookie('csrftoken');
+ 
+ let stream = null;
+ let videoElement = document.getElementById('video_preview');
+ let processedVideo = document.getElementById('processed_video');
+ let canvas = document.getElementById('canvas');
+ let streamInterval;
+ let isProcessing = false;
+ 
+ async function enumerateDevices() {
     try {
         const devices = await navigator.mediaDevices.enumerateDevices();
         const videoDevices = devices.filter(device => device.kind === 'videoinput');
         const select = document.getElementById('cameraSelect');
         
-        select.innerHTML = '<option value="">カメラを選択してください</option>';
+        select.innerHTML = '<option value="">Please select a camera</option>';
         
         videoDevices.forEach(device => {
             const option = document.createElement('option');
             option.value = device.deviceId;
-            option.text = device.label || `カメラ ${select.length}`;
+            option.text = device.label || `Camera ${select.length}`;
             select.appendChild(option);
         });
     } catch (error) {
-        console.error("デバイス列挙エラー:", error);
-        showError("カメラの列挙に失敗しました。");
+        console.error("Device enumeration error:", error);
+        showError("Failed to enumerate cameras.");
     }
-}
-
-navigator.mediaDevices.getUserMedia({ video: true })
+ }
+ 
+ navigator.mediaDevices.getUserMedia({ video: true })
     .then(stream => {
         stream.getTracks().forEach(track => track.stop());
         return enumerateDevices();
     })
     .catch(error => {
-        console.error("カメラアクセスエラー:", error);
-        showError("カメラへのアクセスに失敗しました。");
+        console.error("Camera access error:", error);
+        showError("Failed to access camera.");
     });
-
-async function startCamera() {
+ 
+ async function startCamera() {
     const deviceId = document.getElementById('cameraSelect').value;
     if (!deviceId) {
-        showError("カメラを選択してください。");
+        showError("Please select a camera.");
         return;
     }
-
+ 
     try {
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
         }
-
+ 
         stream = await navigator.mediaDevices.getUserMedia({
             video: {
                 deviceId: deviceId ? { exact: deviceId } : undefined,
@@ -96,12 +96,12 @@ async function startCamera() {
         document.getElementById('errorMessage').style.display = 'none';
         
     } catch (error) {
-        console.error("カメラアクセスエラー:", error);
-        showError("カメラへのアクセスに失敗しました。");
+        console.error("Camera access error:", error);
+        showError("Failed to access camera.");
     }
-}
-
-function startStreaming() {
+ }
+ 
+ function startStreaming() {
     const ctx = canvas.getContext('2d');
     
     if (streamInterval) {
@@ -131,7 +131,7 @@ function startStreaming() {
             if (!response.ok) {
                 throw new Error(`Server responded with ${response.status}`);
             }
-
+ 
             const data = await response.json();
             console.log('Response data:', data);
             
@@ -142,27 +142,27 @@ function startStreaming() {
             updateDetectionResults(data);
             
         } catch (error) {
-            console.error("フレーム処理エラー:", error);
+            console.error("Frame processing error:", error);
         } finally {
             isProcessing = false;
         }
         
     }, 100);
-}
-
-function updateDetectionResults(data) {
+ }
+ 
+ function updateDetectionResults(data) {
     let jpyTotal = 0;
     let twdTotal = 0;
     const detectedItems = document.getElementById('detectedItems');
     detectedItems.innerHTML = '';
-
+ 
     if (data.predictions && Array.isArray(data.predictions)) {
         data.predictions.forEach(pred => {
             const item = document.createElement('div');
             item.className = 'detected-item';
             item.textContent = `${pred.class} (${(pred.confidence * 100).toFixed(1)}%)`;
             detectedItems.appendChild(item);
-
+ 
             const label = pred.class;
             if (label.match(/^\d+$/)) {
                 jpyTotal += parseInt(label);
@@ -172,22 +172,22 @@ function updateDetectionResults(data) {
             }
         });
     }
-
+ 
     document.getElementById('jpyTotal').textContent = jpyTotal.toLocaleString();
     document.getElementById('twdTotal').textContent = twdTotal.toLocaleString();
-}
-
-function showError(message) {
+ }
+ 
+ function showError(message) {
     const errorMessage = document.getElementById('errorMessage');
     errorMessage.textContent = message;
     errorMessage.style.display = 'block';
-}
-
-window.onbeforeunload = function() {
+ }
+ 
+ window.onbeforeunload = function() {
     if (stream) {
         stream.getTracks().forEach(track => track.stop());
     }
     if (streamInterval) {
         clearInterval(streamInterval);
     }
-};
+ };
