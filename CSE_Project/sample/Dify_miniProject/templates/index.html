@@ -1,7 +1,8 @@
+<!-- templates/index.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dify Chat Interface</title>
+    <title>Dify Workflow Chat Interface</title>
     <style>
         #chat-container {
             max-width: 600px;
@@ -15,21 +16,41 @@
             margin-bottom: 20px;
             padding: 10px;
         }
+        #input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
         #message-input {
-            width: 80%;
+            flex: 1;
+            padding: 10px;
+        }
+        #select-input {
+            width: 150px;
             padding: 10px;
         }
         #send-button {
-            width: 18%;
+            width: 100px;
             padding: 10px;
+        }
+        .error-message {
+            color: red;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
     <div id="chat-container">
         <div id="chat-messages"></div>
-        <input type="text" id="message-input" placeholder="メッセージを入力...">
-        <button id="send-button">送信</button>
+        <div id="input-container">
+            <input type="text" id="message-input" placeholder="メッセージを入力...">
+            <select id="select-input">
+                <option value="option1">A</option>
+                <option value="option2">B</option>
+                <option value="option3">C</option>
+            </select>
+            <button id="send-button">送信</button>
+        </div>
     </div>
 
     <script>
@@ -42,38 +63,45 @@
 
         function sendMessage() {
             const input = document.getElementById('message-input');
+            const select = document.getElementById('select-input');
             const message = input.value.trim();
+            const selectedOption = select.value;
+            
             if (!message) return;
 
-            // メッセージを表示
             addMessage('User: ' + message);
             input.value = '';
 
-            // サーバーにリクエストを送信
             fetch('/ask', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ message: message })
+                body: JSON.stringify({
+                    message: message,
+                    select: selectedOption
+                })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
-                    addMessage('Error: ' + data.error);
+                    addMessage('Error: ' + data.error, true);
                 } else {
                     addMessage('AI: ' + data.answer);
                 }
             })
             .catch(error => {
-                addMessage('Error: ' + error.message);
+                addMessage('Error: ' + error.message, true);
             });
         }
 
-        function addMessage(message) {
+        function addMessage(message, isError = false) {
             const messagesDiv = document.getElementById('chat-messages');
             const messageElement = document.createElement('p');
             messageElement.textContent = message;
+            if (isError) {
+                messageElement.classList.add('error-message');
+            }
             messagesDiv.appendChild(messageElement);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
