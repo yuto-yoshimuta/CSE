@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 
 services:
   web:
@@ -9,5 +9,12 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DJANGO_SETTINGS_MODULE=CSE_Project.settings
+      - DEBUG=1
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
       - PYTHONUNBUFFERED=1
+    devices:
+      - /dev/video0:/dev/video0
+    # rootlessで動作させるための設定
+    security_opt:
+      - no-new-privileges:true
+    user: appuser
