@@ -1,48 +1,155 @@
-/* Exchange Rate ページ固有のスタイル */
+/* Exchange Rate Page Styles */
+
+/* Main Container */
 .container {
     max-width: 500px;
-    margin: 20px auto;
+    margin: 150px auto 80px; /* Adjusted for fixed header */
     padding: 30px;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.95);
     border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
 }
 
-input, select {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 30px;
+.container:hover {
+    transform: translateY(-2px);
+}
+
+/* Form Styling */
+#conversion-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Label Styling */
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #333;
     font-size: 16px;
 }
 
-button {
+/* Form Input Elements */
+input, select {
+    width: 100%;
     padding: 12px 20px;
+    margin: 5px 0;
+    border: 2px solid #e0e0e0;
+    border-radius: 30px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background-color: #ffffff;
+    box-sizing: border-box;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #2196F3;
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Submit Button */
+button {
+    width: 100%;
+    padding: 14px 24px;
+    margin-top: 20px;
     background-color: #2196F3;
-    color: #fff;
+    color: #ffffff;
     border: none;
     border-radius: 30px;
-    cursor: pointer;
     font-size: 18px;
-    transition: background 0.3s, transform 0.3s;
-    width: 100%;
-    margin-top: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 button:hover {
     background-color: #1976D2;
-    transform: scale(1.05);
+    transform: scale(1.03);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+button:active {
+    transform: scale(0.98);
+}
+
+/* Results Display */
 #result {
-    margin-top: 20px;
+    margin-top: 24px;
+    padding: 16px;
     font-size: 18px;
     text-align: center;
     animation: fadeIn 0.5s ease-in-out;
+    background-color: #f5f5f5;
+    border-radius: 12px;
+    color: #333333;
 }
 
+/* Animation */
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from { 
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        margin: 100px 20px 40px;
+        padding: 20px;
+    }
+
+    input, select {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+
+    button {
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+
+    #result {
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    label {
+        font-size: 14px;
+    }
+}
+
+/* Additional Accessibility Enhancements */
+input::placeholder {
+    color: #999;
+}
+
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    padding-right: 2.5em;
+}
+
+/* Focus State Accessibility */
+input:focus, select:focus, button:focus {
+    outline: none;
+    border-color: #2196F3;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.25);
 }

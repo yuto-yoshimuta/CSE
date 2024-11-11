@@ -1,4 +1,9 @@
-/* base.css */
+/*
+* Base styles for Cash Scan Explore
+* Main styling file containing global styles and layout components
+*/
+
+/* Reset and Base Styles */
 body {
     font-family: 'Fredoka One', cursive;
     margin: 0;
@@ -7,108 +12,164 @@ body {
     color: #333;
     background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
     min-height: 100vh;
-}
-
-h1, h2, h3, h4, h5, h6 {
+    letter-spacing: 0.5px;
+ }
+ 
+ /* Typography */
+ h1, h2, h3, h4, h5, h6 {
     font-family: 'Fredoka One', cursive;
-}
-
-/* ヘッダーのスタイル */
-header {
+    margin-bottom: 1rem;
+    line-height: 1.2;
+ }
+ 
+ /* Header Layout and Styling */
+ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 0;
-    background-color: rgba(255, 255, 255, 0.8);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.25rem 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 10;
-}
-
-.logo {
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+ }
+ 
+ /* Logo Container */
+ .logo {
     display: flex;
     align-items: center;
-    padding: 0 20px;
-}
-
-.logo img {
+    padding: 0 1.25rem;
+ }
+ 
+ .logo img {
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
-}
-
-.logo a {
+    width: 3.125rem;
+    height: 3.125rem;
+    margin-right: 0.625rem;
+    transition: transform 0.3s ease;
+ }
+ 
+ .logo img:hover {
+    transform: scale(1.1);
+ }
+ 
+ .logo a {
     font-size: 1.5em;
     color: #333;
     text-decoration: none;
-}
-
-/* ヘッダーのボタンスタイル */
-.header-buttons {
+    transition: color 0.3s ease;
+ }
+ 
+ .logo a:hover {
+    color: #4CAF50;
+ }
+ 
+ /* Header Navigation */
+ .header-buttons {
     display: flex;
     align-items: center;
-    padding: 0 20px;
-}
-
-.header-buttons a {
+    padding: 0 1.25rem;
+    gap: 0.625rem;
+ }
+ 
+ .header-buttons a {
     text-decoration: none;
     color: #fff;
-    padding: 10px 20px;
-    border-radius: 30px;
-    transition: background 0.3s, transform 0.3s;
+    padding: 0.625rem 1.25rem;
+    border-radius: 1.875rem;
+    transition: all 0.3s ease;
     font-weight: bold;
-    text-shadow: -0.5px -0.5px 0 #444, 0.5px -0.5px 0 #444, -0.5px 0.5px 0 #444, 0.5px 0.5px 0 #444;
-    margin-left: 10px;
-}
-
-/* 各ボタンのスタイル */
-.btn-mitei {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    margin-left: 0.625rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+ }
+ 
+ /* Navigation Button Styles */
+ .btn-mitei {
     background: #FF5722;
-}
-.btn-mitei:hover {
+    box-shadow: 0 2px 4px rgba(255, 87, 34, 0.3);
+ }
+ .btn-mitei:hover {
     background: #E64A19;
-    transform: scale(1.05);
-}
-.btn-exchange {
+    transform: translateY(-2px) scale(1.05);
+ }
+ 
+ .btn-exchange {
     background: #4CAF50;
-}
-.btn-exchange:hover {
+    box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+ }
+ .btn-exchange:hover {
     background: #388E3C;
-    transform: scale(1.05);
-}
-.btn-recognition {
+    transform: translateY(-2px) scale(1.05);
+ }
+ 
+ .btn-recognition {
     background: #FFC107;
-}
-.btn-recognition:hover {
+    box-shadow: 0 2px 4px rgba(255, 193, 7, 0.3);
+ }
+ .btn-recognition:hover {
     background: #FFA000;
-    transform: scale(1.05);
-}
-.btn-money {
+    transform: translateY(-2px) scale(1.05);
+ }
+ 
+ .btn-money {
     background: #6495ED;
-}
-.btn-money:hover {
+    box-shadow: 0 2px 4px rgba(100, 149, 237, 0.3);
+ }
+ .btn-money:hover {
     background: #1f4da2;
-    transform: scale(1.05);
-}
-
-/* フッター */
-footer {
+    transform: translateY(-2px) scale(1.05);
+ }
+ 
+ /* Footer Styling */
+ footer {
     position: relative;
     left: 0;
     bottom: 0;
     width: 100%;
     text-align: center;
-    padding: 20px 0;
-    background-color: rgba(0, 0, 0, 0.8);
+    padding: 1.25rem 0;
+    background-color: rgba(0, 0, 0, 0.9);
     color: #fff;
-}
-
-/* メインコンテンツ */
-main {
-    padding-top: 100px;
-    min-height: calc(100vh - 140px);
-}
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+ }
+ 
+ /* Main Content Area */
+ main {
+    padding-top: 6.25rem;
+    min-height: calc(100vh - 8.75rem);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+ }
+ 
+ /* Responsive Design */
+ @media (max-width: 768px) {
+    .header-buttons {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+ 
+    .header-buttons a {
+        margin: 0.3125rem;
+    }
+ 
+    main {
+        padding-top: 8rem;
+    }
+ }
+ 
+ /* Accessibility */
+ @media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+ }
