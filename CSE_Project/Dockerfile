@@ -4,7 +4,7 @@ FROM python:3.9-slim
 # 作業ディレクトリの設定
 WORKDIR /app
 
-# 必要なシステムパッケージのインストール（gitを追加）
+# 必要なパッケージのインストール（日本語フォントを追加）
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgl1-mesa-glx \
     libglib2.0-0 \
@@ -14,7 +14,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     python3-dev \
     git \
+    fonts-noto-cjk \
     && rm -rf /var/lib/apt/lists/*
+
+# matplotlibの設定ファイルを作成
+RUN mkdir -p /root/.config/matplotlib && \
+    echo "backend : Agg" > /root/.config/matplotlib/matplotlibrc
 
 # Python依存関係のインストール
 COPY requirements.txt .

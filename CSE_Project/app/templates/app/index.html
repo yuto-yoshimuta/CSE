@@ -46,7 +46,11 @@
         </div>
 
         <div class="graph-space">
-            <img alt="Exchange Rate Plot" border="5" src="data:image/png;base64,{{ graph_data }}" style="max-width: 100%; height: auto;"/>
+            {% if graph_data %}
+                <img alt="Exchange Rate Plot" border="5" src="data:image/png;base64,{{ graph_data }}" style="max-width: 100%; height: auto;"/>
+            {% else %}
+                <p>グラフデータを読み込めません</p>
+            {% endif %}
         </div>
 
         <div class="button-section">

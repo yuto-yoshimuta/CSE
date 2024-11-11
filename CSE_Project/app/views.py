@@ -43,122 +43,152 @@ class ExchangeRateData:
 
 def get_exchange_rate_data() -> Optional[List[ExchangeRate]]:
     """
-    Fetch exchange rate data with caching mechanism
-    
-    Returns:
-        Optional[List[ExchangeRate]]: List of exchange rate objects or None if fetch fails
+    Fetch exchange rate data with improved caching mechanism
     """
     end = datetime.now().date()
     start = end - timedelta(days=365)
     currency_pair = 'TWDJPY'
     
-    # Check cache
-    cache_key = f'exchange_rate_data_{currency_pair}'
-    cached_data = cache.get(cache_key)
-    if cached_data:
-        return cached_data
-    
-    # Get data from database
-    rates = ExchangeRate.objects.filter(
-        currency_pair=currency_pair,
-        date__gte=start
-    ).order_by('date')
-    
-    # Fetch new data if not exists
-    if not rates.exists():
-        try:
-            df = yf.download(f'{currency_pair}=X', start=start, end=end)
-            bulk_create_list = []
-            for index, row in df.iterrows():
-                bulk_create_list.append(
-                    ExchangeRate(
-                        date=index.date(),
-                        rate=float(row['Close']),
-                        currency_pair=currency_pair
-                    )
+    try:
+        # Always fetch new data from yfinance
+        df = yf.download(f'{currency_pair}=X', start=start, end=end)
+        
+        # Delete old data
+        ExchangeRate.objects.filter(
+            currency_pair=currency_pair,
+            date__gte=start
+        ).delete()
+        
+        # Create new records
+        bulk_create_list = []
+        for index, row in df.iterrows():
+            bulk_create_list.append(
+                ExchangeRate(
+                    date=index.date(),
+                    rate=float(row['Close']),
+                    currency_pair=currency_pair
                 )
-            ExchangeRate.objects.bulk_create(bulk_create_list)
-            rates = ExchangeRate.objects.filter(
-                currency_pair=currency_pair,
-                date__gte=start
-            ).order_by('date')
-        except Exception as e:
-            logger.error(f"Error fetching data: {e}")
-            return None
-    
-    # Cache data for 1 hour
-    cache.set(cache_key, rates, 3600)
-    return rates
+            )
+        
+        # Bulk create new records
+        ExchangeRate.objects.bulk_create(bulk_create_list)
+        
+        # Get all rates ordered by date
+        rates = ExchangeRate.objects.filter(
+            currency_pair=currency_pair,
+            date__gte=start
+        ).order_by('date')
+        
+        return rates
+        
+    except Exception as e:
+        logger.error(f"Error fetching data: {e}")
+        # Fallback to database if API fails
+        rates = ExchangeRate.objects.filter(
+            currency_pair=currency_pair,
+            date__gte=start
+        ).order_by('date')
+        
+        if rates.exists():
+            return rates
+        return None
 
 def generate_graph(rates: List[ExchangeRate]) -> Tuple[Optional[str], Optional[float], Optional[str]]:
     """
-    Generate graph from exchange rate data
-    
-    Args:
-        rates (List[ExchangeRate]): List of exchange rate objects
-    
-    Returns:
-        Tuple[Optional[str], Optional[float], Optional[str]]: 
-            (base64 encoded graph, latest rate, timestamp)
+    Generate graph from exchange rate data with improved error handling and font settings
     """
+    import matplotlib.pyplot as plt
+    import matplotlib as mpl
+    
+    # Configure matplotlib
+    mpl.rc('font', family='Noto Sans CJK JP')
+    mpl.use('Agg')
+    
+    fig = None
+    buffer = None
     try:
-        fig = plt.figure(figsize=(10, 5))
+        # Clear any existing plots
+        plt.clf()
+        plt.close('all')
+        
+        # Create new figure with specific DPI
+        fig, ax = plt.subplots(figsize=(10, 5), dpi=100)
+        
+        # Prepare data
         dates = [rate.date for rate in rates]
         values = [rate.rate for rate in rates]
         
-        plt.plot(dates, values, label='TWD/JPY')
-        plt.title('TWD/JPY Exchange Rate', fontsize=14)
-        plt.xlabel('Date', fontsize=12)
-        plt.ylabel('Exchange Rate (TWD/JPY)', fontsize=12)
-        plt.grid(True)
-        plt.legend()
+        # Plot data
+        ax.plot(dates, values, label='TWD/JPY', color='#4CAF50', linewidth=2)
+        
+        # Configure plot
+        ax.set_title('TWD/JPY Exchange Rate', fontsize=14, pad=20)
+        ax.set_xlabel('Date', fontsize=12)
+        ax.set_ylabel('Exchange Rate (TWD/JPY)', fontsize=12)
+        ax.grid(True, linestyle='--', alpha=0.7)
+        ax.legend(loc='upper right')
 
-        latest_rate = rates.first().rate
+        # Rotate and align the tick labels so they look better
+        plt.setp(ax.get_xticklabels(), rotation=45, ha='right')
+        
+        # Use a tight layout
+        plt.tight_layout()
+
+        # Add rate and timestamp
+        latest_rate = rates.last().rate if rates else 0
         current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
-        # Add rate and timestamp
-        plt.figtext(0.05, 0.98, f'1 TWD = {latest_rate:.2f} JPY', 
-                   fontsize=12, ha='left', va='top')
-        plt.figtext(0.99, 0.01, f'Last updated: {current_datetime}', 
-                   horizontalalignment='right')
+        fig.text(0.05, 0.95, f'1 TWD = {latest_rate:.2f} JPY', 
+                fontsize=12, ha='left', va='top')
+        fig.text(0.95, 0.02, f'Last updated: {current_datetime}', 
+                fontsize=10, ha='right')
 
-        # Convert to base64
+        # Save to buffer
         buffer = io.BytesIO()
-        plt.savefig(buffer, format='png', bbox_inches='tight', dpi=300)
+        fig.savefig(buffer, format='png', bbox_inches='tight', dpi=100)
         buffer.seek(0)
         graph = base64.b64encode(buffer.getvalue()).decode('utf-8')
-        
-        # Cleanup
-        plt.close(fig)
-        buffer.close()
         
         return graph, latest_rate, current_datetime
     
     except Exception as e:
         logger.error(f"Error generating graph: {e}")
-        if 'fig' in locals():
-            plt.close(fig)
         return None, None, None
+    
+    finally:
+        if fig is not None:
+            plt.close(fig)
+        if buffer is not None:
+            buffer.close()
 
 def index(request):
-    """Main view function for the homepage"""
+    """Main view function for the homepage with improved error handling"""
     try:
+        # Clear matplotlib's cache
+        plt.clf()
+        plt.close('all')
+        
         rates = get_exchange_rate_data()
         if rates is None:
+            logger.error("Failed to fetch exchange rate data")
             return render(request, 'app/index.html', {
-                'error': 'Failed to fetch exchange rate data.'
+                'error': 'Failed to fetch exchange rate data.',
+                'graph_data': None
             })
 
         graph_data, latest_rate, last_updated = generate_graph(rates)
         if graph_data is None:
+            logger.error("Failed to generate graph")
             return render(request, 'app/index.html', {
-                'error': 'Failed to generate graph.'
+                'error': 'Failed to generate graph.',
+                'graph_data': None
             })
 
         context = {
             'graph_data': graph_data,
             'latest_rate': latest_rate,
-            'last_updated': last_updated
+            'last_updated': last_updated,
+            'error': None
         }
         
         return render(request, 'app/index.html', context)
@@ -166,7 +196,8 @@ def index(request):
     except Exception as e:
         logger.error(f"Error in index view: {e}")
         return render(request, 'app/index.html', {
-            'error': 'An unexpected error occurred.'
+            'error': 'An unexpected error occurred.',
+            'graph_data': None
         })
 
 # Currency conversion page views
