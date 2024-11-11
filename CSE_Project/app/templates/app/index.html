@@ -46,10 +46,23 @@
         </div>
 
         <div class="graph-space">
+            {% if error_message %}
+                <div class="error-message">
+                    {{ error_message }}
+                </div>
+            {% endif %}
+            
             {% if graph_data %}
-                <img alt="Exchange Rate Plot" border="5" src="data:image/png;base64,{{ graph_data }}" style="max-width: 100%; height: auto;"/>
+                <img alt="Exchange Rate Plot" 
+                     border="5" 
+                     src="data:image/png;base64,{{ graph_data }}" 
+                     style="max-width: 100%; height: auto;"/>
             {% else %}
-                <p>グラフデータを読み込めません</p>
+                {% if not error_message %}
+                    <div class="loading-message">
+                        グラフデータを読み込み中...
+                    </div>
+                {% endif %}
             {% endif %}
         </div>
 
@@ -100,5 +113,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'app/scripts/app.js' %}"></script>
+    {{ block.super }}
+    <script src="{% static 'app/scripts/app.js' %}"></script>
+    <script src="{% static 'app/scripts/graph_updater.js' %}"></script>
 {% endblock %}

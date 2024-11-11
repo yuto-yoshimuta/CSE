@@ -14,4 +14,5 @@ urlpatterns = [
     path('video_feed/<str:stream_id>', views.video_feed, name='video_feed'),
     path('money/', views.money, name='money'),  # お金説明
     path('convert/', views.convert_currency, name='convert_currency'),  # 為替変換用
+    path('get_updated_graph/', views.get_updated_graph, name='get_updated_graph'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
