@@ -16,7 +16,7 @@ else:
     print("モデルが正常に読み込まれました。")
 
 # カメラのキャプチャ開始
-cap = cv2.VideoCapture(1)  # '0'はデフォルトのカメラを指定
+cap = cv2.VideoCapture(0)  # '0'はデフォルトのカメラを指定
 
 while cap.isOpened():
     ret, frame = cap.read()
