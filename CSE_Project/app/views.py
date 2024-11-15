@@ -28,9 +28,9 @@ logger = logging.getLogger(__name__)
 
 # Initialize Roboflow client
 try:
-    rf = Roboflow(api_key="X6ALu0a2v4EeuHuJoa0V")
-    project = rf.workspace().project("jpdtwd")
-    model = project.version(3).model
+    rf = Roboflow(api_key="4jFLZZIZSslfmqbOl4lq")
+    project = rf.workspace().project("jpytwd")
+    model = project.version(1).model
     logger.info("Roboflow model loaded successfully")
 except Exception as e:
     logger.error(f"Failed to initialize Roboflow: {e}")

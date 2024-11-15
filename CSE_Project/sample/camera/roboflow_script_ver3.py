@@ -4,10 +4,10 @@ from roboflow import Roboflow
 import time
 
 # RoboflowのAPIキーとモデル情報
-rf = Roboflow(api_key="X6ALu0a2v4EeuHuJoa0V")
+rf = Roboflow(api_key="4jFLZZIZSslfmqbOl4lq")
 workspace = rf.workspace()
-project = workspace.project("jpdtwd")
-model = project.version(3).model
+project = workspace.project("jpytwd")
+model = project.version(1).model
 
 def preprocess_frame(frame):
     """フレームの前処理を行う関数"""
