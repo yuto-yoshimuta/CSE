@@ -96,7 +96,7 @@ class GraphService:
             plt.close('all')
             
             fig, ax = plt.subplots(figsize=(10, 5), dpi=100)
-            jst = pytz.timezone('Asia/Tokyo')
+            jst = pytz.timezone('Asia/Taipei')
             current_datetime = datetime.now(jst).strftime("%Y-%m-%d %H:%M:%S")
             
             dates = [rate.date for rate in rates]
@@ -119,7 +119,7 @@ class GraphService:
             
             plt.figtext(0.05, 0.95, f'1 TWD = {latest_rate:.2f} JPY', 
                        fontsize=12, ha='left', va='top')
-            plt.figtext(0.95, 0.02, f'Last updated: {current_datetime} (JST)', 
+            plt.figtext(0.95, 0.02, f'Last updated: {current_datetime} (TST)', 
                        fontsize=10, ha='right')
             
             buffer = io.BytesIO()
