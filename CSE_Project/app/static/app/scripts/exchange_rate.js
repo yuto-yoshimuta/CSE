@@ -1,5 +1,9 @@
-// CSRFトークンの設定
-function getCookie(name) {
+/**
+ * Get CSRF token from cookies
+ * @returns {string|null} CSRF token value
+ */
+function getCsrfToken() {
+    const name = 'csrftoken';
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
@@ -14,34 +18,84 @@ function getCookie(name) {
     return cookieValue;
 }
 
-$(document).ready(function() {
-    const csrftoken = getCookie('csrftoken');
+/**
+ * Show/hide loading overlay
+ * @param {boolean} show - Whether to show or hide the overlay
+ */
+function showLoading(show = true) {
+    document.getElementById('loading-overlay').style.display = show ? 'flex' : 'none';
+}
 
-    $('#conversion-form').on('submit', function(e) {
-        e.preventDefault();
-        
-        const amount = $('#amount').val();
-        const fromCurrency = $('#from_currency').val();
-        const toCurrency = $('#to_currency').val();
+/**
+ * Update the conversion result display
+ * @param {Object} data - Response data containing conversion results
+ */
+function updateConversionResult(data) {
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = `
+        <div class="conversion-result">
+            <p class="result-text">${data.formatted_result}</p>
+            <p class="rate-text">${data.formatted_rate}</p>
+            <p class="conversion-time">Converted at: ${data.conversion_time} (Taipei Time)</p>
+        </div>
+    `;
+}
 
-        $.ajax({
-            url: '/convert/',  // 新しいエンドポイント
-            type: 'POST',
-            headers: {'X-CSRFToken': csrftoken},
-            data: {
-                amount: amount,
-                from_currency: fromCurrency,
-                to_currency: toCurrency
+/**
+ * Handle form submission for currency conversion
+ * @param {Event} event - Form submission event
+ */
+async function handleFormSubmit(event) {
+    event.preventDefault();
+    showLoading(true);
+
+    try {
+        const form = event.target;
+        const formData = new FormData(form);
+
+        const response = await fetch('/convert/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCsrfToken()
             },
-            success: function(response) {
-                $('#result').html(`
-                    <p>${amount} ${fromCurrency} = ${response.result} ${toCurrency}</p>
-                    <p>Exchange rate: 1 ${fromCurrency} = ${response.rate} ${toCurrency}</p>
-                `);
-            },
-            error: function(error) {
-                $('#result').html('<p>Error occurred during conversion.</p>');
-            }
+            body: formData
         });
-    });
-});
+        
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Conversion failed');
+        }
+
+        updateConversionResult(data);
+    } catch (error) {
+        document.getElementById('result').innerHTML = `
+            <div class="error">Error: ${error.message}</div>
+        `;
+    } finally {
+        showLoading(false);
+    }
+}
+
+/**
+ * Initialize form event listeners
+ */
+function initializeForm() {
+    const form = document.getElementById('conversion-form');
+    if (form) {
+        form.addEventListener('submit', handleFormSubmit);
+    }
+
+    const amountInput = document.getElementById('amount');
+    if (amountInput) {
+        amountInput.addEventListener('input', (event) => {
+            const value = parseFloat(event.target.value);
+            event.target.setCustomValidity(
+                !value || value <= 0 ? 'Please enter a positive amount' : ''
+            );
+        });
+    }
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', initializeForm);

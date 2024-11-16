@@ -96,7 +96,7 @@ class GraphService:
             plt.close('all')
             
             fig, ax = plt.subplots(figsize=(10, 5), dpi=100)
-            jst = pytz.timezone('Asia/Tokyo')
+            jst = pytz.timezone('Asia/Taipei')
             current_datetime = datetime.now(jst).strftime("%Y-%m-%d %H:%M:%S")
             
             dates = [rate.date for rate in rates]
@@ -119,7 +119,7 @@ class GraphService:
             
             plt.figtext(0.05, 0.95, f'1 TWD = {latest_rate:.2f} JPY', 
                        fontsize=12, ha='left', va='top')
-            plt.figtext(0.95, 0.02, f'Last updated: {current_datetime} (JST)', 
+            plt.figtext(0.95, 0.02, f'Last updated: {current_datetime} (TST)', 
                        fontsize=10, ha='right')
             
             buffer = io.BytesIO()
@@ -271,27 +271,134 @@ def exchange_rate(request):
 
 @require_http_methods(["POST"])
 def convert_currency(request):
+    """
+    Currency conversion endpoint that handles POST requests
+    Parameters:
+        amount: float - Amount to convert
+        from_currency: str - Source currency code
+        to_currency: str - Target currency code
+    Returns:
+        JsonResponse with:
+        - result: float - Converted amount
+        - rate: float - Exchange rate
+        - formatted_result: str - Formatted conversion result
+        - formatted_rate: str - Formatted exchange rate
+        - conversion_time: str - Conversion timestamp in Taipei timezone
+    """
     try:
-        amount = float(request.POST.get('amount'))
-        from_currency = request.POST.get('from_currency')
-        to_currency = request.POST.get('to_currency')
-        
+        # Validate required parameters
+        if not all(key in request.POST for key in ['amount', 'from_currency', 'to_currency']):
+            return JsonResponse({
+                'error': 'Missing required parameters'
+            }, status=400)
+
+        # Get and convert parameters
+        try:
+            amount = float(request.POST.get('amount'))
+            from_currency = request.POST.get('from_currency')
+            to_currency = request.POST.get('to_currency')
+        except ValueError:
+            return JsonResponse({
+                'error': 'Invalid amount format'
+            }, status=400)
+
+        # Validate amount
+        if amount <= 0:
+            return JsonResponse({
+                'error': 'Amount must be greater than 0'
+            }, status=400)
+
+        logger.info(f"Converting {amount} {from_currency} to {to_currency}")
+
+        # Handle same currency case
         if from_currency == to_currency:
-            rate = 1.0
-        else:
+            current_time = datetime.now(pytz.timezone('Asia/Taipei')).strftime("%Y-%m-%d %H:%M:%S")
+            return JsonResponse({
+                'result': amount,
+                'rate': 1.0,
+                'formatted_result': f"{amount:,.2f} {to_currency}",
+                'formatted_rate': f"1 {from_currency} = 1.0000 {to_currency}",
+                'conversion_time': current_time
+            })
+
+        # Fetch exchange rate from Yahoo Finance
+        try:
             ticker = f"{from_currency}{to_currency}=X"
-            data = yf.download(ticker, period="1d")
-            rate = float(data['Close'].iloc[-1])
-        
-        result = amount * rate
-        
-        return JsonResponse({
-            'result': round(result, 2),
-            'rate': round(rate, 4)
-        })
+            df = yf.download(ticker, period="1d")
+            
+            if df.empty:
+                return JsonResponse({
+                    'error': 'Failed to fetch exchange rate'
+                }, status=400)
+
+            # Calculate conversion
+            current_rate = float(df['Close'].iloc[-1])
+            result = amount * current_rate
+            
+            # Get current time in Taipei timezone
+            current_time = datetime.now(pytz.timezone('Asia/Taipei')).strftime("%Y-%m-%d %H:%M:%S")
+
+            return JsonResponse({
+                'result': round(result, 2),
+                'rate': round(current_rate, 4),
+                'formatted_result': f"{amount:,.2f} {from_currency} = {result:,.2f} {to_currency}",
+                'formatted_rate': f"1 {from_currency} = {current_rate:.4f} {to_currency}",
+                'conversion_time': current_time
+            })
+
+        except Exception as e:
+            logger.error(f"Yahoo Finance error: {str(e)}")
+            return JsonResponse({
+                'error': 'Failed to fetch exchange rate'
+            }, status=400)
+
     except Exception as e:
-        logger.error(f"Error in currency conversion: {e}")
-        return JsonResponse({'error': str(e)}, status=500)
+        logger.error(f"Conversion error: {str(e)}")
+        return JsonResponse({
+            'error': 'An unexpected error occurred'
+        }, status=500)
+
+def get_exchange_rates(request):
+    """
+    Get current exchange rates for the rate table
+    """
+    try:
+        currencies = ['USD', 'EUR', 'JPY', 'TWD', 'CNY', 'HKD', 'KRW', 'SGD']
+        rates_jpy = {}
+        rates_twd = {}
+        changes = {}
+        
+        for curr in currencies:
+            if curr != 'JPY':
+                # JPYに対するレート取得
+                df_jpy = yf.download(f"{curr}JPY=X", period="2d")
+                if not df_jpy.empty:
+                    rates_jpy[curr] = float(df_jpy['Close'].iloc[-1])
+                    prev_rate = float(df_jpy['Close'].iloc[-2])
+                    changes[curr] = ((rates_jpy[curr] - prev_rate) / prev_rate) * 100
+            
+            if curr != 'TWD':
+                # TWDに対するレート取得
+                df_twd = yf.download(f"{curr}TWD=X", period="2d")
+                if not df_twd.empty:
+                    rates_twd[curr] = float(df_twd['Close'].iloc[-1])
+
+        # 日本時間で現在時刻を取得
+        jst = pytz.timezone('Asia/Tokyo')
+        current_time = datetime.now(jst).strftime("%Y-%m-%d %H:%M:%S")
+
+        return JsonResponse({
+            'rates_jpy': rates_jpy,
+            'rates_twd': rates_twd,
+            'changes': changes,
+            'last_updated': current_time
+        })
+
+    except Exception as e:
+        logger.error(f"Error fetching exchange rates: {str(e)}")
+        return JsonResponse({
+            'error': 'Failed to fetch exchange rates'
+        }, status=500)
 
 def money(request):
     currency_types = {
