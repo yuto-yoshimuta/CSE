@@ -1,155 +1,159 @@
-/* Exchange Rate Page Styles */
-
-/* Main Container */
+/* Container styles */
 .container {
-    max-width: 500px;
-    margin: 150px auto 80px; /* Adjusted for fixed header */
-    padding: 30px;
-    background-color: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+   max-width: 800px;
+   margin: 20px auto;
+   padding: 30px;
+   background: #fff;
+   border-radius: 15px;
+   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-.container:hover {
-    transform: translateY(-2px);
+.container h2 {
+   margin-bottom: 30px;
+   color: #333;
+   text-align: center;
 }
 
-/* Form Styling */
-#conversion-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* Label Styling */
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-    color: #333;
-    font-size: 16px;
-}
-
-/* Form Input Elements */
-input, select {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 5px 0;
-    border: 2px solid #e0e0e0;
-    border-radius: 30px;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    background-color: #ffffff;
-    box-sizing: border-box;
-}
-
-input:focus, select:focus {
-    outline: none;
-    border-color: #2196F3;
-    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
-}
-
-/* Form Groups */
+/* Form styles */
 .form-group {
-    margin-bottom: 15px;
+   margin-bottom: 20px;
+   /* Add this to contain the form elements */
+   width: 100%;
 }
 
-/* Submit Button */
-button {
-    width: 100%;
-    padding: 14px 24px;
-    margin-top: 20px;
-    background-color: #2196F3;
-    color: #ffffff;
-    border: none;
-    border-radius: 30px;
-    font-size: 18px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+.form-group label {
+   display: block;
+   margin-bottom: 8px;
+   font-weight: bold;
+   color: #333;
 }
 
-button:hover {
-    background-color: #1976D2;
-    transform: scale(1.03);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.form-input, 
+.form-select {
+   display: block; /* Add this */
+   width: 100%;
+   padding: 12px 15px;
+   border: 2px solid #e0e0e0;
+   border-radius: 8px;
+   font-size: 16px;
+   transition: border-color 0.3s ease;
+   box-sizing: border-box; /* Add this */
 }
 
-button:active {
-    transform: scale(0.98);
+.form-input:focus, 
+.form-select:focus {
+   border-color: #4CAF50;
+   outline: none;
 }
 
-/* Results Display */
-#result {
-    margin-top: 24px;
-    padding: 16px;
-    font-size: 18px;
-    text-align: center;
-    animation: fadeIn 0.5s ease-in-out;
-    background-color: #f5f5f5;
-    border-radius: 12px;
-    color: #333333;
+.convert-btn {
+   width: 100%;
+   padding: 15px;
+   background: #4CAF50;
+   color: white;
+   border: none;
+   border-radius: 8px;
+   font-size: 16px;
+   font-weight: bold;
+   cursor: pointer;
+   transition: background-color 0.3s ease;
+   margin-top: 10px; /* Add some space above the button */
 }
 
-/* Animation */
-@keyframes fadeIn {
-    from { 
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to { 
-        opacity: 1;
-        transform: translateY(0);
-    }
+.convert-btn:hover {
+   background: #45a049;
 }
 
-/* Responsive Design */
+/* Result container */
+.result-container {
+   margin: 20px 0;
+   padding: 20px;
+   background: #f8f9fa;
+   border-radius: 8px;
+   text-align: center;
+}
+
+.conversion-result {
+   font-size: 1.4em;
+   font-weight: 600;
+   color: #333;
+   margin-bottom: 10px;
+}
+
+.result-text {
+   margin-bottom: 10px;
+}
+
+.rate-text {
+   color: #666;
+   font-size: 0.9em;
+}
+
+.conversion-time {
+   color: #666;
+   font-size: 0.8em;
+   margin-top: 10px;
+}
+
+/* Loading overlay */
+.loading-overlay {
+   display: none;
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background: rgba(255, 255, 255, 0.8);
+   z-index: 1000;
+}
+
+.loader {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   width: 50px;
+   height: 50px;
+   border: 5px solid #f3f3f3;
+   border-top: 5px solid #4CAF50;
+   border-radius: 50%;
+   animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+   0% { transform: translate(-50%, -50%) rotate(0deg); }
+   100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Error message */
+.error {
+   background-color: #fff5f5;
+   color: #e53e3e;
+   padding: 12px 16px;
+   border-radius: 8px;
+   margin: 10px 0;
+   border: 1px solid #fed7d7;
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
-    .container {
-        margin: 100px 20px 40px;
-        padding: 20px;
-    }
+   .container {
+       margin: 10px;
+       padding: 15px;
+   }
 
-    input, select {
-        padding: 10px 15px;
-        font-size: 14px;
-    }
+   .form-input,
+   .form-select,
+   .convert-btn {
+       font-size: 14px;
+       padding: 10px;
+   }
 
-    button {
-        padding: 12px 20px;
-        font-size: 16px;
-    }
+   .result-container {
+       padding: 15px;
+   }
 
-    #result {
-        font-size: 16px;
-        padding: 12px;
-    }
-
-    label {
-        font-size: 14px;
-    }
-}
-
-/* Additional Accessibility Enhancements */
-input::placeholder {
-    color: #999;
-}
-
-select {
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 1em;
-    padding-right: 2.5em;
-}
-
-/* Focus State Accessibility */
-input:focus, select:focus, button:focus {
-    outline: none;
-    border-color: #2196F3;
-    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.25);
+   .conversion-result {
+       font-size: 1.2em;
+   }
 }
