@@ -57,6 +57,19 @@
    ```
    docker-compose down
    ```
+9. mainProject実行
+   path:CSE_Project配下で実行
+   ```
+   python manage.py runserver
+   ```
+   出力されるローカルホストにアクセスすれば完了
+
+10. 携帯などで操作する場合、（仮デプロイ）
+    前提: ngrokをインストール, ngrokアカウント作成
+   出てきたローカルホストURLを○○と定義して以下のコマンドを実行
+    ```
+   ngrok http ○○
+    ```
 
 ### ※注意点
 gitのbranchや作業履歴は普通で開いているときとコンテナ内では共有されないため注意 
