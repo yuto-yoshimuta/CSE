@@ -3,8 +3,6 @@
 
 # プロジェクトのセットアップ手順
 
-このドキュメントでは、MACとWindows環境でプロジェクトをセットアップする手順を説明します。
-
 ### 前提条件
 - Docker Desktopがインストールされていること
 - VSCodeがインストールされていること
@@ -181,7 +179,8 @@ git log
 ```
 </details>
 
-<details>
+<details>マークダウン書き方
 
 [MDチートシートその1](https://qiita.com/kamorits/items/6f342da395ad57468ae3)
 [MDチートシートその2](https://qiita.com/Qiita/items/c686397e4a0f4f11683d)
+</details>
