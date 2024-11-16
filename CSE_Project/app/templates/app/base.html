@@ -16,12 +16,12 @@
 
     <header>
         <div class="logo">
-            <img src="{% static 'app/assets/image.png' %}" alt="ロゴ">
+            <img src="{% static 'app/assets/icon.png' %}" alt="icon">
             <a href="{% url 'app:home' %}" id="home-link">Cash Scan Explore</a>
         </div>
         <div class="header-buttons">
-            <a href="{% url 'app:mitei' %}" class="btn-mitei">
-                <i class="fas fa-question-circle"></i>未定
+            <a href="{% url 'app:financing_ai_chat' %}" class="btn-financing_ai_chat">
+                <i class="fas fa-aichat"></i>Financing AI Chat
             </a>
             <a href="{% url 'app:exchange_rate' %}" class="btn-exchange">
                 <i class="fas fa-exchange-alt"></i>Exchange Rate

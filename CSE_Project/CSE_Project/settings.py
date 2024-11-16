@@ -1,5 +1,11 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+DIFY_API_KEY = os.getenv('DIFY_API_KEY', 'app-M0lChryRKvOYknRLy6MngnUs')
+DIFY_APP_ID = os.getenv('DIFY_APP_ID', 'd654d54b-8319-48c7-9d21-90d730e9d195')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
