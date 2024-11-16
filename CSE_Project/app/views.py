@@ -138,7 +138,7 @@ class GraphService:
             if 'buffer' in locals():
                 buffer.close()
 
-def index(request):
+def home(request):
     """Main view function for the homepage"""
     try:
         plt.clf()
@@ -150,7 +150,7 @@ def index(request):
                 'error_message': 'Failed to fetch data.',
                 'graph_data': None
             }
-            return render(request, 'app/index.html', context)
+            return render(request, 'app/home.html', context)
 
         graph_data, latest_rate, last_updated = GraphService.generate_graph(rates)
         if not graph_data:
@@ -158,7 +158,7 @@ def index(request):
                 'error_message': 'Failed to generate graph.',
                 'graph_data': None
             }
-            return render(request, 'app/index.html', context)
+            return render(request, 'app/home.html', context)
 
         context = {
             'graph_data': graph_data,
@@ -167,15 +167,15 @@ def index(request):
             'error_message': None
         }
         
-        return render(request, 'app/index.html', context)
+        return render(request, 'app/home.html', context)
     
     except Exception as e:
-        logger.error(f"Error in index view: {e}")
+        logger.error(f"Error in home view: {e}")
         context = {
             'error_message': 'An unexpected error occurred.',
             'graph_data': None
         }
-        return render(request, 'app/index.html', context)
+        return render(request, 'app/home.html', context)
 
 @never_cache
 def get_updated_graph(request):

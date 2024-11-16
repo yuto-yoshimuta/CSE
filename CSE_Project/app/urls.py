@@ -7,7 +7,7 @@ app_name = 'app'
 
 # Main page URLs
 urlpatterns = [
-   path('', views.index, name='index'),
+   path('', views.home, name='home'),
    path('get_updated_graph/', views.get_updated_graph, name='get_updated_graph'),
 ]
 
