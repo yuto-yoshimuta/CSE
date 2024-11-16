@@ -5,102 +5,79 @@
 
 このドキュメントでは、MACとWindows環境でプロジェクトをセットアップする手順を説明します。
 
-## MAC版の手順
-
-### 前提条件
-- Dockerがインストールされていること
-- VSCodeがインストールされていること
-
-### 手順
-1. ターミナルを開き、プロジェクトのディレクトリに移動します。
-   ```
-   cd ~/CSE_Project
-   ```
-
-2. 以下のコマンドを実行して、Dockerイメージをビルドします。
-   ```
-   docker build -t myproject .
-   ```
-
-3. ビルドが完了したら、以下のコマンドでDockerコンテナを起動します。
-   ```
-   docker run -it -v $(pwd):/app -p 8080:8080 myproject
-   ```
-
-4. VSCodeを開き、「ファイル」メニューから「フォルダを開く」を選択します。
-
-5. プロジェクトのディレクトリ（~/CSE_Project）を選択して開きます。
-
-6. VSCodeの拡張機能タブを開き、「Dev Containers」拡張機能を検索してインストールします。
-
-7. コマンドパレット（Cmd + Shift + P）を開き、「Dev Containers: Attach to Running Container」を選択します。
-
-8. 起動中のDockerコンテナを選択し、VSCodeでコンテナに接続します。
-
-9. 必要なファイルを編集し、変更を加えます。
-
-10. ターミナルでコンテナ内のシェルを開き、プロジェクトに関連するコマンドを実行します。
-
-## Windows版の手順
-
 ### 前提条件
 - Docker Desktopがインストールされていること
 - VSCodeがインストールされていること
 
 ### 手順
-1. コマンドプロンプトを開き、プロジェクトのディレクトリに移動します。
+1. コマンドプロンプトorターミナルを開き、プロジェクトのディレクトリに移動します。
+   (VScode内で作業するの推奨)
    ```
-   cd C:\Users\YourUsername\CSE_Project
+   cd CSE\CSE_Project
    ```
 
 2. 以下のコマンドを実行して、Dockerイメージをビルドします。
+   (Docker desktopを立ち上げておくこと)
+   (PCのスペック、状態にもよるが3分程度かかる)
    ```
-   docker build -t myproject .
+   docker-compose build
    ```
 
 3. ビルドが完了したら、以下のコマンドでDockerコンテナを起動します。
    ```
-   docker run -it -v %cd%:/app -p 8080:8080 myproject
+   docker-compose up -d
    ```
 
-4. VSCodeを開き、「ファイル」メニューから「フォルダを開く」を選択します。
+4. VScodeに拡張機能を追加(デフォルトでインストールされていたかもしれないその場合はスキップ)
+   拡張機能検索で「Dev Containers」をインストール
+   画面左下に><のマークが出てきて左サイドバーにモニターに><が合わさったアイコンがあれば問題なし
 
-5. プロジェクトのディレクトリ（C:\Users\YourUsername\CSE_Project）を選択して開きます。
+5. コンテナ内に侵入
+　モニターに><が合わさったアイコン(リモートエクスプローラー)を選択して開発コンテナ―にcse_Project等の記述があればうまくコンテナがupできています。
+以下のコマンドでも確認できます。
+   ```
+   # コンテナの状態確認
+   docker-compose ps
+   ```
+起動しているコンテナにカーソルを合わせると→がでてきて「現在のウィンドウにアタッチする」といったものがあるためクリック
 
-6. VSCodeの拡張機能タブを開き、「Dev Containers」拡張機能を検索してインストールします。
+7. プロジェクトフォルダーの選択
+   コンテナ内に入るととりあえず現在のpathを定義する
+   ファイルを開くでrootに移動する
+   OSがLinuxのためCtrl+Pで検索するかターミナルからcs,lsコマンドで移動していく
 
-7. コマンドパレット（Ctrl + Shift + P）を開き、「Dev Containers: Attach to Running Container」を選択します。
+8. コンテナ内にgitProjectをクローンする
+   以下のコマンドでCSEProjectをクローンする
+   ```
+   git clone https://github.com/yuto-yoshimuta/CSE.git
+   ```
+   うまくできない場合はユーザー設定ができていない可能性があるため自分で調べてユーザー名とメールアドレス設定を行う
+   うまくクローン出来ればroot/CSEとpathがなっているはず
 
-8. 起動中のDockerコンテナを選択し、VSCodeでコンテナに接続します。
+9. Docker down
+   作業が終了すれば以下のコマンドでコンテナを停止することが可能
+   ```
+   docker-compose down
+   ```
 
-9. 必要なファイルを編集し、変更を加えます。
+### ※注意点
+gitのbranchや作業履歴は普通で開いているときとコンテナ内では共有されないため注意 
+１度コンテナを作成すれば今後上記の手順を踏まずコンテナを起動させて同じ手順で侵入するのみ
+コンテナ起動方法はup を入力してもよいしDocker Desktopから直接起動させてもよい個人的に後者推奨
 
-10. コマンドプロンプトでコンテナ内のシェルを開き、プロジェクトに関連するコマンドを実行します。
-
-
-- コンテナを停止
-```
-docker-compose down
-```
-
+### 便利なコマンド集
 - コンテナのログを表示
 ```
 docker-compose logs
 ```
 
-- コンテナ内でコマンドを実行
-```
-docker-compose exec web bash
-```
+- コンテナの状態確認
+docker-compose ps
 
 - コンテナとイメージを完全に削除（クリーンアップ）
 ```
 docker-compose down --rmi all
 ```
-
-
-以上の手順に従って、MACとWindows環境でプロジェクトをセットアップし、Dev Containersを使用してDockerコンテナ内で開発を行うことができます。問題がある場合は、Yutoに連絡してください。
-
 </details>
 
 <details><summary><h1>gitのコマンド操作</h1></summary>
