@@ -3,62 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Interface</title>
+    <title>AI Chat Interface</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
     <style>
-        .chat-container {
-            max-width: 800px;
-            margin: 20px auto;
+        /* 既存のスタイルはそのまま保持 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: white;
+            border-right: 1px solid #e0e0e0;
             padding: 20px;
-            height: calc(100vh - 100px);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar-button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            color: black;
+        }
+
+        .sidebar-button:hover {
+            background-color: #f5f5f5;
+        }
+
+        .sidebar-button i {
+            font-size: 1.2em;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+        }
+
+        .chat-container {
+            flex: 1;
+            padding: 20px;
             overflow-y: auto;
         }
+
         .message {
-            margin: 10px 0;
-            padding: 10px;
+            display: flex;
+            margin-bottom: 20px;
+            gap: 16px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .user-avatar {
+            background-color: #007AFF;
+            color: white;
+        }
+
+        .bot-avatar {
+            background-color: #f0f0f0;
+        }
+
+        .message-content {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 80%;
+        }
+
+        .user-message .message-content {
+            background-color: #007AFF;
+            color: white;
+        }
+
+        .bot-message .message-content {
+            background-color: #f0f0f0;
+            color: black;
+        }
+
+        .markdown-content {
+            line-height: 1.6;
+        }
+
+        .markdown-content h1,
+        .markdown-content h2,
+        .markdown-content h3 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-weight: 600;
+        }
+
+        .markdown-content h1 {
+            font-size: 1.5em;
+        }
+
+        .markdown-content h2 {
+            font-size: 1.3em;
+        }
+
+        .markdown-content h3 {
+            font-size: 1.1em;
+        }
+
+        .markdown-content p {
+            margin-bottom: 1em;
+        }
+
+        .markdown-content ul,
+        .markdown-content ol {
+            margin-bottom: 1em;
+            padding-left: 2em;
+        }
+
+        .markdown-content li {
+            margin-bottom: 0.5em;
+        }
+
+        .markdown-content strong {
+            font-weight: 600;
+        }
+
+        .markdown-content em {
+            font-style: italic;
+        }
+
+        .markdown-content code {
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
+        .markdown-content pre {
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 1em;
             border-radius: 5px;
+            overflow-x: auto;
+            margin-bottom: 1em;
         }
-        .user-message {
-            background-color: #e3f2fd;
-            margin-left: 20%;
-            margin-right: 5px;
+
+        .markdown-content pre code {
+            background-color: transparent;
+            padding: 0;
         }
-        .bot-message {
-            background-color: #f5f5f5;
-            margin-right: 20%;
-            margin-left: 5px;
-            white-space: pre-wrap;
+
+        .markdown-content blockquote {
+            border-left: 4px solid #ddd;
+            padding-left: 1em;
+            margin-bottom: 1em;
+            color: #666;
         }
+
         .input-area {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
             padding: 20px;
-            background: white;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid #e0e0e0;
+            background-color: white;
         }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
         .input-box {
-            width: 80%;
-            padding: 10px;
-            margin-right: 10px;
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            resize: none;
+            height: 45px;
+            line-height: 1.4;
         }
-        .button {
-            padding: 10px 20px;
-            cursor: pointer;
-            background-color: #4CAF50;
+
+        .input-box:focus {
+            outline: none;
+            border-color: #007AFF;
+        }
+
+        .send-button {
+            padding: 0 20px;
+            background-color: #007AFF;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s;
         }
-        .button:hover {
-            background-color: #45a049;
+
+        .send-button:hover {
+            background-color: #0056b3;
         }
+
+        .send-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
         .loading {
             display: inline-block;
             margin-left: 10px;
             font-style: italic;
             color: #666;
         }
+
         @keyframes typing {
             0% { content: ""; }
             25% { content: "."; }
@@ -66,18 +244,39 @@
             75% { content: "..."; }
             100% { content: ""; }
         }
+
         .typing::after {
             content: "";
             animation: typing 1.5s infinite;
         }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .message-content {
+                max-width: 90%;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="chat-container" id="chat"></div>
-    <div class="input-area">
-        <input type="text" id="input" class="input-box" placeholder="メッセージを入力...">
-        <button id="send" class="button">送信</button>
-        <span id="loading" class="loading typing" style="display: none">入力中</span>
+    <div class="sidebar">
+        <div class="sidebar-button" onclick="refreshChat()">
+            <i class="fas fa-plus"></i>
+            新規チャット
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="chat-container" id="chat"></div>
+        <div class="input-area">
+            <div class="input-container">
+                <textarea id="input" class="input-box" placeholder="メッセージを入力..." rows="1"></textarea>
+                <button id="send" class="send-button">送信</button>
+                <span id="loading" class="loading typing" style="display: none">入力中</span>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -88,11 +287,32 @@
         let isProcessing = false;
         let currentConversationId = null;
 
+        marked.setOptions({
+            breaks: true,
+            gfm: true
+        });
+
         function addMessage(text, isUser = false) {
-            const div = document.createElement('div');
-            div.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
-            div.textContent = text;
-            chat.appendChild(div);
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+
+            const avatar = document.createElement('div');
+            avatar.className = `avatar ${isUser ? 'user-avatar' : 'bot-avatar'}`;
+            avatar.innerHTML = isUser ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+
+            const content = document.createElement('div');
+            content.className = 'message-content';
+
+            if (isUser) {
+                content.textContent = text;
+            } else {
+                content.className += ' markdown-content';
+                content.innerHTML = marked.parse(text);
+            }
+
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            chat.appendChild(messageDiv);
             chat.scrollTop = chat.scrollHeight;
         }
 
@@ -137,38 +357,18 @@
 
                         if (data.event === 'message' && data.answer) {
                             if (!messageDiv) {
-                                messageDiv = document.createElement('div');
-                                messageDiv.className = 'message bot-message';
-                                chat.appendChild(messageDiv);
+                                addMessage(data.answer, false);
+                            } else {
+                                const content = messageDiv.querySelector('.message-content');
+                                content.innerHTML = marked.parse(data.answer);
                             }
                             currentAnswer = data.answer;
-                            messageDiv.textContent = currentAnswer;
-                            chat.scrollTop = chat.scrollHeight;
-                        }
-                        else if (data.event === 'workflow_finished' && data.data?.outputs?.answer) {
-                            currentAnswer = data.data.outputs.answer;
-                            if (messageDiv) {
-                                messageDiv.textContent = currentAnswer;
-                                chat.scrollTop = chat.scrollHeight;
-                            }
-                        }
-                        else if (data.event === 'message_end' && currentAnswer) {
-                            if (messageDiv) {
-                                messageDiv.textContent = currentAnswer;
-                                chat.scrollTop = chat.scrollHeight;
-                            }
-                            return;
                         }
                     }
                 }
-
-                if (currentAnswer && messageDiv) {
-                    messageDiv.textContent = currentAnswer;
-                    chat.scrollTop = chat.scrollHeight;
-                }
             } catch (error) {
                 console.error('Stream processing error:', error);
-                addMessage('エラーが発生しました。もう一度お試しください。');
+                addMessage('エラーが発生しました。もう一度お試しください。', false);
             }
         }
 
@@ -200,14 +400,24 @@
                 await processStreamResponse(response);
             } catch (error) {
                 console.error('Error:', error);
-                addMessage('エラーが発生しました。もう一度お試しください。');
+                addMessage('エラーが発生しました。もう一度お試しください。', false);
             } finally {
                 isProcessing = false;
                 loading.style.display = 'none';
             }
         }
 
-        // イベントリスナーの設定
+        function refreshChat() {
+            currentConversationId = null;
+            chat.innerHTML = '';
+            addMessage('こんにちは！ご質問をどうぞ。', false);
+        }
+
+        input.addEventListener('input', () => {
+            input.style.height = 'auto';
+            input.style.height = (input.scrollHeight) + 'px';
+        });
+
         send.addEventListener('click', handleMessage);
         input.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -216,7 +426,6 @@
             }
         });
 
-        // 初期メッセージの表示
         document.addEventListener('DOMContentLoaded', () => {
             addMessage('こんにちは！ご質問をどうぞ。', false);
             input.focus();
