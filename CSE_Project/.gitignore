@@ -1,24 +1,15 @@
+# Python virtual environment
+venv/
+csevenv/
+ENV/
+.env/
+
 # Python
 __pycache__/
 *.py[cod]
 *.so
 .Python
 *.pyc
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
 
 # Django
 *.log
@@ -27,53 +18,13 @@ db.sqlite3
 db.sqlite3-journal
 media
 staticfiles
-*.pot
-*.mo
-
-# Coverage/Testing
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.pytest_cache/
 
 # IDEs
 .idea/
 .vscode/
 *.swp
 *.swo
-*~
-.project
-.pydevproject
-.settings/
-*.sublime-workspace
-*.sublime-project
 
 # OS
 .DS_Store
 Thumbs.db
-.directory
-desktop.ini
-
-# Environment variables
-.env
-.env.local
-.env.*.local
-
-# Temporary files
-*.bak
-*.tmp
-*.temp
-
-# Node (もしフロントエンドで使用している場合)
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Matplotlib
-.matplotlib/
