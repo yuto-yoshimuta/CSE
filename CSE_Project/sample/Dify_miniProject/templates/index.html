@@ -1,110 +1,226 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-    <title>Dify Workflow Chat Interface</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface</title>
     <style>
-        #chat-container {
-            max-width: 600px;
-            margin: 0 auto;
+        .chat-container {
+            max-width: 800px;
+            margin: 20px auto;
             padding: 20px;
-        }
-        #chat-messages {
-            height: 400px;
-            border: 1px solid #ccc;
+            height: calc(100vh - 100px);
             overflow-y: auto;
-            margin-bottom: 20px;
+        }
+        .message {
+            margin: 10px 0;
             padding: 10px;
+            border-radius: 5px;
         }
-        #input-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
+        .user-message {
+            background-color: #e3f2fd;
+            margin-left: 20%;
+            margin-right: 5px;
         }
-        #message-input {
-            flex: 1;
+        .bot-message {
+            background-color: #f5f5f5;
+            margin-right: 20%;
+            margin-left: 5px;
+            white-space: pre-wrap;
+        }
+        .input-area {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #ddd;
+        }
+        .input-box {
+            width: 80%;
             padding: 10px;
+            margin-right: 10px;
         }
-        #select-input {
-            width: 150px;
-            padding: 10px;
+        .button {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
         }
-        #send-button {
-            width: 100px;
-            padding: 10px;
+        .button:hover {
+            background-color: #45a049;
         }
-        .error-message {
-            color: red;
+        .loading {
+            display: inline-block;
+            margin-left: 10px;
             font-style: italic;
+            color: #666;
+        }
+        @keyframes typing {
+            0% { content: ""; }
+            25% { content: "."; }
+            50% { content: ".."; }
+            75% { content: "..."; }
+            100% { content: ""; }
+        }
+        .typing::after {
+            content: "";
+            animation: typing 1.5s infinite;
         }
     </style>
 </head>
 <body>
-    <div id="chat-container">
-        <div id="chat-messages"></div>
-        <div id="input-container">
-            <input type="text" id="message-input" placeholder="メッセージを入力...">
-            <select id="select-input">
-                <option value="option1">A</option>
-                <option value="option2">B</option>
-                <option value="option3">C</option>
-            </select>
-            <button id="send-button">送信</button>
-        </div>
+    <div class="chat-container" id="chat"></div>
+    <div class="input-area">
+        <input type="text" id="input" class="input-box" placeholder="メッセージを入力...">
+        <button id="send" class="button">送信</button>
+        <span id="loading" class="loading typing" style="display: none">入力中</span>
     </div>
 
     <script>
-        document.getElementById('send-button').addEventListener('click', sendMessage);
-        document.getElementById('message-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
+        const chat = document.getElementById('chat');
+        const input = document.getElementById('input');
+        const send = document.getElementById('send');
+        const loading = document.getElementById('loading');
+        let isProcessing = false;
+        let currentConversationId = null;
+
+        function addMessage(text, isUser = false) {
+            const div = document.createElement('div');
+            div.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            div.textContent = text;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function parseSSEData(line) {
+            if (!line.startsWith('data: ')) return null;
+            
+            try {
+                let jsonStr = line.replace(/^data:\s*data:\s*/, 'data: ');
+                jsonStr = jsonStr.replace(/^data:\s*/, '');
+                return JSON.parse(jsonStr);
+            } catch (e) {
+                console.error('Parse error:', e);
+                return null;
+            }
+        }
+
+        async function processStreamResponse(response) {
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = '';
+            let currentAnswer = '';
+            let messageDiv = null;
+
+            try {
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop() || '';
+
+                    for (const line of lines) {
+                        if (line.trim() === '' || line.trim() === 'event: ping') continue;
+
+                        const data = parseSSEData(line);
+                        if (!data) continue;
+
+                        if (data.conversation_id && !currentConversationId) {
+                            currentConversationId = data.conversation_id;
+                        }
+
+                        if (data.event === 'message' && data.answer) {
+                            if (!messageDiv) {
+                                messageDiv = document.createElement('div');
+                                messageDiv.className = 'message bot-message';
+                                chat.appendChild(messageDiv);
+                            }
+                            currentAnswer = data.answer;
+                            messageDiv.textContent = currentAnswer;
+                            chat.scrollTop = chat.scrollHeight;
+                        }
+                        else if (data.event === 'workflow_finished' && data.data?.outputs?.answer) {
+                            currentAnswer = data.data.outputs.answer;
+                            if (messageDiv) {
+                                messageDiv.textContent = currentAnswer;
+                                chat.scrollTop = chat.scrollHeight;
+                            }
+                        }
+                        else if (data.event === 'message_end' && currentAnswer) {
+                            if (messageDiv) {
+                                messageDiv.textContent = currentAnswer;
+                                chat.scrollTop = chat.scrollHeight;
+                            }
+                            return;
+                        }
+                    }
+                }
+
+                if (currentAnswer && messageDiv) {
+                    messageDiv.textContent = currentAnswer;
+                    chat.scrollTop = chat.scrollHeight;
+                }
+            } catch (error) {
+                console.error('Stream processing error:', error);
+                addMessage('エラーが発生しました。もう一度お試しください。');
+            }
+        }
+
+        async function handleMessage() {
+            if (isProcessing) return;
+            
+            const message = input.value.trim();
+            if (!message) return;
+
+            try {
+                isProcessing = true;
+                loading.style.display = 'inline-block';
+                addMessage(message, true);
+                input.value = '';
+
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message,
+                        conversation_id: currentConversationId
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                await processStreamResponse(response);
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage('エラーが発生しました。もう一度お試しください。');
+            } finally {
+                isProcessing = false;
+                loading.style.display = 'none';
+            }
+        }
+
+        // イベントリスナーの設定
+        send.addEventListener('click', handleMessage);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleMessage();
             }
         });
 
-        function sendMessage() {
-            const input = document.getElementById('message-input');
-            const select = document.getElementById('select-input');
-            const message = input.value.trim();
-            const selectedOption = select.value;
-            
-            if (!message) return;
-
-            addMessage('User: ' + message);
-            input.value = '';
-
-            fetch('/ask', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    message: message,
-                    select: selectedOption
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    addMessage('Error: ' + data.error, true);
-                } else {
-                    addMessage('AI: ' + data.answer);
-                }
-            })
-            .catch(error => {
-                addMessage('Error: ' + error.message, true);
-            });
-        }
-
-        function addMessage(message, isError = false) {
-            const messagesDiv = document.getElementById('chat-messages');
-            const messageElement = document.createElement('p');
-            messageElement.textContent = message;
-            if (isError) {
-                messageElement.classList.add('error-message');
-            }
-            messagesDiv.appendChild(messageElement);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
+        // 初期メッセージの表示
+        document.addEventListener('DOMContentLoaded', () => {
+            addMessage('こんにちは！ご質問をどうぞ。', false);
+            input.focus();
+        });
     </script>
 </body>
 </html>
