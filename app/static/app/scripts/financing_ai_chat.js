@@ -1,4 +1,4 @@
-// グローバル変数の設定
+// Global variable initialization
 const chat = document.getElementById('chat');
 const input = document.getElementById('input');
 const send = document.getElementById('send');
@@ -6,7 +6,7 @@ const loading = document.getElementById('loading');
 let isProcessing = false;
 let currentConversationId = null;
 
-// Markedの設定
+// Marked configuration
 marked.setOptions({
     breaks: true,
     gfm: true,
@@ -15,9 +15,9 @@ marked.setOptions({
 });
 
 /**
- * メッセージを追加する関数
- * @param {string} text - メッセージテキスト
- * @param {boolean} isUser - ユーザーのメッセージかどうか
+ * Add a message to the chat
+ * @param {string} text - Message text
+ * @param {boolean} isUser - Whether the message is from the user
  */
 function addMessage(text, isUser = false) {
     const messageDiv = document.createElement('div');
@@ -36,7 +36,7 @@ function addMessage(text, isUser = false) {
         content.className += ' markdown-content';
         content.innerHTML = marked.parse(text);
 
-        // コードブロックのシンタックスハイライト（オプション）
+        // Syntax highlighting for code blocks (optional)
         document.querySelectorAll('pre code').forEach((block) => {
             hljs.highlightBlock(block);
         });
@@ -49,9 +49,9 @@ function addMessage(text, isUser = false) {
 }
 
 /**
- * SSEデータをパースする関数
- * @param {string} line - SSEデータライン
- * @returns {Object|null} パースされたデータまたはnull
+ * Parse SSE data stream
+ * @param {string} line - SSE data line
+ * @returns {Object|null} Parsed data or null
  */
 function parseSSEData(line) {
     if (!line.startsWith('data: ')) return null;
@@ -67,8 +67,8 @@ function parseSSEData(line) {
 }
 
 /**
- * ストリームレスポンスを処理する関数
- * @param {Response} response - フェッチレスポンス
+ * Process stream response from server
+ * @param {Response} response - Fetch response object
  */
 async function processStreamResponse(response) {
     const reader = response.body.getReader();
@@ -109,12 +109,12 @@ async function processStreamResponse(response) {
         }
     } catch (error) {
         console.error('Stream processing error:', error);
-        addMessage('エラーが発生しました。もう一度お試しください。', false);
+        addMessage('An error occurred. Please try again.', false);
     }
 }
 
 /**
- * メッセージを処理する関数
+ * Handle message submission
  */
 async function handleMessage() {
     if (isProcessing) return;
@@ -130,9 +130,9 @@ async function handleMessage() {
         input.value = '';
         adjustTextareaHeight();
 
-        // グローバル変数からURLを取得
+        // Get URL from global variable
         const askUrl = window.ASK_URL;
-        // CSRFトークンを隠しフィールドから取得
+        // Get CSRF token from hidden field
         const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
         const response = await fetch(askUrl, {
@@ -154,7 +154,7 @@ async function handleMessage() {
         await processStreamResponse(response);
     } catch (error) {
         console.error('Error:', error);
-        addMessage('エラーが発生しました。もう一度お試しください。', false);
+        addMessage('An error occurred. Please try again.', false);
     } finally {
         isProcessing = false;
         send.disabled = false;
@@ -163,18 +163,18 @@ async function handleMessage() {
 }
 
 /**
- * チャットをリフレッシュする関数
+ * Refresh chat window
  */
 function refreshChat() {
     currentConversationId = null;
     chat.innerHTML = '';
-    // ハードコードされたメッセージの代わりにサーバーから受け取ったメッセージを使用
+    // Use server-provided initial message instead of hardcoded one
     addMessage(window.INITIAL_MESSAGE || 'Hello! Please ask your question.', false);
     input.focus();
 }
 
 /**
- * テキストエリアの高さを調整する関数
+ * Adjust textarea height based on content
  */
 function adjustTextareaHeight() {
     input.style.height = 'auto';
@@ -182,9 +182,9 @@ function adjustTextareaHeight() {
 }
 
 /**
- * CSRFトークンを取得する関数
- * @param {string} name - クッキー名
- * @returns {string} CSRFトークン
+ * Get CSRF token from cookies
+ * @param {string} name - Cookie name
+ * @returns {string} CSRF token
  */
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -192,7 +192,7 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
-// イベントリスナーの設定
+// Event listener setup
 input.addEventListener('input', adjustTextareaHeight);
 
 send.addEventListener('click', handleMessage);
@@ -204,7 +204,7 @@ input.addEventListener('keypress', (e) => {
     }
 });
 
-// モバイルデバイスでの表示調整
+// Mobile view adjustments
 function adjustMobileView() {
     if (window.innerWidth <= 768) {
         chat.style.height = `${window.innerHeight - 180}px`;
@@ -219,14 +219,14 @@ document.addEventListener('DOMContentLoaded', () => {
     refreshChat();
 });
 
-// ページ離脱時の処理
+// Handle page unload
 window.addEventListener('beforeunload', () => {
     if (isProcessing) {
-        return '会話が進行中です。本当にページを離れますか？';
+        return 'Conversation is in progress. Are you sure you want to leave?';
     }
 });
 
-// デバッグモード（開発時のみ）
+// Debug mode (development only)
 const DEBUG = false;
 if (DEBUG) {
     window.debugChat = {

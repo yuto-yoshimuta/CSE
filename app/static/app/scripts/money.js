@@ -1,4 +1,4 @@
-// 通貨データの定義
+// Currency data definitions
 const CURRENCY_DESCRIPTIONS = {
     jpy1: { 
         title: '1 JPY', 
@@ -66,8 +66,8 @@ const CURRENCY_DESCRIPTIONS = {
     }
  };
  
- // 通貨タイプの定義
- const CURRENCY_TYPES = {
+// Currency type definitions
+const CURRENCY_TYPES = {
     JPY: {
         denominations: [1, 5, 10, 50, 100, 500, 1000, 5000, 10000],
         path: 'JPY'
@@ -76,10 +76,9 @@ const CURRENCY_DESCRIPTIONS = {
         denominations: [1, 5, 10, 50, 100, 500, 1000],
         path: 'TWD'
     }
- };
- 
+};
 
-// 画像URLを生成する関数を修正
+// Function to generate image URL
 function getImageUrl(currency) {
     const type = currency.slice(0, 3).toUpperCase();
     const value = currency.slice(3);
@@ -87,8 +86,10 @@ function getImageUrl(currency) {
 }
 
 /**
-* 画像読み込みエラー時のハンドラー
-*/
+ * Image error handler
+ * Handles cases where the image fails to load
+ * @param {HTMLImageElement} img - The image element that failed to load
+ */
 function handleImageError(img) {
     console.error('Image load failed:', img.src);
     img.onerror = null;
@@ -97,8 +98,10 @@ function handleImageError(img) {
 }
 
 /**
-* 通貨情報を設定する関数
-*/
+ * Set currency information
+ * Updates the display with information for the selected currency
+ * @param {string} currency - The currency code (e.g., 'jpy1', 'twd1')
+ */
 function setCurrency(currency) {
     const currencyData = CURRENCY_DESCRIPTIONS[currency];
     if (!currencyData) return;
@@ -116,7 +119,7 @@ function setCurrency(currency) {
     }
 }
 
-// ページ読み込み時の初期化
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     const imageElement = document.getElementById('currencyImage');
     if (imageElement) {

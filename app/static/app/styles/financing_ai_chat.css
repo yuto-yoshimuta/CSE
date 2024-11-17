@@ -14,8 +14,8 @@ body {
 /* Chat Layout */
 .chat-wrapper {
     display: flex;
-    height: calc(100vh - 70px); /* ヘッダーの高さを引く */
-    margin-top: 70px; /* ヘッダーの高さ分のマージン */
+    height: calc(100vh - 70px); /* Subtract header height */
+    margin-top: 70px; /* Add margin for header height */
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
 }
