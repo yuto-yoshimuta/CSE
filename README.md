@@ -51,19 +51,18 @@
    ```
    うまくできない場合はユーザー設定ができていない可能性があるため自分で調べてユーザー名とメールアドレス設定を行う
    うまくクローン出来ればroot/CSEとpathがなっているはず
+8.以下のコードを実行
+   ```
+   python manage.py makemigrations
+   python manage.py migrate
+   ```
 
-8. mainProject実行
+9. mainProject実行
    path:CSE_Project配下で実行
    ```
    python manage.py runserver
    ```
    出力されるローカルホストにアクセスすれば完了
-
-9.以下のコードを実行
-   ```
-   python manage.py makemigrations
-   python manage.py migrate
-   ```
 
 10. 携帯などで操作する場合、（仮デプロイ）
     前提: ngrokをインストール, ngrokアカウント作成
