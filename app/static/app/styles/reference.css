@@ -1,0 +1,106 @@
+.description-box {
+    background-color: #b3b3b3;
+    color: black;
+    text-align: center;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+.description-box h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.description-box p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+
+.references-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+    grid-auto-rows: 1fr;
+}
+
+.reference-item {
+    background-color: rgba(245, 245, 245, 0.9);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    min-height: 150px; 
+}
+
+.reference-item p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #555;
+    margin: 0; 
+}
+
+
+.reference-item:hover {
+    transform: translateY(-5px);
+}
+
+.reference-item a {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2563eb;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.reference-item a:hover {
+    color: #1e3a8a;
+    text-decoration: underline;
+}
+
+.reference-item p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #555;
+    margin: 0 0 1rem 0;
+}
+
+.pdf-link {
+    display: inline-block;
+    font-size: 1rem !important;
+    font-weight: bold;
+    color: #2563eb;
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+    background-color: rgba(173, 216, 230, 0.5);
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.pdf-link:hover {
+    background-color: rgba(173, 216, 230, 0.7);
+    transform: translateY(-2px);
+}
+
+
+
+@media (max-width: 768px) {
+    .references-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 1024px) {
+    .references-grid {
+        gap: 2rem;
+    }
+}
