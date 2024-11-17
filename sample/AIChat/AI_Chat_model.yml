@@ -1,0 +1,1922 @@
+app:
+  description: ''
+  icon: 💰
+  icon_background: '#E0F2FE'
+  mode: advanced-chat
+  name: ' WealthWise Spark📈✨'
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.3
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: 'Hello! I''m WealthWise Spark 💬✨!
+
+
+      I''m here to help you level up your finance knowledge!
+
+      Curious about investments or want to boost your financial smarts?
+
+
+      Just a heads up—I can only answer questions about finance or investing!'
+    retriever_resource:
+      enabled: false
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: question-classifier
+      id: 1731409373615-source-1731417587773-target
+      source: '1731409373615'
+      sourceHandle: source
+      target: '1731417587773'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: question-classifier
+        targetType: parameter-extractor
+      id: 1731417587773-1-1731659112212-target
+      source: '1731417587773'
+      sourceHandle: '1'
+      target: '1731659112212'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: parameter-extractor
+      id: 1731661214801-source-1731660605609-target
+      source: '1731661214801'
+      sourceHandle: source
+      target: '1731660605609'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: tool
+      id: 1731661214801-source-1731659195578-target
+      source: '1731661214801'
+      sourceHandle: source
+      target: '1731659195578'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: tool
+      id: 1731661214801-source-1731659207025-target
+      source: '1731661214801'
+      sourceHandle: source
+      target: '1731659207025'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: parameter-extractor
+        targetType: if-else
+      id: 1731659112212-source-1731661497010-target
+      source: '1731659112212'
+      sourceHandle: source
+      target: '1731661497010'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: llm
+      id: 1731661497010-true-1731661214801-target
+      source: '1731661497010'
+      sourceHandle: 'true'
+      target: '1731661214801'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: template-transform
+      id: 1731661497010-false-1731661545555-target
+      source: '1731661497010'
+      sourceHandle: 'false'
+      target: '1731661545555'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: template-transform
+        targetType: answer
+      id: 1731661545555-source-1731661525156-target
+      source: '1731661545555'
+      sourceHandle: source
+      target: '1731661525156'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: tool
+        targetType: variable-aggregator
+      id: 1731659195578-source-1731661786488-target
+      source: '1731659195578'
+      sourceHandle: source
+      target: '1731661786488'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: tool
+        targetType: variable-aggregator
+      id: 1731659207025-source-1731661786488-target
+      source: '1731659207025'
+      sourceHandle: source
+      target: '1731661786488'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: tool
+        targetType: variable-aggregator
+      id: 1731661655252-source-1731661786488-target
+      source: '1731661655252'
+      sourceHandle: source
+      target: '1731661786488'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: parameter-extractor
+        targetType: tool
+      id: 1731660605609-source-1731659943505-target
+      source: '1731660605609'
+      sourceHandle: source
+      target: '1731659943505'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: tool
+        targetType: if-else
+      id: 1731659943505-source-1731661609798-target
+      source: '1731659943505'
+      sourceHandle: source
+      target: '1731661609798'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: tool
+      id: 1731661609798-false-1731661655252-target
+      source: '1731661609798'
+      sourceHandle: 'false'
+      target: '1731661655252'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: variable-aggregator
+        targetType: llm
+      id: 1731661786488-source-1731664020417-target
+      source: '1731661786488'
+      sourceHandle: source
+      target: '1731664020417'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: llm
+      id: 1731661609798-true-1731668202308-target
+      source: '1731661609798'
+      sourceHandle: 'true'
+      target: '1731668202308'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: tool
+      id: 1731668202308-source-1731668629762-target
+      source: '1731668202308'
+      sourceHandle: source
+      target: '1731668629762'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: tool
+        targetType: variable-aggregator
+      id: 1731668629762-source-1731661786488-target
+      source: '1731668629762'
+      sourceHandle: source
+      target: '1731661786488'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: question-classifier
+        targetType: knowledge-retrieval
+      id: 1731417587773-2-1731418309468-target
+      source: '1731417587773'
+      sourceHandle: '2'
+      target: '1731418309468'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: 1731418309468-source-1731669692517-target
+      source: '1731418309468'
+      sourceHandle: source
+      target: '1731669692517'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: question-classifier
+        targetType: knowledge-retrieval
+      id: 1731417587773-1731417787364-1731669761543-target
+      source: '1731417587773'
+      sourceHandle: '1731417787364'
+      target: '1731669761543'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: 1731669761543-source-1731669804499-target
+      source: '1731669761543'
+      sourceHandle: source
+      target: '1731669804499'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: question-classifier
+        targetType: llm
+      id: 1731417587773-1731418765687-llm-target
+      source: '1731417587773'
+      sourceHandle: '1731418765687'
+      target: llm
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: question-classifier
+        targetType: answer
+      id: 1731417587773-1731423271756-1731671485617-target
+      source: '1731417587773'
+      sourceHandle: '1731423271756'
+      target: '1731671485617'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: template-transform
+      id: 1731664020417-source-1731675812787-target
+      source: '1731664020417'
+      sourceHandle: source
+      target: '1731675812787'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: template-transform
+      id: 1731669692517-source-1731675817704-target
+      source: '1731669692517'
+      sourceHandle: source
+      target: '1731675817704'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: template-transform
+      id: 1731669804499-source-1731675819976-target
+      source: '1731669804499'
+      sourceHandle: source
+      target: '1731675819976'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: template-transform
+      id: llm-source-1731675822391-target
+      source: llm
+      sourceHandle: source
+      target: '1731675822391'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: template-transform
+        targetType: answer
+      id: 1731675812787-source-1731675847471-target
+      source: '1731675812787'
+      sourceHandle: source
+      target: '1731675847471'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: template-transform
+        targetType: answer
+      id: 1731675817704-source-1731675850092-target
+      source: '1731675817704'
+      sourceHandle: source
+      target: '1731675850092'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: template-transform
+        targetType: answer
+      id: 1731675819976-source-1731675852239-target
+      source: '1731675819976'
+      sourceHandle: source
+      target: '1731675852239'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: template-transform
+        targetType: answer
+      id: 1731675822391-source-1731675854669-target
+      source: '1731675822391'
+      sourceHandle: source
+      target: '1731675854669'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: start
+        type: start
+        variables: []
+      height: 54
+      id: '1731409373615'
+      position:
+        x: 28.723046059109095
+        y: 821.5
+      positionAbsolute:
+        x: 28.723046059109095
+        y: 821.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        memory:
+          query_prompt_template: ''
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 50
+        model:
+          completion_params:
+            frequency_penalty: 0.3
+            presence_penalty: 0.2
+            temperature: 0.5
+            top_p: 0.85
+          mode: chat
+          name: gpt-4o-mini
+          provider: openai
+        prompt_template:
+        - id: d81e3321-1087-4186-a692-739f4c6bd1bd
+          role: system
+          text: Provide appropriate answers to user questions. If the user's question
+            is clearly unrelated to finance or investments, politely encourage them
+            to ask questions related to finance or investments.
+        selected: false
+        title: LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: llm
+      position:
+        x: 3374
+        y: 1557.5
+      positionAbsolute:
+        x: 3374
+        y: 1557.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        classes:
+        - id: '1'
+          name: '"Classify the message as Class 1 if the user is asking for information
+            on a specific stock, bond, or financial asset. This includes details such
+            as recent performance, market news, analyst ratings, or financial metrics.
+            Focus is on understanding a particular asset rather than general financial
+            advice or investing concepts."
+
+
+            Example Sentences:
+
+
+            "What is the current performance of Tesla stock?"
+
+            "Can you give me the latest news on Microsoft?"
+
+            "What are the analyst ratings for Apple?"'
+        - id: '2'
+          name: '"Classify the message as Class 2 if the user wants to learn about
+            financial literacy, concepts, or basic knowledge of personal finance and
+            investing. Topics may include budgeting, understanding financial statements,
+            types of investments, or general economic principles."
+
+
+            Example Sentences:
+
+
+            "Can you explain what a bond is?"
+
+            "What does diversification mean in investing?"
+
+            "How do I start budgeting effectively?"'
+        - id: '1731417787364'
+          name: 'Classify the message as Class 3 if the user is interested in finding
+            a recommended investment style based on their financial goals, risk tolerance,
+            or personal preferences. This includes questions about evaluating risk
+            types, investment timeframes, or matching investment strategies with their
+            personality or objectives."
+
+
+            Example Sentences:
+
+
+            "What investment style suits someone who prefers low risk?"
+
+            "Can you suggest a strategy for a long-term investor?"
+
+            "Which investment approach aligns with a conservative outlook?"'
+        - id: '1731418765687'
+          name: 'English Prompt: "Classify the message as Class 4 if the user asks
+            a question that does not fall under any specific financial or weather-related
+            categories. This class includes general inquiries that may cover a wide
+            range of topics outside the other defined classes."
+
+
+            Example Sentences:
+
+
+            "What is the current time in London?"
+
+            "How do I set a reminder on my phone?"
+
+            "What are some tips for improving productivity?"'
+        - id: '1731423271756'
+          name: '"Classify the message as Class 5 if the user''s question or statement
+            is entirely unclear or incomprehensible, making it impossible to categorize
+            based on the existing classes. This includes messages with ambiguous wording,
+            fragmented phrases, or language that does not match any recognizable topic
+            or context."
+
+
+            Example Sentences:
+
+
+            "Ghrf...skp qtzp?"
+
+            "What am apple under river?"
+
+            "Nonsense in tomorrow, please rain out!"'
+        desc: ''
+        instruction: 'If the user''s input consists only of letters such as A, B,
+          C, or D, or appears as a response like "Question1: ○○," it is highly likely
+          that they are in the middle of an investment style assessment (Class 3).
+
+          If the input contains anything other than A, B, C, or D, it should not be
+          classified as Class 3 and may indicate a user error.
+
+          Therefore, classify the question as "Class 3: Recommended Investment Style
+          Diagnosis" only if the input meets the above criteria.
+
+          Additionally, if applicable, consider previous context or memory to help
+          confirm the classification.'
+        instructions: ''
+        memory:
+          query_prompt_template: ''
+          window:
+            enabled: false
+            size: 50
+        model:
+          completion_params:
+            frequency_penalty: 0.5
+            presence_penalty: 0.5
+            temperature: 0.2
+            top_p: 0.75
+          mode: chat
+          name: gpt-4o-mini
+          provider: openai
+        query_variable_selector:
+        - '1731409373615'
+        - sys.query
+        selected: false
+        title: question classifier
+        topics: []
+        type: question-classifier
+        vision:
+          enabled: false
+      height: 1340
+      id: '1731417587773'
+      position:
+        x: 334
+        y: 821.5
+      positionAbsolute:
+        x: 334
+        y: 821.5
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        dataset_ids:
+        - 3da1df06-5765-4510-a4e7-387fbaa0c600
+        desc: ''
+        multiple_retrieval_config:
+          reranking_enable: true
+          reranking_mode: weighted_score
+          reranking_model:
+            model: ''
+            provider: ''
+          score_threshold: 0.7
+          top_k: 4
+          weights:
+            keyword_setting:
+              keyword_weight: 0.3
+            vector_setting:
+              embedding_model_name: text-embedding-3-large
+              embedding_provider_name: openai
+              vector_weight: 0.7
+        query_variable_selector:
+        - '1731409373615'
+        - sys.query
+        retrieval_mode: multiple
+        selected: false
+        title: 知識取得
+        type: knowledge-retrieval
+      height: 92
+      id: '1731418309468'
+      position:
+        x: 3070
+        y: 1298.1640194931595
+      positionAbsolute:
+        x: 3070
+        y: 1298.1640194931595
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1731669761543'
+          - result
+        desc: ''
+        memory:
+          query_prompt_template: ''
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 50
+        model:
+          completion_params:
+            frequency_penalty: 0.1
+            presence_penalty: 0.1
+            temperature: 0.8
+            top_p: 0.9
+          mode: chat
+          name: gpt-4o-mini
+          provider: openai
+        prompt_template:
+        - id: 6dfdd8a9-05c1-4593-a327-2dc0b326b5f3
+          role: system
+          text: 'You are a highly knowledgeable AI financial advisor specializing
+            in personalized investment style diagnostics. Your task is to help users
+            identify their most suitable investment style step by step, using clear
+            and simple questions. Leverage your comprehensive knowledge of financial
+            markets, investment products, and user behavior to provide accurate and
+            actionable recommendations. Ensure the diagnostic process is easy to follow,
+            personalized, and user-friendly.
+
+            Diagnostic Overview
+
+            At the beginning of the interaction, inform the user about the total number
+            of questions in the diagnostic process.
+
+            Display the current question number and total questions (e.g., "Question
+            1 of 7").
+
+            Provide clear answer options in a labeled format in alphabet ex) A, B,
+            C, D
+
+            Require users to format their responses clearly to ensure smooth communication.
+
+            Format for User Responses
+
+            Users must provide answers using the following structure:
+
+            For single-choice questions:
+
+            QuestionX: <Selected Option>
+
+            Example: Question1: A
+
+            For follow-up or open-ended responses:
+
+            QuestionXReturns: <Your Text>
+
+            Example: Question1Returns: Capital growth
+
+            Example Interaction
+
+            System: "There are 7 questions in this diagnostic. Let’s begin.
+
+            You are on Question 1 of 7."
+
+            System:
+
+            Question 1: What is your primary goal for investing?
+
+            A: Capital growth
+
+            B: Stable income
+
+            C: Long-term wealth building
+
+            D: Quick returns
+
+            Please respond in the format: Question1: <Your Answer>
+
+            Step-by-Step Diagnostic Process
+
+            Question 1: What is your primary goal for investing?
+
+            Options:
+
+            A: Capital growth
+
+            B: Stable income
+
+            C: Long-term wealth building
+
+            D: Quick returns
+
+            Response Format: Question1: A
+
+            Question 2: How much risk are you comfortable taking in your investments?
+
+            Options:
+
+            A: Low
+
+            B: Moderate
+
+            C: High
+
+            Response Format: Question2: B
+
+            Question 3: What is your investment time horizon?
+
+            Options:
+
+            A: Short-term (less than 1 year)
+
+            B: Medium-term (1–5 years)
+
+            C: Long-term (5+ years)
+
+            Response Format: Question3: C
+
+            Question 4: What amount can you comfortably allocate to investments?
+
+            Options:
+
+            A: Small
+
+            B: Moderate
+
+            C: Large
+
+            Response Format: Question4: A
+
+            Question 5: How frequently can you follow financial news and market updates?
+
+            Options:
+
+            A: Rarely
+
+            B: Occasionally
+
+            C: Frequently
+
+            Response Format: Question5: C
+
+            Question 6: Do you have any prior experience with investing?
+
+            Options:
+
+            A: None
+
+            B: Some
+
+            C: Extensive
+
+            Response Format: Question6: B
+
+            Question 7: If your investments temporarily dropped by 20%, how would
+            you respond?
+
+            Options:
+
+            A: Feel very anxious and sell
+
+            B: Feel slightly worried and wait
+
+            C: Remain calm and consider buying more
+
+            Response Format: Question7: B
+
+            Post-Diagnostic Recommendations
+
+            Summarize Responses: After all questions, clearly restate the user’s answers
+            for confirmation.
+
+            Investment Style Classification: Classify the user into one of the following
+            investment styles (e.g., "Conservative," "Balanced," "Aggressive").
+
+            Justify the Recommendation: Provide a step-by-step explanation of how
+            the responses guided the classification.
+
+            Actionable Advice: Offer tailored recommendations on suitable investment
+            strategies and products that align with the identified style.
+
+            Example: "Based on your preference for long-term wealth building and high
+            risk tolerance, we recommend exploring equity funds and emerging market
+            ETFs."
+
+            Your objective is to empower users to make confident, informed investment
+            decisions by delivering a personalized and structured analysis.'
+        selected: false
+        title: Investment Style Diagnostic Generation
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1731669804499'
+      position:
+        x: 3374
+        y: 1420.5
+      positionAbsolute:
+        x: 3374
+        y: 1420.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        author: Yuto
+        desc: ''
+        height: 372
+        selected: false
+        showAuthor: true
+        text: '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Hello!
+          I''m WealthWise Spark 💬✨!","type":"text","version":1}],"direction":"ltr","format":"start","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Feel
+          free to enter your concerns or matters you wish to investigate.","type":"text","version":1}],"direction":"ltr","format":"start","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":"ltr","format":"start","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"What
+          I can do","type":"text","version":1}],"direction":"ltr","format":"start","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Analyze
+          specific stocks (U.S. listed stocks)","type":"text","version":1}],"direction":"ltr","format":"start","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Provide
+          financial knowledge and literacy","type":"text","version":1}],"direction":"ltr","format":"start","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Diagnosis
+          of investment style","type":"text","version":1}],"direction":"ltr","format":"start","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"・
+          Chatting with you","type":"text","version":1}],"direction":"ltr","format":"start","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":"ltr","format":"start","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Example
+          question：","type":"text","version":1}],"direction":"ltr","format":"start","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"・
+          I would like to know if TSMC''s share price was undervalued in 2020.","type":"text","version":1}],"direction":"ltr","format":"start","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"・
+          I want to know which investment method is right for me.","type":"text","version":1}],"direction":"ltr","format":"start","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"・
+          What is the difference between assets and liabilities?","type":"text","version":1}],"direction":"ltr","format":"start","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":"ltr","format":"start","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"・
+          ","type":"text","version":1}],"direction":"ltr","format":"start","indent":0,"type":"paragraph","version":1,"textFormat":0}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}'
+        theme: blue
+        title: ''
+        type: ''
+        width: 484
+      height: 372
+      id: '1731657873769'
+      position:
+        x: -181.23844914208286
+        y: 906.4471001056727
+      positionAbsolute:
+        x: -181.23844914208286
+        y: 906.4471001056727
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-note
+      width: 484
+    - data:
+        desc: ''
+        instruction: '"You are a highly skilled assistant designed to extract company
+          names or stock ticker symbols from user queries. Your task is to identify
+          either the company name or the stock ticker symbol mentioned by the user
+          in their question. If neither is explicitly mentioned, do not provide any
+          response. The company name may be a full name (e.g., Apple, Tesla, TSMC)
+          or an abbreviation (e.g., AAPL, TSLA, TSM). Provide only the company name
+          or stock ticker symbol, or nothing if neither is available."'
+        memory:
+          query_prompt_template: ''
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 50
+        model:
+          completion_params:
+            frequency_penalty: 0.5
+            presence_penalty: 0.5
+            temperature: 0.2
+            top_p: 0.75
+          mode: chat
+          name: gpt-4o-mini
+          provider: openai
+        parameters:
+        - description: stock variable
+          name: stock
+          required: true
+          type: string
+        query:
+        - sys
+        - query
+        reasoning_mode: prompt
+        selected: false
+        title: stock picking
+        type: parameter-extractor
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1731659112212'
+      position:
+        x: 638
+        y: 821.5
+      positionAbsolute:
+        x: 638
+        y: 821.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        provider_id: yahoo
+        provider_name: yahoo
+        provider_type: builtin
+        selected: false
+        title: News
+        tool_configurations: {}
+        tool_label: News
+        tool_name: yahoo_finance_news
+        tool_parameters:
+          symbol:
+            type: mixed
+            value: '{{#1731661214801.text#}}'
+        type: tool
+      height: 54
+      id: '1731659195578'
+      position:
+        x: 2766
+        y: 1007.5
+      positionAbsolute:
+        x: 2766
+        y: 1007.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        provider_id: yahoo
+        provider_name: yahoo
+        provider_type: builtin
+        selected: false
+        title: Ticker
+        tool_configurations: {}
+        tool_label: Ticker
+        tool_name: yahoo_finance_ticker
+        tool_parameters:
+          symbol:
+            type: mixed
+            value: '{{#1731661214801.text#}}'
+        type: tool
+      height: 54
+      id: '1731659207025'
+      position:
+        x: 2766
+        y: 1100.5
+      positionAbsolute:
+        x: 2766
+        y: 1100.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        provider_id: time
+        provider_name: time
+        provider_type: builtin
+        selected: false
+        title: Current Time
+        tool_configurations:
+          format: '%Y-%m-%d'
+          timezone: Asia/Shanghai
+        tool_label: Current Time
+        tool_name: current_time
+        tool_parameters: {}
+        type: tool
+      height: 116
+      id: '1731659943505'
+      position:
+        x: 1858.0199699664518
+        y: 821.5
+      positionAbsolute:
+        x: 1858.0199699664518
+        y: 821.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        instruction: Extract the specific date mentioned by the user in their input.
+          If the user asks for the stock price of a certain company from a specific
+          time, extract the start date (for example, if the user asks 'Tell me the
+          stock price from when...', extract the date they refer to). If only a year
+          is mentioned, extract just the year."
+        model:
+          completion_params:
+            frequency_penalty: 0.5
+            presence_penalty: 0.5
+            temperature: 0.2
+            top_p: 0.75
+          mode: chat
+          name: gpt-4o-mini
+          provider: openai
+        parameters:
+        - description: いつからか
+          name: time
+          required: true
+          type: string
+        query:
+        - sys
+        - query
+        reasoning_mode: prompt
+        selected: false
+        title: Starting Day Drawing
+        type: parameter-extractor
+        variables: []
+        vision:
+          configs:
+            detail: high
+            variable_selector:
+            - sys
+            - files
+          enabled: false
+      height: 98
+      id: '1731660605609'
+      position:
+        x: 1550
+        y: 821.5
+      positionAbsolute:
+        x: 1550
+        y: 821.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        memory:
+          query_prompt_template: '{{#sys.query#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 50
+        model:
+          completion_params:
+            frequency_penalty: 0.3
+            presence_penalty: 0.2
+            temperature: 0.5
+            top_p: 0.85
+          mode: chat
+          name: gpt-4o-mini
+          provider: openai
+        prompt_template:
+        - id: 00051930-bc18-4c82-9fae-2c31616e0aac
+          role: system
+          text: Your role is to identify and extract stock ticker symbols or company
+            names from user input, and verify if they correspond to publicly traded
+            securities listed on a financial exchange. If the input matches a valid
+            security based on U.S. ADR (American Depository Receipt) standards, return
+            only the valid ticker symbol. Do not provide explanations, additional
+            information, or any other response. If the input is already a valid match,
+            return it as-is.
+        - id: 81036ad1-7d6d-49c6-a878-3f146ec2071a
+          role: user
+          text: '{{#sys.query#}}'
+        selected: false
+        title: Adjustment of brand name output
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1731661214801'
+      position:
+        x: 1246
+        y: 821.5
+      positionAbsolute:
+        x: 1246
+        y: 821.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: '='
+            id: ec37fa11-4c5c-4706-aad5-5b99615e2d56
+            value: '1'
+            varType: number
+            variable_selector:
+            - '1731659112212'
+            - __is_success
+          id: 'true'
+          logical_operator: and
+        desc: ''
+        selected: false
+        title: Have the stocks been extracted correctly?
+        type: if-else
+      height: 126
+      id: '1731661497010'
+      position:
+        x: 942
+        y: 821.5
+      positionAbsolute:
+        x: 942
+        y: 821.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1731661545555.output#}}'
+        desc: ''
+        selected: false
+        title: error message
+        type: answer
+        variables: []
+      height: 103
+      id: '1731661525156'
+      position:
+        x: 1550
+        y: 1179
+      positionAbsolute:
+        x: 1550
+        y: 1179
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        selected: false
+        template: "The following error occurred:\r\n\r\n{{ arg1 }}"
+        title: Create error message
+        type: template-transform
+        variables:
+        - value_selector:
+          - '1731659112212'
+          - __reason
+          variable: arg1
+      height: 54
+      id: '1731661545555'
+      position:
+        x: 1246
+        y: 1203
+      positionAbsolute:
+        x: 1246
+        y: 1203
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: '='
+            id: ea460378-a7a9-44bb-a5e1-05b96cc41d15
+            value: '1'
+            varType: number
+            variable_selector:
+            - '1731660605609'
+            - __is_success
+          id: 'true'
+          logical_operator: and
+        desc: ''
+        selected: false
+        title: Whether the date could be retrieved or not
+        type: if-else
+      height: 126
+      id: '1731661609798'
+      position:
+        x: 2158
+        y: 821.5
+      positionAbsolute:
+        x: 2158
+        y: 821.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        provider_id: yahoo
+        provider_name: yahoo
+        provider_type: builtin
+        selected: false
+        title: Analytics(Start date not specified)
+        tool_configurations: {}
+        tool_label: Analytics
+        tool_name: yahoo_finance_analytics
+        tool_parameters:
+          end_date:
+            type: mixed
+            value: '{{#1731659943505.text#}}'
+          symbol:
+            type: mixed
+            value: '{{#1731661214801.text#}}'
+        type: tool
+      height: 54
+      id: '1731661655252'
+      position:
+        x: 2766
+        y: 821.5
+      positionAbsolute:
+        x: 2766
+        y: 821.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        output_type: string
+        selected: false
+        title: variable aggregator
+        type: variable-aggregator
+        variables:
+        - - '1731659195578'
+          - text
+        - - '1731659207025'
+          - text
+        - - '1731668629762'
+          - text
+        - - '1731661655252'
+          - text
+      height: 191
+      id: '1731661786488'
+      position:
+        x: 3070
+        y: 914.5
+      positionAbsolute:
+        x: 3070
+        y: 914.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        memory:
+          query_prompt_template: ''
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 50
+        model:
+          completion_params:
+            frequency_penalty: 0.1
+            presence_penalty: 0.1
+            temperature: 0.8
+            top_p: 0.9
+          mode: chat
+          name: gpt-4o-mini
+          provider: openai
+        prompt_template:
+        - id: 881425cf-89ad-4c27-80d0-052f8931d782
+          role: system
+          text: 'You are a professional stock analyst. Below is a question from the
+            user about a specific stock and summarized basic information about the
+            stock. Your task is to create a clear and well-structured response that
+            perfectly aligns with the user''s question, using the provided stock information.
+            Make sure the response is concise, accurate, and easy for the user to
+            understand.
+
+
+            {{#sys.query#}}
+
+
+            {{#1731661786488.output#}}'
+        selected: false
+        title: Creation of stock analysis responses
+        type: llm
+        variables: []
+        vision:
+          configs:
+            detail: high
+            variable_selector:
+            - sys
+            - files
+          enabled: false
+      height: 98
+      id: '1731664020417'
+      position:
+        x: 3374
+        y: 914.5
+      positionAbsolute:
+        x: 3374
+        y: 914.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        memory:
+          query_prompt_template: ''
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 50
+        model:
+          completion_params:
+            frequency_penalty: 0.5
+            presence_penalty: 0.5
+            temperature: 0.2
+            top_p: 0.75
+          mode: chat
+          name: gpt-4o
+          provider: openai
+        prompt_template:
+        - id: 2e9e89a6-fff8-4ddb-8d7b-d0c6e5526716
+          role: system
+          text: You are a system designed to handle date inputs. When the user provides
+            a date (year, month, day, or any combination), convert it to the format
+            `%Y-%m-%d`. If only a year (e.g., "1980") is provided, return the date
+            as "1980-01-01". Ensure all responses strictly follow the `%Y-%m-%d` format.
+            Do not include any other information in your response.
+        - id: 6cffd1a8-f783-4053-a316-1026ebc9b1d5
+          role: user
+          text: '{{#1731660605609.time#}}'
+        selected: false
+        title: Adjust date shape
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1731668202308'
+      position:
+        x: 2458.6719610136806
+        y: 884.5476491231261
+      positionAbsolute:
+        x: 2458.6719610136806
+        y: 884.5476491231261
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        provider_id: yahoo
+        provider_name: yahoo
+        provider_type: builtin
+        selected: false
+        title: Analytics(Start date designation)
+        tool_configurations: {}
+        tool_label: Analytics
+        tool_name: yahoo_finance_analytics
+        tool_parameters:
+          end_date:
+            type: mixed
+            value: '{{#1731659943505.text#}}'
+          start_date:
+            type: mixed
+            value: '{{#1731668202308.text#}}'
+          symbol:
+            type: mixed
+            value: '{{#1731661214801.text#}}'
+        type: tool
+      height: 54
+      id: '1731668629762'
+      position:
+        x: 2766
+        y: 914.5
+      positionAbsolute:
+        x: 2766
+        y: 914.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        author: Yuto
+        desc: ''
+        height: 1158
+        selected: false
+        showAuthor: true
+        text: '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"question
+          classifier","type":"text","version":1},{"type":"linebreak","version":1},{"detail":0,"format":0,"mode":"normal","style":"","text":"class1:","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"Classify
+          the message as Class 1 if the user is asking for information on a specific
+          stock, bond, or financial asset. This includes details such as recent performance,
+          market news, analyst ratings, or financial metrics. Focus is on understanding
+          a particular asset rather than general financial advice or investing concepts.\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Example
+          Sentences:","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"What
+          is the current performance of Tesla stock?\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"Can
+          you give me the latest news on Microsoft?\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"What
+          are the analyst ratings for Apple?\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"class2:","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"Classify
+          the message as Class 2 if the user wants to learn about financial literacy,
+          concepts, or basic knowledge of personal finance and investing. Topics may
+          include budgeting, understanding financial statements, types of investments,
+          or general economic principles.\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Example
+          Sentences:","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"Can
+          you explain what a bond is?\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"What
+          does diversification mean in investing?\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"How
+          do I start budgeting effectively?\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"class3:","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Classify
+          the message as Class 3 if the user is interested in finding a recommended
+          investment style based on their financial goals, risk tolerance, or personal
+          preferences. This includes questions about evaluating risk types, investment
+          timeframes, or matching investment strategies with their personality or
+          objectives.\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Example
+          Sentences:","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"What
+          investment style suits someone who prefers low risk?\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"Can
+          you suggest a strategy for a long-term investor?\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"Which
+          investment approach aligns with a conservative outlook?\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"class4:","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"English
+          Prompt: \"Classify the message as Class 4 if the user asks a question that
+          does not fall under any specific financial or weather-related categories.
+          This class includes general inquiries that may cover a wide range of topics
+          outside the other defined classes.\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Example
+          Sentences:","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"What
+          is the current time in London?\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"How
+          do I set a reminder on my phone?\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"What
+          are some tips for improving productivity?\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"class5:","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"Classify
+          the message as Class 5 if the user''s question or statement is entirely
+          unclear or incomprehensible, making it impossible to categorize based on
+          the existing classes. This includes messages with ambiguous wording, fragmented
+          phrases, or language that does not match any recognizable topic or context.\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Example
+          Sentences:","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"Ghrf...skp
+          qtzp?\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"What
+          am apple under river?\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"\"Nonsense
+          in tomorrow, please rain out!\"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"system
+          prompt","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"If
+          the user''s input consists only of alphabets, words, or numbers, it is highly
+          likely that they are in the middle of an investment style assessment. Therefore,
+          classify the question as \"Class 3: Recommended Investment Style Diagnosis.\"
+          Please also consider past memory if available, as it may help confirm the
+          classification.","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}'
+        theme: blue
+        title: ''
+        type: ''
+        width: 640
+      height: 1158
+      id: '1731669618232'
+      position:
+        x: -56.185498786051085
+        y: -368.81183838154055
+      positionAbsolute:
+        x: -56.185498786051085
+        y: -368.81183838154055
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-note
+      width: 640
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1731418309468'
+          - result
+        desc: ''
+        memory:
+          query_prompt_template: ''
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 50
+        model:
+          completion_params:
+            frequency_penalty: 0.1
+            presence_penalty: 0.1
+            temperature: 0.8
+            top_p: 0.9
+          mode: chat
+          name: gpt-4o-mini
+          provider: openai
+        prompt_template:
+        - id: 2cb4b663-34fc-43aa-b547-3d5463d8ab2d
+          role: system
+          text: 'Please refer to the knowledge base and answer the user''s questions
+            related to financial literacy in a clear, thorough, and understandable
+            manner, ensuring that your responses are appropriate and helpful.
+
+            {{#context#}}'
+        - id: bf14f507-7760-4286-9364-cf22a4371081
+          role: user
+          text: '{{#sys.query#}}'
+        selected: false
+        title: Financial Literacy Response Generation
+        type: llm
+        variables: []
+        vision:
+          configs:
+            detail: high
+            variable_selector:
+            - sys
+            - files
+          enabled: false
+      height: 98
+      id: '1731669692517'
+      position:
+        x: 3374
+        y: 1261.5
+      positionAbsolute:
+        x: 3374
+        y: 1261.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        dataset_ids:
+        - ce1b11c4-60c7-497e-a2fc-f44117c3a619
+        desc: ''
+        multiple_retrieval_config:
+          reranking_enable: true
+          reranking_mode: weighted_score
+          top_k: 4
+          weights:
+            keyword_setting:
+              keyword_weight: 0.3
+            vector_setting:
+              embedding_model_name: text-embedding-3-large
+              embedding_provider_name: openai
+              vector_weight: 0.7
+        query_variable_selector:
+        - '1731409373615'
+        - sys.query
+        retrieval_mode: multiple
+        selected: false
+        title: 知識取得 2
+        type: knowledge-retrieval
+      height: 92
+      id: '1731669761543'
+      position:
+        x: 3070
+        y: 1455.5
+      positionAbsolute:
+        x: 3070
+        y: 1455.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: Sorry. I did not understand the question well. Please type it again.
+        desc: ''
+        selected: false
+        title: error message
+        type: answer
+        variables: []
+      height: 116
+      id: '1731671485617'
+      position:
+        x: 845.6984482666903
+        y: 1861.1183181213157
+      positionAbsolute:
+        x: 845.6984482666903
+        y: 1861.1183181213157
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        author: Yuto
+        desc: ''
+        height: 334
+        selected: false
+        showAuthor: true
+        text: '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"From
+          the user''s question to getting the exact issue code.","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"stock
+          picking","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"↓","type":"text","version":1}],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Have
+          the stocks been extracted correctly?","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"↓","type":"text","version":1}],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Adjustment
+          of brand name output","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"system
+          prompt","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Your
+          role is to identify and extract stock ticker symbols or company names from
+          user input, and verify if they correspond to publicly traded securities
+          listed on a financial exchange. If the input matches a valid security based
+          on U.S. ADR (American Depository Receipt) standards, return only the valid
+          ticker symbol. Do not provide explanations, additional information, or any
+          other response. If the input is already a valid match, return it as-is.","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}'
+        theme: blue
+        title: ''
+        type: ''
+        width: 444
+      height: 334
+      id: '1731673878355'
+      position:
+        x: 886.8337947371142
+        y: 399.77691874847517
+      positionAbsolute:
+        x: 886.8337947371142
+        y: 399.77691874847517
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-note
+      width: 444
+    - data:
+        author: Yuto
+        desc: ''
+        height: 302
+        selected: false
+        showAuthor: true
+        text: '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"From
+          the user''s question to getting the exact start date","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Current
+          Time","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"↓","type":"text","version":1}],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Whether
+          the date could be retrieved or not","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"↓","type":"text","version":1}],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Adjust
+          date shape","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"system
+          prompt","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"You
+          are a system designed to handle date inputs. When the user provides a date
+          (year, month, day, or any combination), convert it to the format `%Y-%m-%d`.
+          If only a year (e.g., \"1980\") is provided, return the date as \"1980-01-01\".
+          Ensure all responses strictly follow the `%Y-%m-%d` format. Do not include
+          any other information in your response.","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}'
+        theme: blue
+        title: ''
+        type: ''
+        width: 586
+      height: 302
+      id: '1731673996138'
+      position:
+        x: 1982.860781136671
+        y: 424.5416208282997
+      positionAbsolute:
+        x: 1982.860781136671
+        y: 424.5416208282997
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-note
+      width: 586
+    - data:
+        author: Yuto
+        desc: ''
+        height: 160
+        selected: false
+        showAuthor: true
+        text: '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"The
+          following tools are from Yahoo! Finance","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Analytics","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"News","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Ticker","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}'
+        theme: blue
+        title: ''
+        type: ''
+        width: 294
+      height: 160
+      id: '1731674143754'
+      position:
+        x: 2714.2489739613316
+        y: 619.3522890764352
+      positionAbsolute:
+        x: 2714.2489739613316
+        y: 619.3522890764352
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-note
+      width: 294
+    - data:
+        desc: ''
+        selected: false
+        template: '{{ arg1 }}'
+        title: constructed response1
+        type: template-transform
+        variables:
+        - value_selector:
+          - '1731664020417'
+          - text
+          variable: arg1
+      height: 54
+      id: '1731675812787'
+      position:
+        x: 3678
+        y: 914.5
+      positionAbsolute:
+        x: 3678
+        y: 914.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        selected: false
+        template: '{{ arg1 }}'
+        title: constructed response2
+        type: template-transform
+        variables:
+        - value_selector:
+          - '1731669692517'
+          - text
+          variable: arg1
+      height: 54
+      id: '1731675817704'
+      position:
+        x: 3678
+        y: 1261.5
+      positionAbsolute:
+        x: 3678
+        y: 1261.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        selected: false
+        template: '{{ arg1 }}'
+        title: constructed response3
+        type: template-transform
+        variables:
+        - value_selector:
+          - '1731669804499'
+          - text
+          variable: arg1
+      height: 54
+      id: '1731675819976'
+      position:
+        x: 3678
+        y: 1420.5
+      positionAbsolute:
+        x: 3678
+        y: 1420.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        selected: false
+        template: '{{ arg1 }}'
+        title: constructed response4
+        type: template-transform
+        variables:
+        - value_selector:
+          - llm
+          - text
+          variable: arg1
+      height: 54
+      id: '1731675822391'
+      position:
+        x: 3678
+        y: 1557.5
+      positionAbsolute:
+        x: 3678
+        y: 1557.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1731675812787.output#}}'
+        desc: ''
+        selected: false
+        title: Output1
+        type: answer
+        variables: []
+      height: 103
+      id: '1731675847471'
+      position:
+        x: 3982
+        y: 914.5
+      positionAbsolute:
+        x: 3982
+        y: 914.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1731675817704.output#}}'
+        desc: ''
+        selected: false
+        title: Output2
+        type: answer
+        variables: []
+      height: 103
+      id: '1731675850092'
+      position:
+        x: 3982
+        y: 1261.5
+      positionAbsolute:
+        x: 3982
+        y: 1261.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1731675819976.output#}}'
+        desc: ''
+        selected: false
+        title: Output3
+        type: answer
+        variables: []
+      height: 103
+      id: '1731675852239'
+      position:
+        x: 3982
+        y: 1420.5
+      positionAbsolute:
+        x: 3982
+        y: 1420.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1731675822391.output#}}'
+        desc: ''
+        selected: false
+        title: Output4
+        type: answer
+        variables: []
+      height: 103
+      id: '1731675854669'
+      position:
+        x: 4037.329385962151
+        y: 1519.6430517101073
+      positionAbsolute:
+        x: 4037.329385962151
+        y: 1519.6430517101073
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: 141.7702707658175
+      y: -267.8496325480289
+      zoom: 0.42201827995280045
