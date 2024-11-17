@@ -89,7 +89,7 @@ def draw_predictions(frame, predictions, fps=None):
     return frame
 
 def main():
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
     
     # カメラの設定を最適化
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
