@@ -17,6 +17,7 @@ urlpatterns += [
    path('image_recognition/', views.image_recognition, name='image_recognition'),
    path('money/', views.money, name='money'),
    path('financing_ai_chat/', views.financing_ai_chat, name='financing_ai_chat'),
+   path('reference/', views.reference, name='reference'),
 ]
 
 # API endpoints

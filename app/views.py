@@ -597,3 +597,8 @@ def ask(request):
             'error': 'An unexpected error occurred',
             'details': str(e)
         }, status=500)
+
+def reference(request):
+    return render(request, 'app/reference.html')
+
+
