@@ -2,45 +2,42 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
+# Load environment variables from .env file
 load_dotenv()
 
+# Dify API configuration
 DIFY_API_KEY = os.getenv('DIFY_API_KEY', 'app-Qa4zCgr8Qd61Q8H3wPzOK2Zc')
 DIFY_APP_ID = os.getenv('DIFY_APP_ID', '59a2ea29-1a73-4a68-bac4-483cf915aa6b')
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Set up base directory path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Static files configuration
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'app/static'),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
+# Security settings
 SECRET_KEY = 'django-insecure-hafresg05t6dn&i8ukg^8==-jf286zug05vdp9feync)+ud2mb'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Allowed hosts configuration including ngrok domains for development
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '[::1]',
-    'e9f1-106-72-56-194.ngrok-free.app',  # ngrokドメイン
-    '*.ngrok-free.app',  # すべてのngrokサブドメインを許可
+    'e9f1-106-72-56-194.ngrok-free.app',
+    '*.ngrok-free.app',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://e9f1-106-72-56-194.ngrok-free.app',  # ngrokドメイン
-    'https://*.ngrok-free.app',  # すべてのngrokサブドメインを許可
+    'https://e9f1-106-72-56-194.ngrok-free.app',
+    'https://*.ngrok-free.app',
 ]
 
-# Application definition
-
+# Installed applications
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -61,6 +58,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Cache configuration
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -70,6 +68,7 @@ CACHES = {
 
 ROOT_URLCONF = 'CSE_Project.urls'
 
+# Template configuration
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -88,10 +87,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'CSE_Project.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
+# Database configuration
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -99,10 +95,7 @@ DATABASES = {
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
+# Password validation settings
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -118,25 +111,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
+# Internationalization settings
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
 STATIC_URL = 'static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

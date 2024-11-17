@@ -104,12 +104,12 @@ body {
 
 /* Main Content Area */
 .site-main {
-   flex: 1 0 auto; /* flexを1に設定し、縮小を防ぐ */
-   padding-top: 90px; /* ヘッダーの高さ分 */
+   flex: 1 0 auto; /* Set flex to 1 and prevent shrinking */
+   padding-top: 90px; /* Add padding for header height */
    position: relative;
    z-index: 1;
    width: 100%;
-   min-height: calc(100vh - 70px - 400px); /* 最小高さの設定 */
+   min-height: calc(100vh - 70px - 400px); /* Set minimum height considering header and footer */
 }
 
 .content-wrapper {

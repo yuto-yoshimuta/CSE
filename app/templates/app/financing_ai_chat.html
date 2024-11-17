@@ -1,39 +1,46 @@
 {% extends 'app/base.html' %}
 {% load static %}
 
+{# Page title for the AI Chat interface #}
 {% block title %}Financing AI Chat - Cash Scan Explore{% endblock %}
 
+{# Add meta tag for the ask endpoint URL #}
 {% block extra_head %}
 <meta name="ask-url" content="{% url 'app:ask' %}">
 {% endblock %}
 
+{# Load additional CSS files #}
 {% block extra_css %}
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'app/styles/financing_ai_chat.css' %}">
 {% endblock %}
 
+{# Main content section #}
 {% block content %}
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 <div class="chat-wrapper">
+    {# Sidebar with new chat button #}
     <div class="sidebar">
         <div class="sidebar-button" onclick="refreshChat()">
             <i class="fas fa-plus"></i>
-            新規チャット
+            New Chat
         </div>
     </div>
+    {# Main chat interface #}
     <div class="main-content">
         <div class="chat-container" id="chat"></div>
         <div class="input-area">
             <div class="input-container">
-                <textarea id="input" class="input-box" placeholder="メッセージを入力..." rows="1"></textarea>
-                <button id="send" class="send-button">送信</button>
-                <span id="loading" class="loading typing" style="display: none">入力中</span>
+                <textarea id="input" class="input-box" placeholder="Enter your message..." rows="1"></textarea>
+                <button id="send" class="send-button">Send</button>
+                <span id="loading" class="loading typing" style="display: none">Typing</span>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
 
+{# Load JavaScript dependencies and initialization #}
 {% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
 <script>

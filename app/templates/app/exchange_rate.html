@@ -1,19 +1,26 @@
 {% extends 'app/base.html' %}
 {% load static %}
 
+{# Define the page title #}
 {% block title %}Currency Converter - Cash Scan Explore{% endblock %}
 
+{# Include custom CSS for the currency converter #}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'app/styles/exchange_rate.css' %}">
 {% endblock %}
 
+{# Main content block #}
 {% block content %}
 <div class="content-wrapper">
+    {# Page heading #}
     <h1 class="page-title">Currency Converter</h1>
     
+    {# Main converter form container #}
     <div class="converter-container">
+        {# Currency conversion form with CSRF protection #}
         <form id="conversion-form">
             {% csrf_token %}
+            {# Amount input field #}
             <div class="form-group">
                 <label for="amount">Amount</label>
                 <input type="number" 
@@ -26,13 +33,16 @@
                        class="form-input">
             </div>
             
+            {# Source currency selection dropdown #}
             <div class="form-group">
                 <label for="from_currency">From Currency</label>
                 <select id="from_currency" name="from_currency" class="form-select">
+                    {# Group for commonly used currencies #}
                     <optgroup label="Main Currencies">
                         <option value="JPY" selected>Japanese Yen (JPY)</option>
                         <option value="TWD">Taiwan Dollar (TWD)</option>
                     </optgroup>
+                    {# Group for major global currencies #}
                     <optgroup label="Major World Currencies">
                         <option value="USD">US Dollar (USD)</option>
                         <option value="EUR">Euro (EUR)</option>
@@ -41,6 +51,7 @@
                         <option value="CAD">Canadian Dollar (CAD)</option>
                         <option value="CHF">Swiss Franc (CHF)</option>
                     </optgroup>
+                    {# Group for Asian regional currencies #}
                     <optgroup label="Asian Currencies">
                         <option value="CNY">Chinese Yuan (CNY)</option>
                         <option value="HKD">Hong Kong Dollar (HKD)</option>
@@ -50,13 +61,16 @@
                 </select>
             </div>
             
+            {# Target currency selection dropdown #}
             <div class="form-group">
                 <label for="to_currency">To Currency</label>
                 <select id="to_currency" name="to_currency" class="form-select">
+                    {# Group for commonly used currencies #}
                     <optgroup label="Main Currencies">
                         <option value="TWD" selected>Taiwan Dollar (TWD)</option>
                         <option value="JPY">Japanese Yen (JPY)</option>
                     </optgroup>
+                    {# Group for major global currencies #}
                     <optgroup label="Major World Currencies">
                         <option value="USD">US Dollar (USD)</option>
                         <option value="EUR">Euro (EUR)</option>
@@ -65,6 +79,7 @@
                         <option value="CAD">Canadian Dollar (CAD)</option>
                         <option value="CHF">Swiss Franc (CHF)</option>
                     </optgroup>
+                    {# Group for Asian regional currencies #}
                     <optgroup label="Asian Currencies">
                         <option value="CNY">Chinese Yuan (CNY)</option>
                         <option value="HKD">Hong Kong Dollar (HKD)</option>
@@ -74,18 +89,22 @@
                 </select>
             </div>
             
+            {# Submit button for the form #}
             <button type="submit" class="convert-btn">Convert Currency</button>
         </form>
         
+        {# Container for displaying conversion results #}
         <div id="result" class="result-container"></div>
     </div>
 </div>
 
+{# Loading overlay shown during currency conversion #}
 <div id="loading-overlay" class="loading-overlay">
     <div class="loader"></div>
 </div>
 {% endblock %}
 
+{# Include JavaScript for currency converter functionality #}
 {% block extra_js %}
 <script src="{% static 'app/scripts/exchange_rate.js' %}"></script>
 {% endblock %}

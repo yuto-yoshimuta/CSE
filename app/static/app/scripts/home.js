@@ -8,25 +8,36 @@ document.addEventListener("DOMContentLoaded", function () {
   let progress = 0;
   let interval;
 
-  // クエリパラメータをチェック
+  // Check if this is the first visit
+  const hasVisitedBefore = localStorage.getItem('hasVisitedBefore');
+
+  // Skip intro if user has visited before or if skipIntro parameter is present
   const urlParams = new URLSearchParams(window.location.search);
   const skipIntro = urlParams.get('skipIntro');
 
-  // skipIntro パラメータが true なら intro をスキップしてメインコンテンツを表示
-  if (skipIntro === 'true') {
+  if (hasVisitedBefore || skipIntro === 'true') {
+    // Skip intro animation for returning visitors
     introSection.style.display = 'none';
     mainContent.style.display = 'block';
   } else {
+    // Show intro animation for first-time visitors
     introBtn.addEventListener('click', function () {
       introBtn.style.display = 'none';
       progressContainer.style.display = 'block';
       startProgressBar();
+      
+      // Set flag in localStorage to indicate user has seen the intro
+      localStorage.setItem('hasVisitedBefore', 'true');
     });
   }
 
+  /**
+   * Initialize and start the progress bar animation
+   * Controls the loading animation before showing main content
+   */
   function startProgressBar() {
-    const duration = 2500; // プログレスバーが完了する時間（ミリ秒）
-    const intervalTime = 100; // プログレスバーを更新する間隔（ミリ秒）
+    const duration = 2500;  // Total time for progress bar completion (milliseconds)
+    const intervalTime = 100;  // Update interval for progress bar (milliseconds)
     const increment = (intervalTime / duration) * 100;
 
     interval = setInterval(() => {
@@ -41,6 +52,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }, intervalTime);
   }
 
+  /**
+   * Switch display from intro section to main content
+   * Called after progress bar reaches 100%
+   */
   function showMainContent() {
     introSection.style.display = 'none';
     mainContent.style.display = 'block';
