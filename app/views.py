@@ -280,9 +280,16 @@ def video_feed(request, stream_id):
         # Run object detection on the frame
         prediction_result = model.predict(frame, confidence=40, overlap=30).json()
         
+        # Debug log for predictions
+        logger.debug(f"Raw predictions: {prediction_result}")
+        
         # Process and visualize detection results
         processed_predictions = []
         for detection in prediction_result['predictions']:
+            # Extract class name and confidence
+            class_name = detection['class']
+            confidence = detection['confidence']
+            
             # Calculate bounding box coordinates
             x = int(detection['x'] - detection['width'] / 2)
             y = int(detection['y'] - detection['height'] / 2)
@@ -291,31 +298,56 @@ def video_feed(request, stream_id):
             
             # Draw rectangle and label on the frame
             cv2.rectangle(frame, (x, y), (x + width, y + height), (0, 255, 0), 2)
+            label_text = f"{class_name} ({confidence:.2f})"
             cv2.putText(frame, 
-                       f"{detection['class']} ({detection['confidence']:.2f})", 
+                       label_text, 
                        (x, y - 10), 
                        cv2.FONT_HERSHEY_SIMPLEX, 
                        0.5, (0, 255, 0), 2)
             
+            # Clean and normalize the class name
+            # TWD format standardization
+            if isinstance(class_name, str):
+                if 'twd' in class_name.lower():
+                    # Extract the number and ensure proper format
+                    try:
+                        # Remove any negative signs from the class name if present
+                        class_name = class_name.replace('-', '')
+                        # Standardize format to "twd_X" where X is the number
+                        if '_' not in class_name:
+                            number = ''.join(filter(str.isdigit, class_name))
+                            class_name = f"twd_{number}"
+                    except Exception as e:
+                        logger.error(f"Error processing TWD class name: {e}")
+            
             # Store detection results
-            processed_predictions.append({
-                "class": detection['class'],
-                "confidence": detection['confidence'],
+            processed_prediction = {
+                "class": class_name,
+                "confidence": confidence,
                 "x": x,
                 "y": y,
                 "width": width,
                 "height": height
-            })
+            }
+            processed_predictions.append(processed_prediction)
+            
+            # Debug log for each processed prediction
+            logger.debug(f"Processed prediction: {processed_prediction}")
         
         # Convert processed frame to base64 for sending to frontend
         _, buffer = cv2.imencode('.jpg', frame)
         image_base64 = base64.b64encode(buffer).decode('utf-8')
         
-        return JsonResponse({
+        response_data = {
             "status": "success",
             "predictions": processed_predictions,
             "image": image_base64
-        })
+        }
+        
+        # Debug log for final response
+        logger.debug(f"Sending response with predictions: {processed_predictions}")
+        
+        return JsonResponse(response_data)
         
     except Exception as e:
         logger.error(f"Error processing frame: {e}", exc_info=True)
