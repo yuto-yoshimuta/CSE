@@ -7,7 +7,7 @@ app_name = 'app'
 
 # Main page URLs
 urlpatterns = [
-   path('', views.index, name='index'),
+   path('', views.home, name='home'),
    path('get_updated_graph/', views.get_updated_graph, name='get_updated_graph'),
 ]
 
@@ -16,7 +16,7 @@ urlpatterns += [
    path('exchange_rate/', views.exchange_rate, name='exchange_rate'),
    path('image_recognition/', views.image_recognition, name='image_recognition'),
    path('money/', views.money, name='money'),
-   path('mitei/', views.mitei, name='mitei'),
+   path('financing_ai_chat/', views.financing_ai_chat, name='financing_ai_chat'),
 ]
 
 # API endpoints
@@ -24,6 +24,7 @@ urlpatterns += [
    path('convert/', views.convert_currency, name='convert_currency'),
    path('start_camera/', views.start_camera, name='start_camera'),
    path('video_feed/<str:stream_id>', views.video_feed, name='video_feed'),
+   path('ask/', views.ask, name='ask'),
 ]
 
 # Static files

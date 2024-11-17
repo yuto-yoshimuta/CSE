@@ -67,10 +67,10 @@
         </div>
 
         <div class="button-section">
-            <a class="button-box" href="{% url 'app:mitei' %}">
-                <h2>未定</h2>
-                <img alt="未定" src="{% static 'app/assets/news-image.png' %}"/>
-                <p>未定についての説明文</p>
+            <a class="button-box" href="{% url 'app:financing_ai_chat' %}">
+                <h2>Financing AI Chat</h2>
+                <img alt="Financing AI Chat" src="{% static 'app/assets/aichat.png' %}"/>
+                <p class="button-box-explain">Financing AI Chatについての説明文</p>
             </a>
 
             <a class="button-box" href="{% url 'app:exchange_rate' %}">
@@ -114,6 +114,6 @@
 
 {% block extra_js %}
     {{ block.super }}
-    <script src="{% static 'app/scripts/app.js' %}"></script>
+    <script src="{% static 'app/scripts/home.js' %}"></script>
     <script src="{% static 'app/scripts/graph_updater.js' %}"></script>
 {% endblock %}

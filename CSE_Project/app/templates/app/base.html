@@ -1,47 +1,91 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>{% block title %}Cash Scan Explore{% endblock %}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&amp;display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
-    <link href="{% static 'app/styles/base.css' %}" rel="stylesheet"/>
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'app/styles/base.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    {% block extra_head %}{% endblock %}
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     {% block bg_video %}{% endblock %}
 
-    <header>
+    <!-- Header Section -->
+    <header class="site-header">
         <div class="logo">
-            <img src="{% static 'app/assets/image.png' %}" alt="ロゴ">
-            <a href="{% url 'app:index' %}" id="home-link">Cash Scan Explore</a>
+            <img src="{% static 'app/assets/icon.png' %}" alt="CSE Icon">
+            <a href="{% url 'app:home' %}" class="logo-text">Cash Scan Explore</a>
         </div>
-        <div class="header-buttons">
-            <a href="{% url 'app:mitei' %}" class="btn-mitei">
-                <i class="fas fa-question-circle"></i>未定
+        <nav class="header-buttons">
+            <a href="{% url 'app:financing_ai_chat' %}" class="nav-btn ai-chat">
+                <i class="fas fa-robot"></i>
+                <span>Financing AI Chat</span>
             </a>
-            <a href="{% url 'app:exchange_rate' %}" class="btn-exchange">
-                <i class="fas fa-exchange-alt"></i>Exchange Rate
+            <a href="{% url 'app:exchange_rate' %}" class="nav-btn exchange">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Exchange Rate</span>
             </a>
-            <a href="{% url 'app:image_recognition' %}" class="btn-recognition">
-                <i class="fas fa-camera"></i>Image Recognition
+            <a href="{% url 'app:image_recognition' %}" class="nav-btn recognition">
+                <i class="fas fa-camera"></i>
+                <span>Image Recognition</span>
             </a>
-            <a href="{% url 'app:money' %}" class="btn-money">
-                <i class="fas fa-coins"></i>Types of Money
+            <a href="{% url 'app:money' %}" class="nav-btn money">
+                <i class="fas fa-coins"></i>
+                <span>Types of Money</span>
             </a>
-        </div>
+        </nav>
     </header>
 
-    <main>
-        {% block content %}
-        {% endblock %}
+    <!-- Main Content -->
+    <main class="site-main">
+        <div class="content-wrapper">
+            {% block content %}{% endblock %}
+        </div>
     </main>
 
-    <footer>
-        <h1>2024 Uni</h1>
+    <!-- Footer Section -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About Us</h3>
+                <ul>
+                    <li><a href="#">Project Overview</a></li>
+                    <li><a href="#">Our Team</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Features</h3>
+                <ul>
+                    <li><a href="{% url 'app:financing_ai_chat' %}">AI Chat</a></li>
+                    <li><a href="{% url 'app:exchange_rate' %}">Exchange Rate</a></li>
+                    <li><a href="{% url 'app:image_recognition' %}">Recognition</a></li>
+                    <li><a href="{% url 'app:money' %}">Money Types</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">API Reference</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="social-links">
+                <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            </div>
+            <p>&copy; 2024 Cash Scan Explore. Built with pride at Uni</p>
+        </div>
     </footer>
 
     {% block extra_js %}{% endblock %}

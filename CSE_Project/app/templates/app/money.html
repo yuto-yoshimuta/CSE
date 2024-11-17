@@ -9,27 +9,29 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row align-items-start">
-        <div class="col-2">
-            <div class="dropdown" id="space">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="yellow">
-                    JPY
+<div class="content-wrapper">
+    <h1 class="page-title">Currency Information</h1>
+    <div class="currency-container">
+        <!-- Currency Selection Section -->
+        <div class="currency-selectors">
+            <div class="currency-dropdown">
+                <button class="currency-btn jpy-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Japanese Yen (JPY)
+                    <i class="fas fa-chevron-down"></i>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-white">
+                <ul class="dropdown-menu">
                     {% for value in currency_types.JPY.denominations %}
                         <li><a class="dropdown-item" href="#" onclick="setCurrency('jpy{{ value }}')">{{ value }} JPY</a></li>
                     {% endfor %}
                 </ul>
             </div>
-        </div>
 
-        <div class="col-2">
-            <div class="dropdown" id="space">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="blue">
-                    TWD
+            <div class="currency-dropdown">
+                <button class="currency-btn twd-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Taiwan Dollar (TWD)
+                    <i class="fas fa-chevron-down"></i>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-white">
+                <ul class="dropdown-menu">
                     {% for value in currency_types.TWD.denominations %}
                         <li><a class="dropdown-item" href="#" onclick="setCurrency('twd{{ value }}')">{{ value }} TWD</a></li>
                     {% endfor %}
@@ -37,19 +39,19 @@
             </div>
         </div>
 
-        <div class="col-8">
-            <div class="card mb-3" id="space">
+        <!-- Currency Display Card -->
+        <div class="currency-card">
+            <div class="currency-image">
                 <img id="currencyImage" 
                      src="{% static 'app/assets/JPY/1.jpg' %}" 
-                     class="card-img-top" 
-                     alt="currency"
+                     alt="Currency"
                      data-placeholder="{% static 'app/assets/placeholder.jpg' %}">
-                <div class="card-body">
-                    <h5 class="card-title" id="currencyTitle">1 JPY</h5>
-                    <p class="card-text" id="currencyText">
-                        <!-- Initial text will be set by JavaScript -->
-                    </p>
-                </div>
+            </div>
+            <div class="currency-info">
+                <h2 id="currencyTitle">1 Japanese Yen</h2>
+                <p id="currencyText" class="currency-description">
+                    <!-- Description will be set by JavaScript -->
+                </p>
             </div>
         </div>
     </div>
@@ -58,7 +60,6 @@
 
 {% block extra_js %}
 <script>
-    // 画像のベースURLをJavaScriptに渡す
     const STATIC_URL = "{% static 'app/assets/' %}";
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>

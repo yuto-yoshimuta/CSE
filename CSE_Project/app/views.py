@@ -6,6 +6,7 @@ import base64
 import io
 import pytz
 import cv2
+import json
 import numpy as np
 import pandas as pd
 import yfinance as yf
@@ -16,11 +17,14 @@ import matplotlib
 matplotlib.use('Agg')
 
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import StreamingHttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
+from .utils import DifyAPI
 from .models import ExchangeRate
+
+dify_api = DifyAPI()
 
 # Initialize logging
 logging.basicConfig(level=logging.DEBUG)
@@ -138,7 +142,7 @@ class GraphService:
             if 'buffer' in locals():
                 buffer.close()
 
-def index(request):
+def home(request):
     """Main view function for the homepage"""
     try:
         plt.clf()
@@ -150,7 +154,7 @@ def index(request):
                 'error_message': 'Failed to fetch data.',
                 'graph_data': None
             }
-            return render(request, 'app/index.html', context)
+            return render(request, 'app/home.html', context)
 
         graph_data, latest_rate, last_updated = GraphService.generate_graph(rates)
         if not graph_data:
@@ -158,7 +162,7 @@ def index(request):
                 'error_message': 'Failed to generate graph.',
                 'graph_data': None
             }
-            return render(request, 'app/index.html', context)
+            return render(request, 'app/home.html', context)
 
         context = {
             'graph_data': graph_data,
@@ -167,15 +171,15 @@ def index(request):
             'error_message': None
         }
         
-        return render(request, 'app/index.html', context)
+        return render(request, 'app/home.html', context)
     
     except Exception as e:
-        logger.error(f"Error in index view: {e}")
+        logger.error(f"Error in home view: {e}")
         context = {
             'error_message': 'An unexpected error occurred.',
             'graph_data': None
         }
-        return render(request, 'app/index.html', context)
+        return render(request, 'app/home.html', context)
 
 @never_cache
 def get_updated_graph(request):
@@ -413,5 +417,82 @@ def money(request):
     }
     return render(request, 'app/money.html', {'currency_types': currency_types})
 
-def mitei(request):
-    return render(request, 'app/mitei.html')
+def financing_ai_chat(request):
+    context = {
+        'initial_message': (
+            "Hello! I'm WealthWise Spark 💬✨!\n"
+            "Feel free to enter your concerns or matters you wish to investigate.\n\n"
+            "What I can do:\n"
+            "- Analyze specific stocks (U.S. listed stocks)\n"
+            "- Provide financial knowledge and literacy\n"
+            "- Diagnosis of investment style\n"
+            "- Chatting with you\n\n"
+            "Sample Questions:\n"
+            "- I would like to know if TSMC's share price was undervalued in 2020.\n"
+            "- I want to know which investment method is right for me.\n"
+            "- What is the difference between assets and liabilities?"
+        )
+    }
+    return render(request, 'app/financing_ai_chat.html', context)
+
+@require_http_methods(["POST"])
+def ask(request):
+    """
+    AI Chat endpoint that handles POST requests for message processing
+    """
+    try:
+        data = json.loads(request.body)
+        user_message = data.get('message')
+        conversation_id = data.get('conversation_id')
+        user_id = data.get('user', 'default_user')
+
+        if not user_message:
+            logger.error("No message provided in request")
+            return JsonResponse({'error': 'No message provided'}, status=400)
+
+        logger.info(f"Processing message from user {user_id}: {user_message[:50]}...")
+
+        try:
+            response = dify_api.send_message(
+                query=user_message,
+                conversation_id=conversation_id,
+                user=user_id,
+                stream=True
+            )
+
+            def generate():
+                try:
+                    for line in response.iter_lines():
+                        if line:
+                            decoded_line = line.decode('utf-8')
+                            logger.debug(f"Streaming response line: {decoded_line[:50]}...")
+                            yield f"data: {decoded_line}\n\n"
+                except Exception as e:
+                    logger.error(f"Error in stream generation: {e}")
+                    yield f"data: {json.dumps({'error': str(e)})}\n\n"
+
+            return StreamingHttpResponse(
+                generate(),
+                content_type='text/event-stream'
+            )
+
+        except Exception as e:
+            logger.error(f"Error in Dify API communication: {e}")
+            return JsonResponse({
+                'error': 'Failed to communicate with AI service',
+                'details': str(e)
+            }, status=503)
+
+    except json.JSONDecodeError as e:
+        logger.error(f"Invalid JSON in request: {e}")
+        return JsonResponse({
+            'error': 'Invalid JSON format',
+            'details': str(e)
+        }, status=400)
+    
+    except Exception as e:
+        logger.error(f"Unexpected error in ask endpoint: {e}")
+        return JsonResponse({
+            'error': 'An unexpected error occurred',
+            'details': str(e)
+        }, status=500)
