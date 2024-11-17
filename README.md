@@ -60,8 +60,10 @@
    出力されるローカルホストにアクセスすれば完了
 
 9.以下のコードを実行
+   ```
    python manage.py makemigrations
    python manage.py migrate
+   ```
 
 10. 携帯などで操作する場合、（仮デプロイ）
     前提: ngrokをインストール, ngrokアカウント作成
