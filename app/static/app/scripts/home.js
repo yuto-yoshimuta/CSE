@@ -8,19 +8,26 @@ document.addEventListener("DOMContentLoaded", function () {
   let progress = 0;
   let interval;
 
-  // Check for URL query parameters
+  // Check if this is the first visit
+  const hasVisitedBefore = localStorage.getItem('hasVisitedBefore');
+
+  // Skip intro if user has visited before or if skipIntro parameter is present
   const urlParams = new URLSearchParams(window.location.search);
   const skipIntro = urlParams.get('skipIntro');
 
-  // If skipIntro parameter is 'true', skip introduction and show main content directly
-  if (skipIntro === 'true') {
+  if (hasVisitedBefore || skipIntro === 'true') {
+    // Skip intro animation for returning visitors
     introSection.style.display = 'none';
     mainContent.style.display = 'block';
   } else {
+    // Show intro animation for first-time visitors
     introBtn.addEventListener('click', function () {
       introBtn.style.display = 'none';
       progressContainer.style.display = 'block';
       startProgressBar();
+      
+      // Set flag in localStorage to indicate user has seen the intro
+      localStorage.setItem('hasVisitedBefore', 'true');
     });
   }
 
