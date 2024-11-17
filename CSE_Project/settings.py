@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DIFY_API_KEY = os.getenv('DIFY_API_KEY', 'app-M0lChryRKvOYknRLy6MngnUs')
-DIFY_APP_ID = os.getenv('DIFY_APP_ID', 'd654d54b-8319-48c7-9d21-90d730e9d195')
+DIFY_API_KEY = os.getenv('DIFY_API_KEY', 'app-Qa4zCgr8Qd61Q8H3wPzOK2Zc')
+DIFY_APP_ID = os.getenv('DIFY_APP_ID', '59a2ea29-1a73-4a68-bac4-483cf915aa6b')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
