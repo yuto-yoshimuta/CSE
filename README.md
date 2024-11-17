@@ -59,14 +59,18 @@
    ```
    出力されるローカルホストにアクセスすれば完了
 
-9. 携帯などで操作する場合、（仮デプロイ）
+9.以下のコードを実行
+   python manage.py makemigrations
+   python manage.py migrate
+
+10. 携帯などで操作する場合、（仮デプロイ）
     前提: ngrokをインストール, ngrokアカウント作成
    出てきたローカルホストURLを○○と定義して以下のコマンドを実行
    ```
    ngrok http ○○
    ```
 
-10. Docker down
+11. Docker down
    作業が終了すれば以下のコマンドでコンテナを停止することが可能
    ```
    docker-compose down
