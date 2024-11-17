@@ -1,5 +1,6 @@
 # CashScanExplorer
-<details><summary><h1>Project開発スタートアップ</h1></summary>
+<details><summary><h1>Japanese Description</h1></summary>
+   <details><summary><h1>Project開発スタートアップ</h1></summary>
 
 # プロジェクトのセットアップ手順
 
@@ -97,6 +98,7 @@ docker-compose ps
 ```
 docker-compose down --rmi all
 ```
+</details>
 </details>
 
 <details><summary><h1>Project Development Startup</h1></summary>
