@@ -8,75 +8,77 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Currency Converter</h2>
-
-    <form id="conversion-form">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="amount">Amount:</label>
-            <input type="number" 
-                   id="amount" 
-                   name="amount" 
-                   required 
-                   placeholder="Enter amount" 
-                   min="0.01" 
-                   step="0.01"
-                   class="form-input">
-        </div>
-        
-        <div class="form-group">
-            <label for="from_currency">From Currency:</label>
-            <select id="from_currency" name="from_currency" class="form-select">
-                <optgroup label="Main Currencies">
-                    <option value="JPY" selected>Japanese Yen (JPY)</option>
-                    <option value="TWD">Taiwan Dollar (TWD)</option>
-                </optgroup>
-                <optgroup label="Major World Currencies">
-                    <option value="USD">US Dollar (USD)</option>
-                    <option value="EUR">Euro (EUR)</option>
-                    <option value="GBP">British Pound (GBP)</option>
-                    <option value="AUD">Australian Dollar (AUD)</option>
-                    <option value="CAD">Canadian Dollar (CAD)</option>
-                    <option value="CHF">Swiss Franc (CHF)</option>
-                </optgroup>
-                <optgroup label="Asian Currencies">
-                    <option value="CNY">Chinese Yuan (CNY)</option>
-                    <option value="HKD">Hong Kong Dollar (HKD)</option>
-                    <option value="KRW">Korean Won (KRW)</option>
-                    <option value="SGD">Singapore Dollar (SGD)</option>
-                </optgroup>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="to_currency">To Currency:</label>
-            <select id="to_currency" name="to_currency" class="form-select">
-                <optgroup label="Main Currencies">
-                    <option value="TWD" selected>Taiwan Dollar (TWD)</option>
-                    <option value="JPY">Japanese Yen (JPY)</option>
-                </optgroup>
-                <optgroup label="Major World Currencies">
-                    <option value="USD">US Dollar (USD)</option>
-                    <option value="EUR">Euro (EUR)</option>
-                    <option value="GBP">British Pound (GBP)</option>
-                    <option value="AUD">Australian Dollar (AUD)</option>
-                    <option value="CAD">Canadian Dollar (CAD)</option>
-                    <option value="CHF">Swiss Franc (CHF)</option>
-                </optgroup>
-                <optgroup label="Asian Currencies">
-                    <option value="CNY">Chinese Yuan (CNY)</option>
-                    <option value="HKD">Hong Kong Dollar (HKD)</option>
-                    <option value="KRW">Korean Won (KRW)</option>
-                    <option value="SGD">Singapore Dollar (SGD)</option>
-                </optgroup>
-            </select>
-        </div>
-        
-        <button type="submit" class="convert-btn">Convert</button>
-    </form>
+<div class="content-wrapper">
+    <h1 class="page-title">Currency Converter</h1>
     
-    <div id="result" class="result-container"></div>
+    <div class="converter-container">
+        <form id="conversion-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="number" 
+                       id="amount" 
+                       name="amount" 
+                       required 
+                       placeholder="Enter amount" 
+                       min="0.01" 
+                       step="0.01"
+                       class="form-input">
+            </div>
+            
+            <div class="form-group">
+                <label for="from_currency">From Currency</label>
+                <select id="from_currency" name="from_currency" class="form-select">
+                    <optgroup label="Main Currencies">
+                        <option value="JPY" selected>Japanese Yen (JPY)</option>
+                        <option value="TWD">Taiwan Dollar (TWD)</option>
+                    </optgroup>
+                    <optgroup label="Major World Currencies">
+                        <option value="USD">US Dollar (USD)</option>
+                        <option value="EUR">Euro (EUR)</option>
+                        <option value="GBP">British Pound (GBP)</option>
+                        <option value="AUD">Australian Dollar (AUD)</option>
+                        <option value="CAD">Canadian Dollar (CAD)</option>
+                        <option value="CHF">Swiss Franc (CHF)</option>
+                    </optgroup>
+                    <optgroup label="Asian Currencies">
+                        <option value="CNY">Chinese Yuan (CNY)</option>
+                        <option value="HKD">Hong Kong Dollar (HKD)</option>
+                        <option value="KRW">Korean Won (KRW)</option>
+                        <option value="SGD">Singapore Dollar (SGD)</option>
+                    </optgroup>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="to_currency">To Currency</label>
+                <select id="to_currency" name="to_currency" class="form-select">
+                    <optgroup label="Main Currencies">
+                        <option value="TWD" selected>Taiwan Dollar (TWD)</option>
+                        <option value="JPY">Japanese Yen (JPY)</option>
+                    </optgroup>
+                    <optgroup label="Major World Currencies">
+                        <option value="USD">US Dollar (USD)</option>
+                        <option value="EUR">Euro (EUR)</option>
+                        <option value="GBP">British Pound (GBP)</option>
+                        <option value="AUD">Australian Dollar (AUD)</option>
+                        <option value="CAD">Canadian Dollar (CAD)</option>
+                        <option value="CHF">Swiss Franc (CHF)</option>
+                    </optgroup>
+                    <optgroup label="Asian Currencies">
+                        <option value="CNY">Chinese Yuan (CNY)</option>
+                        <option value="HKD">Hong Kong Dollar (HKD)</option>
+                        <option value="KRW">Korean Won (KRW)</option>
+                        <option value="SGD">Singapore Dollar (SGD)</option>
+                    </optgroup>
+                </select>
+            </div>
+            
+            <button type="submit" class="convert-btn">Convert Currency</button>
+        </form>
+        
+        <div id="result" class="result-container"></div>
+    </div>
 </div>
 
 <div id="loading-overlay" class="loading-overlay">

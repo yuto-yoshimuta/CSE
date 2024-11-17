@@ -8,39 +8,39 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-   <div class="header">
-       <h1>Real-time Currency Recognition</h1>
-   </div>
+<div class="content-wrapper">
+    <h1 class="page-title">Real-time Currency Recognition</h1>
+    
+    <div class="recognition-container">
+        <div class="controls">
+            <select id="cameraSelect">
+                <option value="">Select a camera</option>
+            </select>
+            <button id="startButton" onclick="startCamera()">Start Camera</button>
+        </div>
 
-   <div class="controls">
-       <select id="cameraSelect">
-           <option value="">Select a camera</option>
-       </select>
-       <button id="startButton" onclick="startCamera()">Start Camera</button>
-   </div>
+        <div class="video-container">
+            <div class="video-box">
+                <h3>Camera Feed</h3>
+                <video id="video_preview" autoplay playsinline></video>
+            </div>
+            <div class="video-box">
+                <h3>Recognition Results</h3>
+                <img id="processed_video">
+            </div>
+        </div>
 
-   <div class="video-container">
-       <div class="video-box">
-           <h3>Camera Feed</h3>
-           <video id="video_preview" autoplay playsinline></video>
-       </div>
-       <div class="video-box">
-           <h3>Recognition Results</h3>
-           <img id="processed_video">
-       </div>
-   </div>
+        <div class="detection-results">
+            <div class="money-counter">
+                <div>Total Amount (Japanese Yen): <span id="jpyTotal">0</span> JPY</div>
+                <div>Total Amount (Taiwan Dollar): <span id="twdTotal">0</span> TWD</div>
+            </div>
+            <div class="detected-items" id="detectedItems"></div>
+        </div>
 
-   <div class="detection-results">
-       <div class="money-counter">
-           <div>Total Amount (Japanese Yen): <span id="jpyTotal">0</span> JPY</div>
-           <div>Total Amount (Taiwan Dollar): <span id="twdTotal">0</span> TWD</div>
-       </div>
-       <div class="detected-items" id="detectedItems"></div>
-   </div>
-
-   <div id="errorMessage"></div>
-   <canvas id="canvas"></canvas>
+        <div id="errorMessage"></div>
+    </div>
+    <canvas id="canvas"></canvas>
 </div>
 {% endblock %}
 
