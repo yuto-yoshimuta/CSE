@@ -8,10 +8,10 @@
 {% endblock %}
 
 {% block bg_video %}
-<!-- 背景動画 -->
+<!-- Background Video -->
 <video autoplay="" id="bg-video" loop="" muted="">
     <source src="{% static 'app/assets/CSEvideo.mp4' %}" type="video/mp4"/>
-    お使いのブラウザは動画タグに対応していません。
+    Your browser does not support the video tag.
 </video>
 {% endblock %}
 
@@ -60,7 +60,7 @@
             {% else %}
                 {% if not error_message %}
                     <div class="loading-message">
-                        グラフデータを読み込み中...
+                        Loading graph data...
                     </div>
                 {% endif %}
             {% endif %}
