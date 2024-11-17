@@ -24,13 +24,15 @@ from django.views.decorators.cache import never_cache
 from .utils import DifyAPI
 from .models import ExchangeRate
 
+# Initialize the DifyAPI for AI chat functionality
 dify_api = DifyAPI()
 
-# Initialize logging
+# Set up logging to track errors and debug information
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# Initialize Roboflow client
+# Initialize Roboflow for image recognition
+# This service is used to detect and classify objects in images
 try:
     rf = Roboflow(api_key="4jFLZZIZSslfmqbOl4lq")
     project = rf.workspace().project("jpytwd")
@@ -40,30 +42,40 @@ except Exception as e:
     logger.error(f"Failed to initialize Roboflow: {e}")
     raise
 
+# Define a data class to store exchange rate information
 @dataclass
 class ExchangeRateData:
-    graph_data: str
-    latest_rate: float
-    last_updated: str
+    graph_data: str          # Base64 encoded graph image
+    latest_rate: float       # Most recent exchange rate
+    last_updated: str        # Timestamp of last update
 
 class ExchangeRateService:
     @staticmethod
     def get_exchange_rate_data() -> Optional[List[ExchangeRate]]:
+        """
+        Fetches one year of TWD/JPY exchange rate data from Yahoo Finance
+        and stores it in the database.
+        Returns a list of ExchangeRate objects or None if the fetch fails.
+        """
         try:
+            # Set up date range for the past year in Japan timezone
             jst = pytz.timezone('Asia/Tokyo')
             end = datetime.now(jst).date()
             start = end - timedelta(days=365)
             currency_pair = 'TWDJPY'
             
+            # Download exchange rate data from Yahoo Finance
             df = yf.download(f'{currency_pair}=X', start=start, end=end)
             if df.empty:
                 return None
             
+            # Clear existing data for this date range
             ExchangeRate.objects.filter(
                 currency_pair=currency_pair,
                 date__gte=start
             ).delete()
             
+            # Convert the downloaded data into ExchangeRate objects
             bulk_create_list = [
                 ExchangeRate(
                     date=index.tz_localize('UTC').tz_convert('Asia/Tokyo').date() 
@@ -81,8 +93,10 @@ class ExchangeRateService:
             if not bulk_create_list:
                 return None
                 
+            # Save all exchange rates to database at once
             ExchangeRate.objects.bulk_create(bulk_create_list)
             
+            # Return the saved exchange rates ordered by date
             return ExchangeRate.objects.filter(
                 currency_pair=currency_pair,
                 date__gte=start
@@ -95,18 +109,26 @@ class ExchangeRateService:
 class GraphService:
     @staticmethod
     def generate_graph(rates: List[ExchangeRate]) -> Tuple[Optional[str], Optional[float], Optional[str]]:
+        """
+        Generates a graph of exchange rates using matplotlib.
+        Returns a tuple of (base64 encoded graph image, latest rate, timestamp).
+        """
         try:
+            # Clear any existing plots
             plt.clf()
             plt.close('all')
             
+            # Create new figure and axis for the graph
             fig, ax = plt.subplots(figsize=(10, 5), dpi=100)
             jst = pytz.timezone('Asia/Taipei')
             current_datetime = datetime.now(jst).strftime("%Y-%m-%d %H:%M:%S")
             
+            # Extract dates and rates from the data
             dates = [rate.date for rate in rates]
             values = [float(rate.rate) if isinstance(rate.rate, pd.Series) else rate.rate 
                      for rate in rates]
             
+            # Plot the exchange rate data
             ax.plot(dates, values, label='TWD/JPY', color='#4CAF50', linewidth=2)
             ax.set_title('TWD/JPY Exchange Rate', fontsize=14, pad=20)
             ax.set_xlabel('Date', fontsize=12)
@@ -114,18 +136,22 @@ class GraphService:
             ax.grid(True, linestyle='--', alpha=0.7)
             ax.legend(loc='upper right')
             
+            # Format the x-axis dates
             ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
             plt.setp(ax.get_xticklabels(), rotation=45, ha='right')
             plt.tight_layout()
             
+            # Get the latest exchange rate
             latest_rate = float(rates.last().rate.iloc[0] if isinstance(rates.last().rate, pd.Series)
                               else rates.last().rate)
             
+            # Add text annotations to the graph
             plt.figtext(0.05, 0.95, f'1 TWD = {latest_rate:.2f} JPY', 
                        fontsize=12, ha='left', va='top')
             plt.figtext(0.95, 0.02, f'Last updated: {current_datetime} (TST)', 
                        fontsize=10, ha='right')
             
+            # Convert the graph to a base64 encoded string
             buffer = io.BytesIO()
             plt.savefig(buffer, format='png', bbox_inches='tight', dpi=100)
             buffer.seek(0)
@@ -138,16 +164,21 @@ class GraphService:
             return None, None, None
         
         finally:
+            # Clean up matplotlib resources
             plt.close('all')
             if 'buffer' in locals():
                 buffer.close()
 
 def home(request):
-    """Main view function for the homepage"""
+    """
+    Main view function for the homepage.
+    Displays the exchange rate graph and latest rate.
+    """
     try:
         plt.clf()
         plt.close('all')
         
+        # Get exchange rate data
         rates = ExchangeRateService.get_exchange_rate_data()
         if not rates:
             context = {
@@ -156,6 +187,7 @@ def home(request):
             }
             return render(request, 'app/home.html', context)
 
+        # Generate the graph
         graph_data, latest_rate, last_updated = GraphService.generate_graph(rates)
         if not graph_data:
             context = {
@@ -164,6 +196,7 @@ def home(request):
             }
             return render(request, 'app/home.html', context)
 
+        # Prepare data for the template
         context = {
             'graph_data': graph_data,
             'latest_rate': latest_rate,
@@ -183,6 +216,10 @@ def home(request):
 
 @never_cache
 def get_updated_graph(request):
+    """
+    AJAX endpoint to update the exchange rate graph without reloading the page.
+    Returns JSON containing the new graph data, latest rate, and timestamp.
+    """
     try:
         rates = ExchangeRateService.get_exchange_rate_data()
         if not rates:
@@ -203,10 +240,18 @@ def get_updated_graph(request):
 
 @csrf_exempt
 def image_recognition(request):
+    """
+    View for the image recognition page.
+    CSRF exempt to allow image uploads from the frontend.
+    """
     return render(request, 'app/image_recognition.html')
 
 @csrf_exempt
 def start_camera(request):
+    """
+    Endpoint to initialize camera access for image recognition.
+    Returns success/error status to the frontend.
+    """
     try:
         logger.info("Camera access requested")
         return JsonResponse({"status": "success", "message": "Camera access granted"})
@@ -216,10 +261,15 @@ def start_camera(request):
 
 @csrf_exempt
 def video_feed(request, stream_id):
+    """
+    Process video frames for object detection.
+    Takes a frame from the frontend, runs object detection, and returns the results.
+    """
     if request.method != 'POST':
         return JsonResponse({"status": "error", "message": "GET method not supported"}, status=405)
 
     try:
+        # Convert incoming frame data to OpenCV format
         frame_data = request.body
         nparr = np.frombuffer(frame_data, np.uint8)
         frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
@@ -227,16 +277,19 @@ def video_feed(request, stream_id):
         if frame is None:
             raise ValueError("Invalid frame data")
         
+        # Run object detection on the frame
         prediction_result = model.predict(frame, confidence=40, overlap=30).json()
         
-        # 検出結果の処理
+        # Process and visualize detection results
         processed_predictions = []
         for detection in prediction_result['predictions']:
+            # Calculate bounding box coordinates
             x = int(detection['x'] - detection['width'] / 2)
             y = int(detection['y'] - detection['height'] / 2)
             width = int(detection['width'])
             height = int(detection['height'])
             
+            # Draw rectangle and label on the frame
             cv2.rectangle(frame, (x, y), (x + width, y + height), (0, 255, 0), 2)
             cv2.putText(frame, 
                        f"{detection['class']} ({detection['confidence']:.2f})", 
@@ -244,6 +297,7 @@ def video_feed(request, stream_id):
                        cv2.FONT_HERSHEY_SIMPLEX, 
                        0.5, (0, 255, 0), 2)
             
+            # Store detection results
             processed_predictions.append({
                 "class": detection['class'],
                 "confidence": detection['confidence'],
@@ -253,6 +307,7 @@ def video_feed(request, stream_id):
                 "height": height
             })
         
+        # Convert processed frame to base64 for sending to frontend
         _, buffer = cv2.imencode('.jpg', frame)
         image_base64 = base64.b64encode(buffer).decode('utf-8')
         
@@ -271,6 +326,9 @@ def video_feed(request, stream_id):
         }, status=500)
 
 def exchange_rate(request):
+    """
+    View for the exchange rate calculator page.
+    """
     return render(request, 'app/exchange_rate.html')
 
 @require_http_methods(["POST"])
@@ -282,21 +340,16 @@ def convert_currency(request):
         from_currency: str - Source currency code
         to_currency: str - Target currency code
     Returns:
-        JsonResponse with:
-        - result: float - Converted amount
-        - rate: float - Exchange rate
-        - formatted_result: str - Formatted conversion result
-        - formatted_rate: str - Formatted exchange rate
-        - conversion_time: str - Conversion timestamp in Taipei timezone
+        JsonResponse with converted amount, exchange rate and formatted strings
     """
     try:
-        # Validate required parameters
+        # Validate if all required parameters exist in the request
         if not all(key in request.POST for key in ['amount', 'from_currency', 'to_currency']):
             return JsonResponse({
                 'error': 'Missing required parameters'
             }, status=400)
 
-        # Get and convert parameters
+        # Convert and validate input parameters
         try:
             amount = float(request.POST.get('amount'))
             from_currency = request.POST.get('from_currency')
@@ -306,7 +359,7 @@ def convert_currency(request):
                 'error': 'Invalid amount format'
             }, status=400)
 
-        # Validate amount
+        # Check if amount is positive
         if amount <= 0:
             return JsonResponse({
                 'error': 'Amount must be greater than 0'
@@ -314,7 +367,7 @@ def convert_currency(request):
 
         logger.info(f"Converting {amount} {from_currency} to {to_currency}")
 
-        # Handle same currency case
+        # If converting same currency, return original amount with rate of 1
         if from_currency == to_currency:
             current_time = datetime.now(pytz.timezone('Asia/Taipei')).strftime("%Y-%m-%d %H:%M:%S")
             return JsonResponse({
@@ -325,7 +378,7 @@ def convert_currency(request):
                 'conversion_time': current_time
             })
 
-        # Fetch exchange rate from Yahoo Finance
+        # Get exchange rate from Yahoo Finance API
         try:
             ticker = f"{from_currency}{to_currency}=X"
             df = yf.download(ticker, period="1d")
@@ -335,7 +388,7 @@ def convert_currency(request):
                     'error': 'Failed to fetch exchange rate'
                 }, status=400)
 
-            # Calculate conversion
+            # Calculate converted amount using latest exchange rate
             current_rate = float(df['Close'].iloc[-1])
             result = amount * current_rate
             
@@ -364,30 +417,33 @@ def convert_currency(request):
 
 def get_exchange_rates(request):
     """
-    Get current exchange rates for the rate table
+    Get current exchange rates for multiple currencies against JPY and TWD.
+    Returns rates, rate changes, and last updated time.
     """
     try:
+        # List of currencies to fetch rates for
         currencies = ['USD', 'EUR', 'JPY', 'TWD', 'CNY', 'HKD', 'KRW', 'SGD']
-        rates_jpy = {}
-        rates_twd = {}
-        changes = {}
+        rates_jpy = {}  # Store rates against JPY
+        rates_twd = {}  # Store rates against TWD
+        changes = {}    # Store rate changes (percentage)
         
         for curr in currencies:
+            # Get rates against JPY (skip if curr is JPY)
             if curr != 'JPY':
-                # JPYに対するレート取得
+                # Download 2 days of data to calculate rate change
                 df_jpy = yf.download(f"{curr}JPY=X", period="2d")
                 if not df_jpy.empty:
                     rates_jpy[curr] = float(df_jpy['Close'].iloc[-1])
                     prev_rate = float(df_jpy['Close'].iloc[-2])
                     changes[curr] = ((rates_jpy[curr] - prev_rate) / prev_rate) * 100
             
+            # Get rates against TWD (skip if curr is TWD)
             if curr != 'TWD':
-                # TWDに対するレート取得
                 df_twd = yf.download(f"{curr}TWD=X", period="2d")
                 if not df_twd.empty:
                     rates_twd[curr] = float(df_twd['Close'].iloc[-1])
 
-        # 日本時間で現在時刻を取得
+        # Get current time in Japanese timezone
         jst = pytz.timezone('Asia/Tokyo')
         current_time = datetime.now(jst).strftime("%Y-%m-%d %H:%M:%S")
 
@@ -405,6 +461,10 @@ def get_exchange_rates(request):
         }, status=500)
 
 def money(request):
+    """
+    View for displaying currency denominations page.
+    Contains lists of available denominations for JPY and TWD.
+    """
     currency_types = {
         'JPY': {
             'denominations': [1, 5, 10, 50, 100, 500, 1000, 5000, 10000],
@@ -418,9 +478,13 @@ def money(request):
     return render(request, 'app/money.html', {'currency_types': currency_types})
 
 def financing_ai_chat(request):
+    """
+    View for AI chat interface focused on financial topics.
+    Provides initial welcome message and example questions.
+    """
     context = {
         'initial_message': (
-            "Hello! I'm WealthWise Spark 💬✨!\n"
+            "Hello! I'm Financing AI Chat 💬✨!\n"
             "Feel free to enter your concerns or matters you wish to investigate.\n\n"
             "What I can do:\n"
             "- Analyze specific stocks (U.S. listed stocks)\n"
@@ -438,14 +502,17 @@ def financing_ai_chat(request):
 @require_http_methods(["POST"])
 def ask(request):
     """
-    AI Chat endpoint that handles POST requests for message processing
+    AI Chat endpoint that handles POST requests for message processing.
+    Takes user message and returns AI response as a stream.
     """
     try:
+        # Parse JSON request body
         data = json.loads(request.body)
         user_message = data.get('message')
         conversation_id = data.get('conversation_id')
         user_id = data.get('user', 'default_user')
 
+        # Validate message exists
         if not user_message:
             logger.error("No message provided in request")
             return JsonResponse({'error': 'No message provided'}, status=400)
@@ -453,6 +520,7 @@ def ask(request):
         logger.info(f"Processing message from user {user_id}: {user_message[:50]}...")
 
         try:
+            # Send message to Dify API and get streaming response
             response = dify_api.send_message(
                 query=user_message,
                 conversation_id=conversation_id,
@@ -461,6 +529,7 @@ def ask(request):
             )
 
             def generate():
+                """Generator function to stream API response"""
                 try:
                     for line in response.iter_lines():
                         if line:
