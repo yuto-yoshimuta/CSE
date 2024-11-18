@@ -180,6 +180,71 @@ video, #processed_video {
    animation: fadeIn 0.3s ease-out;
 }
 
+.conversion-results {
+   margin-top: 1.5rem;
+   background: rgba(255, 255, 255, 0.95);
+   border-radius: 12px;
+   padding: 1.5rem;
+   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.conversion-box {
+   margin-bottom: 1rem;
+   padding: 1rem;
+   border-radius: 8px;
+   transition: transform 0.2s ease;
+}
+
+.conversion-box:hover {
+   transform: translateY(-2px);
+}
+
+.conversion-box.jpy {
+   background-color: #e3f2fd;
+   border-left: 4px solid #2196f3;
+}
+
+.conversion-box.twd {
+   background-color: #e8f5e9;
+   border-left: 4px solid #4caf50;
+}
+
+.conversion-box h4 {
+   margin: 0 0 0.5rem 0;
+   color: #2c3e50;
+   font-size: 1.1rem;
+   font-weight: 600;
+}
+
+.conversion-box p {
+   margin: 0;
+   font-size: 1.3rem;
+   font-weight: 700;
+   color: #1a1a1a;
+}
+
+.last-updated {
+   margin-top: 1rem;
+   text-align: right;
+   font-size: 0.9rem;
+   color: #666;
+}
+
+@media (max-width: 768px) {
+   .conversion-results {
+       margin-top: 1rem;
+       padding: 1rem;
+   }
+
+   .conversion-box {
+       padding: 0.8rem;
+   }
+
+   .conversion-box p {
+       font-size: 1.1rem;
+   }
+}
+
 /* Animation */
 @keyframes fadeIn {
    from {

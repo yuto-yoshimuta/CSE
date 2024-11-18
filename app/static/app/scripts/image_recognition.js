@@ -242,3 +242,96 @@ navigator.mediaDevices.getUserMedia({ video: true })
         console.log('JPY Total:', document.getElementById('jpyTotal').textContent);
         console.log('TWD Total:', document.getElementById('twdTotal').textContent);
     };
+
+    let exchangeRates = {
+        jpyToTwd: 0,
+        twdToJpy: 0,
+        lastUpdated: ''
+    };
+    
+    // Fetch current exchange rates
+    async function fetchExchangeRates() {
+        try {
+            const response = await fetch('/get_exchange_rates/');
+            const data = await response.json();
+            
+            if (data.rates_jpy && data.rates_twd) {
+                exchangeRates = {
+                    jpyToTwd: data.rates_jpy.TWD,
+                    twdToJpy: data.rates_twd.JPY,
+                    lastUpdated: data.last_updated
+                };
+                
+                // Update the display when rates are fetched
+                updateConversionDisplay();
+                console.log('Exchange rates updated:', exchangeRates);
+            }
+        } catch (error) {
+            console.error('Failed to fetch exchange rates:', error);
+            showError("Failed to fetch exchange rates");
+        }
+    }
+    
+    // Update the conversion display
+    function updateConversionDisplay() {
+        if (!exchangeRates.jpyToTwd || !exchangeRates.twdToJpy) {
+            console.warn('Exchange rates not available');
+            return;
+        }
+    
+        const jpyInTwd = (globalJpyTotal * exchangeRates.jpyToTwd).toFixed(2);
+        const twdInJpy = (globalTwdTotal * exchangeRates.twdToJpy).toFixed(2);
+    
+        // Get or create the conversion results container
+        let conversionResults = document.getElementById('conversionResults');
+        if (!conversionResults) {
+            conversionResults = document.createElement('div');
+            conversionResults.id = 'conversionResults';
+            document.querySelector('.detection-results').appendChild(conversionResults);
+        }
+    
+        // Update the display with current conversions
+        conversionResults.innerHTML = `
+            <div class="conversion-results">
+                <div class="conversion-box jpy">
+                    <h4>JPY to TWD</h4>
+                    <p>${globalJpyTotal} JPY = ${jpyInTwd} TWD</p>
+                </div>
+                <div class="conversion-box twd">
+                    <h4>TWD to JPY</h4>
+                    <p>${globalTwdTotal} TWD = ${twdInJpy} JPY</p>
+                </div>
+                <div class="last-updated">
+                    Last updated: ${exchangeRates.lastUpdated}
+                </div>
+            </div>
+        `;
+    }
+    
+    // Initialize exchange rates when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initial fetch of exchange rates
+        fetchExchangeRates();
+        
+        // Update rates every minute
+        setInterval(fetchExchangeRates, 60000);
+        
+        // Modify the existing updateDetectionResults function
+        const originalUpdateDetectionResults = window.updateDetectionResults;
+        window.updateDetectionResults = function(data) {
+            originalUpdateDetectionResults(data);
+            updateConversionDisplay();
+        };
+    });
+    
+    // Error display function
+    function showError(message) {
+        const errorElement = document.getElementById('errorMessage');
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
+    }

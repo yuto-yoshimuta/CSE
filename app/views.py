@@ -601,4 +601,48 @@ def ask(request):
 def reference(request):
     return render(request, 'app/reference.html')
 
+def get_exchange_rates(request):
+    """
+    Get current exchange rates for JPY/TWD currency pair
+    Returns:
+        JsonResponse with current rates and timestamp
+    """
+    try:
+        # Download current rates from Yahoo Finance
+        jpy_twd = yf.download('JPYTWD=X', period='1d')
+        twd_jpy = yf.download('TWDJPY=X', period='1d')
 
+        if jpy_twd.empty or twd_jpy.empty:
+            return JsonResponse({
+                'error': 'Failed to fetch exchange rates'
+            }, status=400)
+
+        # Get current rates
+        rates = {
+            'rates_jpy': {
+                'TWD': float(jpy_twd['Close'].iloc[-1])
+            },
+            'rates_twd': {
+                'JPY': float(twd_jpy['Close'].iloc[-1])
+            }
+        }
+
+        # Get current time in Asia/Tokyo timezone
+        jst = pytz.timezone('Asia/Tokyo')
+        current_time = datetime.now(jst).strftime("%Y-%m-%d %H:%M:%S")
+
+        # Prepare response data
+        response_data = {
+            **rates,
+            'last_updated': current_time
+        }
+
+        logger.info(f"Exchange rates fetched successfully: {response_data}")
+        return JsonResponse(response_data)
+
+    except Exception as e:
+        logger.error(f"Error fetching exchange rates: {str(e)}")
+        return JsonResponse({
+            'error': 'Failed to fetch exchange rates',
+            'details': str(e)
+        }, status=500)

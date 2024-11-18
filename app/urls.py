@@ -25,6 +25,7 @@ urlpatterns += [
    path('convert/', views.convert_currency, name='convert_currency'),
    path('start_camera/', views.start_camera, name='start_camera'),
    path('video_feed/<str:stream_id>', views.video_feed, name='video_feed'),
+   path('get_exchange_rates/', views.get_exchange_rates, name='get_exchange_rates'),
    path('ask/', views.ask, name='ask'),
 ]
 
