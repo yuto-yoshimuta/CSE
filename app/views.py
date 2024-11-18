@@ -460,7 +460,9 @@ def get_exchange_rates(request):
         for pair in currency_pairs:
             data = yf.download(pair, period='1d')
             if not data.empty:
-                rates[pair.replace('=X', '')] = float(data['Close'].iloc[-1])
+                # Convert Series to float if necessary
+                close_price = data['Close'].iloc[-1]
+                rates[pair.replace('=X', '')] = float(close_price) if hasattr(close_price, 'iloc') else close_price
 
         if not rates:
             return JsonResponse({'error': 'Failed to fetch exchange rates'}, status=400)
@@ -477,6 +479,7 @@ def get_exchange_rates(request):
             'last_updated': current_time
         }
 
+        logger.info(f"Exchange rates fetched successfully: {response_data}")
         return JsonResponse(response_data)
 
     except Exception as e:
