@@ -262,17 +262,27 @@ def start_camera(request):
 @csrf_exempt
 def video_feed(request, stream_id):
     """
-    Process video frames for object detection.
-    Takes a frame from the frontend, runs object detection, and returns the results.
+    Process video frames and image uploads for object detection.
+    Handles both camera stream and image file uploads.
     """
     if request.method != 'POST':
         return JsonResponse({"status": "error", "message": "GET method not supported"}, status=405)
 
     try:
-        # Convert incoming frame data to OpenCV format
-        frame_data = request.body
-        nparr = np.frombuffer(frame_data, np.uint8)
-        frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        # Determine input type and get frame data
+        if 'image' in request.FILES:
+            # Handle image file upload
+            image_file = request.FILES['image']
+            image_data = image_file.read()
+            nparr = np.frombuffer(image_data, np.uint8)
+            frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            source_type = 'image'
+        else:
+            # Handle video frame data
+            frame_data = request.body
+            nparr = np.frombuffer(frame_data, np.uint8)
+            frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            source_type = 'camera'
         
         if frame is None:
             raise ValueError("Invalid frame data")
@@ -281,7 +291,7 @@ def video_feed(request, stream_id):
         prediction_result = model.predict(frame, confidence=40, overlap=30).json()
         
         # Debug log for predictions
-        logger.debug(f"Raw predictions: {prediction_result}")
+        logger.debug(f"Raw predictions for {source_type}: {prediction_result}")
         
         # Process and visualize detection results
         processed_predictions = []
@@ -305,15 +315,11 @@ def video_feed(request, stream_id):
                        cv2.FONT_HERSHEY_SIMPLEX, 
                        0.5, (0, 255, 0), 2)
             
-            # Clean and normalize the class name
-            # TWD format standardization
+            # Clean and normalize the class name for TWD format
             if isinstance(class_name, str):
                 if 'twd' in class_name.lower():
-                    # Extract the number and ensure proper format
                     try:
-                        # Remove any negative signs from the class name if present
                         class_name = class_name.replace('-', '')
-                        # Standardize format to "twd_X" where X is the number
                         if '_' not in class_name:
                             number = ''.join(filter(str.isdigit, class_name))
                             class_name = f"twd_{number}"
@@ -327,30 +333,29 @@ def video_feed(request, stream_id):
                 "x": x,
                 "y": y,
                 "width": width,
-                "height": height
+                "height": height,
+                "source": source_type
             }
             processed_predictions.append(processed_prediction)
             
             # Debug log for each processed prediction
             logger.debug(f"Processed prediction: {processed_prediction}")
         
-        # Convert processed frame to base64 for sending to frontend
+        # Convert processed frame to base64
         _, buffer = cv2.imencode('.jpg', frame)
         image_base64 = base64.b64encode(buffer).decode('utf-8')
         
         response_data = {
             "status": "success",
             "predictions": processed_predictions,
-            "image": image_base64
+            "image": image_base64,
+            "source_type": source_type
         }
-        
-        # Debug log for final response
-        logger.debug(f"Sending response with predictions: {processed_predictions}")
         
         return JsonResponse(response_data)
         
     except Exception as e:
-        logger.error(f"Error processing frame: {e}", exc_info=True)
+        logger.error(f"Error processing {source_type if 'source_type' in locals() else 'frame'}: {e}", exc_info=True)
         return JsonResponse({
             "status": "error",
             "message": str(e),

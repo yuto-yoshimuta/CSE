@@ -14,35 +14,65 @@
     <div class="recognition-container">
         <!-- Exchange rate display -->
         <div id="rateDisplay"></div>
-        
-        <!-- Camera controls -->
-        <div class="controls">
-            <select id="cameraSelect">
-                <option value="">Select a camera</option>
-            </select>
-            <button id="startButton" onclick="toggleCamera()">Start Camera</button>
+
+        <!-- Camera Section -->
+        <div class="camera-section">
+            <h2>Real-time Camera Analysis</h2>
+            <div class="controls">
+                <select id="cameraSelect">
+                    <option value="">Select a camera</option>
+                </select>
+                <button id="startButton" onclick="toggleCamera()">Start Camera</button>
+            </div>
+
+            <div class="video-container">
+                <div class="video-box">
+                    <h3>Camera Feed</h3>
+                    <video id="video_preview" autoplay playsinline></video>
+                </div>
+                <div class="video-box">
+                    <h3>Recognition Results</h3>
+                    <img id="processed_video">
+                </div>
+            </div>
+
+            <!-- Camera Detection Results -->
+            <div class="camera-detection-results">
+                <div class="money-counter">
+                    <div>Total Amount (JPY): <span id="cameraJpyTotal">0</span> JPY</div>
+                    <div>Total Amount (TWD): <span id="cameraTwdTotal">0</span> TWD</div>
+                </div>
+                <div id="cameraConversionResults"></div>
+                <div class="detected-items" id="cameraDetectedItems"></div>
+            </div>
         </div>
 
-        <!-- Video display container -->
-        <div class="video-container">
-            <div class="video-box">
-                <h3>Camera Feed</h3>
-                <video id="video_preview" autoplay playsinline></video>
+        <!-- Image Upload Section -->
+        <div class="upload-section">
+            <h2>Image Upload Analysis</h2>
+            <div class="upload-container">
+                <div class="upload-box" id="dropZone">
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                    <div class="upload-content">
+                        <i class="upload-icon">📸</i>
+                        <p>Drag and drop an image or click to upload</p>
+                    </div>
+                </div>
+                <div class="preview-box">
+                    <img id="imagePreview" alt="Preview">
+                    <div class="analysis-results" id="imageAnalysisResults"></div>
+                </div>
             </div>
-            <div class="video-box">
-                <h3>Recognition Results</h3>
-                <img id="processed_video">
-            </div>
-        </div>
 
-        <!-- Detection results -->
-        <div class="detection-results">
-            <div class="money-counter">
-                <div>Total Amount (JPY): <span id="jpyTotal">0</span> JPY</div>
-                <div>Total Amount (TWD): <span id="twdTotal">0</span> TWD</div>
+            <!-- Image Detection Results -->
+            <div class="image-detection-results">
+                <div class="money-counter">
+                    <div>Total Amount (JPY): <span id="imageJpyTotal">0</span> JPY</div>
+                    <div>Total Amount (TWD): <span id="imageTwdTotal">0</span> TWD</div>
+                </div>
+                <div id="imageConversionResults"></div>
+                <div class="detected-items" id="imageDetectedItems"></div>
             </div>
-            <div id="conversionResults"></div>
-            <div class="detected-items" id="detectedItems"></div>
         </div>
 
         <!-- Error messages -->

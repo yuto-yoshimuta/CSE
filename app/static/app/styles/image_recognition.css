@@ -78,6 +78,22 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Camera Section */
+.camera-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 3rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.camera-section h2 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
 /* Camera Controls */
 .controls {
    display: flex;
@@ -155,13 +171,94 @@ video, #processed_video {
    background: #f8f9fa;
 }
 
+/* Image Upload Section */
+.upload-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 3rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.upload-section h2 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.upload-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.upload-box {
+    border: 2px dashed #cbd5e0;
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-box:hover {
+    border-color: #4facfe;
+    background: rgba(79, 172, 254, 0.05);
+}
+
+.upload-box.dragover {
+    border-color: #4facfe;
+    background: rgba(79, 172, 254, 0.1);
+}
+
+.upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.upload-icon {
+    font-size: 3rem;
+}
+
+.preview-box {
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    min-height: 200px;
+    background: #f8f9fa;
+}
+
+#imagePreview {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: none;
+}
+
 /* Detection Results */
-.detection-results {
+.camera-detection-results,
+.image-detection-results {
    background: white;
    border-radius: 15px;
    padding: 1.5rem;
    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
    animation: fadeIn 0.5s ease-out;
+   margin-top: 2rem;
+}
+
+.results-heading {
+   color: #2c3e50;
+   font-size: 1.6rem;
+   margin: 1rem 0;
+   text-align: center;
+   font-weight: 600;
 }
 
 .money-counter {
@@ -338,5 +435,18 @@ canvas {
 
    .conversion-box p {
        font-size: 1.1rem;
+   }
+
+   .upload-container {
+       grid-template-columns: 1fr;
+   }
+
+   .camera-detection-results,
+   .image-detection-results {
+       padding: 1rem;
+   }
+   
+   .results-heading {
+       font-size: 1.4rem;
    }
 }

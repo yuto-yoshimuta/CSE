@@ -16,6 +16,7 @@ function getCookie(name) {
 
 const csrftoken = getCookie('csrftoken');
 
+// Global variables
 let stream = null;
 let videoElement = document.getElementById('video_preview');
 let processedVideo = document.getElementById('processed_video');
@@ -23,7 +24,20 @@ let canvas = document.getElementById('canvas');
 let streamInterval;
 let isProcessing = false;
 let isStreamActive = false;
+let globalCameraJpyTotal = 0;
+let globalCameraTwdTotal = 0;
+let globalImageJpyTotal = 0;
+let globalImageTwdTotal = 0;
 
+let exchangeRates = {
+    jpyToTwd: 0,
+    twdToJpy: 0,
+    usdJpy: 0,
+    usdTwd: 0,
+    lastUpdated: ''
+};
+
+// Camera handling functions
 async function enumerateDevices() {
     try {
         const devices = await navigator.mediaDevices.enumerateDevices();
@@ -125,10 +139,10 @@ function stopCamera() {
     videoElement.srcObject = null;
     processedVideo.src = '';
     
-    // Reset totals
-    globalJpyTotal = 0;
-    globalTwdTotal = 0;
-    updateDetectionResults({ predictions: [] });
+    // Reset camera totals only
+    globalCameraJpyTotal = 0;
+    globalCameraTwdTotal = 0;
+    updateDetectionResults({ predictions: [] }, 'camera');
 }
 
 function startStreaming() {
@@ -169,7 +183,7 @@ function startStreaming() {
                 processedVideo.src = `data:image/jpeg;base64,${data.image}`;
             }
             
-            updateDetectionResults(data);
+            updateDetectionResults(data, 'camera');
             
         } catch (error) {
             console.error("Frame processing error:", error);
@@ -180,27 +194,16 @@ function startStreaming() {
     }, 100);
 }
 
-// Declare totals as global variables for debugging
-let globalJpyTotal = 0;
-let globalTwdTotal = 0;
-
-let exchangeRates = {
-    jpyToTwd: 0,
-    twdToJpy: 0,
-    usdJpy: 0,
-    usdTwd: 0,
-    lastUpdated: ''
-};
-
-function updateDetectionResults(data) {
-    console.log('Received data:', data);
+// Detection and results handling
+function updateDetectionResults(data, source = 'camera') {
+    console.log(`Received ${source} data:`, data);
 
     let jpyTotal = 0;
     let twdTotal = 0;
 
-    const detectedItems = document.getElementById('detectedItems');
-    const jpyTotalElement = document.getElementById('jpyTotal');
-    const twdTotalElement = document.getElementById('twdTotal');
+    const detectedItems = document.getElementById(source === 'camera' ? 'cameraDetectedItems' : 'imageDetectedItems');
+    const jpyTotalElement = document.getElementById(source === 'camera' ? 'cameraJpyTotal' : 'imageJpyTotal');
+    const twdTotalElement = document.getElementById(source === 'camera' ? 'cameraTwdTotal' : 'imageTwdTotal');
 
     if (detectedItems) {
         detectedItems.innerHTML = '';
@@ -209,7 +212,8 @@ function updateDetectionResults(data) {
     if (!jpyTotalElement || !twdTotalElement) {
         console.error('Total elements not found:', {
             jpyElement: jpyTotalElement,
-            twdElement: twdTotalElement
+            twdElement: twdTotalElement,
+            source: source
         });
         return;
     }
@@ -250,15 +254,21 @@ function updateDetectionResults(data) {
         });
     }
 
-    globalJpyTotal = jpyTotal;
-    globalTwdTotal = twdTotal;
+    if (source === 'camera') {
+        globalCameraJpyTotal = jpyTotal;
+        globalCameraTwdTotal = twdTotal;
+    } else {
+        globalImageJpyTotal = jpyTotal;
+        globalImageTwdTotal = twdTotal;
+    }
 
     jpyTotalElement.textContent = String(jpyTotal);
     twdTotalElement.textContent = String(twdTotal);
 
-    updateConversionDisplay();
+    updateConversionDisplay(source);
 }
 
+// Exchange rate handling
 async function fetchExchangeRates() {
     try {
         const response = await fetch('/get_exchange_rates/');
@@ -272,7 +282,8 @@ async function fetchExchangeRates() {
             };
             
             updateRateDisplay();
-            updateConversionDisplay();
+            updateConversionDisplay('camera');
+            updateConversionDisplay('image');
             console.log('Exchange rates updated:', exchangeRates);
         }
     } catch (error) {
@@ -299,31 +310,32 @@ function updateRateDisplay() {
     document.getElementById('rateDisplay').innerHTML = rateDisplayHtml;
 }
 
-function updateConversionDisplay() {
+function updateConversionDisplay(source = 'camera') {
     if (!exchangeRates.jpyToTwd || !exchangeRates.twdToJpy) {
         console.warn('Exchange rates not available');
         return;
     }
 
-    const jpyInTwd = (globalJpyTotal * exchangeRates.jpyToTwd).toFixed(2);
-    const twdInJpy = (globalTwdTotal * exchangeRates.twdToJpy).toFixed(2);
+    const jpyTotal = source === 'camera' ? globalCameraJpyTotal : globalImageJpyTotal;
+    const twdTotal = source === 'camera' ? globalCameraTwdTotal : globalImageTwdTotal;
+    const jpyInTwd = (jpyTotal * exchangeRates.jpyToTwd).toFixed(2);
+    const twdInJpy = (twdTotal * exchangeRates.twdToJpy).toFixed(2);
 
-    let conversionResults = document.getElementById('conversionResults');
+    const conversionResults = document.getElementById(source === 'camera' ? 'cameraConversionResults' : 'imageConversionResults');
     if (!conversionResults) {
-        conversionResults = document.createElement('div');
-        conversionResults.id = 'conversionResults';
-        document.querySelector('.detection-results').appendChild(conversionResults);
+        console.error(`Conversion results element not found for ${source}`);
+        return;
     }
 
     conversionResults.innerHTML = `
         <div class="conversion-results">
             <div class="conversion-box jpy">
                 <h4>JPY to TWD</h4>
-                <p>${globalJpyTotal} JPY = ${jpyInTwd} TWD</p>
+                <p>${jpyTotal} JPY = ${jpyInTwd} TWD</p>
             </div>
             <div class="conversion-box twd">
                 <h4>TWD to JPY</h4>
-                <p>${globalTwdTotal} TWD = ${twdInJpy} JPY</p>
+                <p>${twdTotal} TWD = ${twdInJpy} JPY</p>
             </div>
             <div class="last-updated">
                 Last updated: ${exchangeRates.lastUpdated}
@@ -332,11 +344,95 @@ function updateConversionDisplay() {
     `;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    fetchExchangeRates();
-    setInterval(fetchExchangeRates, 60000);
+// Image Upload Handling
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+const imagePreview = document.getElementById('imagePreview');
+
+dropZone.addEventListener('click', () => fileInput.click());
+
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, preventDefaults, false);
 });
 
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+['dragenter', 'dragover'].forEach(eventName => {
+    dropZone.addEventListener(eventName, () => {
+        dropZone.classList.add('dragover');
+    });
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, () => {
+        dropZone.classList.remove('dragover');
+    });
+});
+
+dropZone.addEventListener('drop', handleDrop);
+fileInput.addEventListener('change', handleFileSelect);
+
+function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    handleFiles(files);
+}
+
+function handleFileSelect(e) {
+    const files = e.target.files;
+    handleFiles(files);
+}
+
+function handleFiles(files) {
+    if (files.length === 0) return;
+    
+    const file = files[0];
+    if (!file.type.startsWith('image/')) {
+        showError('Please upload an image file.');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        imagePreview.src = e.target.result;
+        imagePreview.style.display = 'block';
+        analyzeImage(file);
+    };
+    reader.readAsDataURL(file);
+}
+
+async function analyzeImage(file) {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+        const response = await fetch('/video_feed/stream1', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            body: formData
+        });
+
+        if (!response.ok) throw new Error('Analysis failed');
+
+        const data = await response.json();
+        updateDetectionResults(data, 'image');
+        
+        if (data.image) {
+            imagePreview.src = `data:image/jpeg;base64,${data.image}`;
+        }
+
+    } catch (error) {
+        console.error('Image analysis error:', error);
+        showError('Failed to analyze image');
+    }
+}
+
+// Utility functions
 function showError(message) {
     const errorElement = document.getElementById('errorMessage');
     if (errorElement) {
@@ -348,9 +444,18 @@ function showError(message) {
     }
 }
 
+// Debug function
 window.checkDetection = function() {
-    const currentDetections = document.getElementById('detectedItems').innerText;
-    console.log('Current detections:', currentDetections);
-    console.log('JPY Total:', document.getElementById('jpyTotal').textContent);
-    console.log('TWD Total:', document.getElementById('twdTotal').textContent);
+    console.log('Camera Detections:', document.getElementById('cameraDetectedItems').innerText);
+    console.log('Camera JPY Total:', document.getElementById('cameraJpyTotal').textContent);
+    console.log('Camera TWD Total:', document.getElementById('cameraTwdTotal').textContent);
+    console.log('Image Detections:', document.getElementById('imageDetectedItems').innerText);
+    console.log('Image JPY Total:', document.getElementById('imageJpyTotal').textContent);
+    console.log('Image TWD Total:', document.getElementById('imageTwdTotal').textContent);
 };
+
+// Initialize exchange rates on page load
+document.addEventListener('DOMContentLoaded', () => {
+    fetchExchangeRates();
+    setInterval(fetchExchangeRates, 60000);
+});
