@@ -24,13 +24,16 @@ SECRET_KEY = 'django-insecure-hafresg05t6dn&i8ukg^8==-jf286zug05vdp9feync)+ud2mb
 DEBUG = True
 
 # Allowed hosts configuration including ngrok domains for development
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    '[::1]',
-    'e9f1-106-72-56-194.ngrok-free.app',
-    '*.ngrok-free.app',
-]
+# Django security Code to set connection limits Comment out if not needed
+# ALLOWED_HOSTS = [
+#     'localhost',
+#     '127.0.0.1',
+#     '[::1]',
+#     '*.ngrok-free.app',
+# ]
+
+ALLOWED_HOSTS = ['*']
+
 
 CSRF_TRUSTED_ORIGINS = [
     'https://e9f1-106-72-56-194.ngrok-free.app',
