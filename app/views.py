@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import logging
 import base64
 import io
+import os
 import pytz
 import cv2
 import json
@@ -21,8 +22,12 @@ from django.http import StreamingHttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
+from django.conf import settings
+from dotenv import load_dotenv
 from .utils import DifyAPI
 from .models import ExchangeRate
+
+load_dotenv()
 
 # Initialize the DifyAPI for AI chat functionality
 dify_api = DifyAPI()
@@ -34,7 +39,7 @@ logger = logging.getLogger(__name__)
 # Initialize Roboflow for image recognition
 # This service is used to detect and classify objects in images
 try:
-    rf = Roboflow(api_key="4jFLZZIZSslfmqbOl4lq")
+    rf = Roboflow(api_key=os.getenv('ROBOFLOW_API_KEY'))
     project = rf.workspace().project("jpytwd")
     model = project.version(1).model
     logger.info("Roboflow model loaded successfully")
