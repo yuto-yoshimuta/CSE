@@ -448,48 +448,37 @@ def convert_currency(request):
         }, status=500)
 
 def get_exchange_rates(request):
-    """
-    Get current exchange rates for multiple currencies against JPY and TWD.
-    Returns rates, rate changes, and last updated time.
-    """
     try:
-        # List of currencies to fetch rates for
-        currencies = ['USD', 'EUR', 'JPY', 'TWD', 'CNY', 'HKD', 'KRW', 'SGD']
-        rates_jpy = {}  # Store rates against JPY
-        rates_twd = {}  # Store rates against TWD
-        changes = {}    # Store rate changes (percentage)
+        currency_pairs = ['TWDJPY=X', 'JPYTWD=X']
+        rates = {}
         
-        for curr in currencies:
-            # Get rates against JPY (skip if curr is JPY)
-            if curr != 'JPY':
-                # Download 2 days of data to calculate rate change
-                df_jpy = yf.download(f"{curr}JPY=X", period="2d")
-                if not df_jpy.empty:
-                    rates_jpy[curr] = float(df_jpy['Close'].iloc[-1])
-                    prev_rate = float(df_jpy['Close'].iloc[-2])
-                    changes[curr] = ((rates_jpy[curr] - prev_rate) / prev_rate) * 100
-            
-            # Get rates against TWD (skip if curr is TWD)
-            if curr != 'TWD':
-                df_twd = yf.download(f"{curr}TWD=X", period="2d")
-                if not df_twd.empty:
-                    rates_twd[curr] = float(df_twd['Close'].iloc[-1])
+        for pair in currency_pairs:
+            data = yf.download(pair, period='1d')
+            if not data.empty:
+                rates[pair.replace('=X', '')] = float(data['Close'].iloc[-1])
 
-        # Get current time in Japanese timezone
-        jst = pytz.timezone('Asia/Tokyo')
-        current_time = datetime.now(jst).strftime("%Y-%m-%d %H:%M:%S")
+        if not rates:
+            return JsonResponse({'error': 'Failed to fetch exchange rates'}, status=400)
 
-        return JsonResponse({
-            'rates_jpy': rates_jpy,
-            'rates_twd': rates_twd,
-            'changes': changes,
+        # Get current time in Taiwan timezone
+        tst = pytz.timezone('Asia/Taipei')
+        current_time = datetime.now(tst).strftime("%Y-%m-%d %H:%M:%S")
+
+        response_data = {
+            'rates': {
+                'JPY_TWD': rates.get('JPYTWD', 0),
+                'TWD_JPY': rates.get('TWDJPY', 0)
+            },
             'last_updated': current_time
-        })
+        }
+
+        return JsonResponse(response_data)
 
     except Exception as e:
         logger.error(f"Error fetching exchange rates: {str(e)}")
         return JsonResponse({
-            'error': 'Failed to fetch exchange rates'
+            'error': 'Failed to fetch exchange rates',
+            'details': str(e)
         }, status=500)
 
 def money(request):
@@ -603,37 +592,34 @@ def reference(request):
 
 def get_exchange_rates(request):
     """
-    Get current exchange rates for JPY/TWD currency pair
+    Get current exchange rates for multiple currency pairs
     Returns:
         JsonResponse with current rates and timestamp
     """
     try:
-        # Download current rates from Yahoo Finance
-        jpy_twd = yf.download('JPYTWD=X', period='1d')
-        twd_jpy = yf.download('TWDJPY=X', period='1d')
+        # Download rates for multiple currency pairs
+        currency_pairs = ['TWDJPY=X', 'JPYTWD=X', 'USDJPY=X', 'USDTWD=X']
+        rates = {}
+        
+        for pair in currency_pairs:
+            data = yf.download(pair, period='1d')
+            if not data.empty:
+                rates[pair.replace('=X', '')] = float(data['Close'].iloc[-1])
 
-        if jpy_twd.empty or twd_jpy.empty:
-            return JsonResponse({
-                'error': 'Failed to fetch exchange rates'
-            }, status=400)
+        if not rates:
+            return JsonResponse({'error': 'Failed to fetch exchange rates'}, status=400)
 
-        # Get current rates
-        rates = {
-            'rates_jpy': {
-                'TWD': float(jpy_twd['Close'].iloc[-1])
-            },
-            'rates_twd': {
-                'JPY': float(twd_jpy['Close'].iloc[-1])
-            }
-        }
+        # Get current time in Taiwan timezone
+        tst = pytz.timezone('Asia/Taipei')
+        current_time = datetime.now(tst).strftime("%Y-%m-%d %H:%M:%S")
 
-        # Get current time in Asia/Tokyo timezone
-        jst = pytz.timezone('Asia/Tokyo')
-        current_time = datetime.now(jst).strftime("%Y-%m-%d %H:%M:%S")
-
-        # Prepare response data
         response_data = {
-            **rates,
+            'rates': {
+                'JPY_TWD': rates.get('JPYTWD', 0),
+                'TWD_JPY': rates.get('TWDJPY', 0),
+                'USD_JPY': rates.get('USDJPY', 0),
+                'USD_TWD': rates.get('USDTWD', 0)
+            },
             'last_updated': current_time
         }
 

@@ -41,6 +41,43 @@ body {
    backdrop-filter: blur(10px);
 }
 
+/* Current Rates Display */
+.current-rates {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.current-rates h4 {
+    color: #2c3e50;
+    font-size: 1.3rem;
+    margin: 0 0 1rem 0;
+    font-weight: 600;
+    text-align: center;
+}
+
+.rate-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.rate-item {
+    padding: 1rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+    transition: transform 0.2s ease;
+}
+
+.rate-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 /* Camera Controls */
 .controls {
    display: flex;
@@ -77,6 +114,10 @@ body {
 #startButton:hover {
    transform: translateY(-2px);
    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+#startButton.active {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8787 100%);
 }
 
 /* Video Display Grid */
@@ -167,19 +208,7 @@ video, #processed_video {
    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Error Message */
-#errorMessage {
-   display: none;
-   background: rgba(254, 215, 215, 0.9);
-   color: #dc2626;
-   padding: 1rem;
-   border-radius: 10px;
-   margin-top: 1rem;
-   text-align: center;
-   font-weight: 500;
-   animation: fadeIn 0.3s ease-out;
-}
-
+/* Conversion Results */
 .conversion-results {
    margin-top: 1.5rem;
    background: rgba(255, 255, 255, 0.95);
@@ -230,19 +259,17 @@ video, #processed_video {
    color: #666;
 }
 
-@media (max-width: 768px) {
-   .conversion-results {
-       margin-top: 1rem;
-       padding: 1rem;
-   }
-
-   .conversion-box {
-       padding: 0.8rem;
-   }
-
-   .conversion-box p {
-       font-size: 1.1rem;
-   }
+/* Error Message */
+#errorMessage {
+   display: none;
+   background: rgba(254, 215, 215, 0.9);
+   color: #dc2626;
+   padding: 1rem;
+   border-radius: 10px;
+   margin-top: 1rem;
+   text-align: center;
+   font-weight: 500;
+   animation: fadeIn 0.3s ease-out;
 }
 
 /* Animation */
@@ -290,5 +317,26 @@ canvas {
 
    .money-counter {
        grid-template-columns: 1fr;
+   }
+
+   .rate-grid {
+        grid-template-columns: 1fr;
+   }
+    
+   .rate-item {
+        padding: 0.8rem;
+   }
+
+   .conversion-results {
+       margin-top: 1rem;
+       padding: 1rem;
+   }
+
+   .conversion-box {
+       padding: 0.8rem;
+   }
+
+   .conversion-box p {
+       font-size: 1.1rem;
    }
 }

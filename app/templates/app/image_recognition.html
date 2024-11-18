@@ -1,66 +1,59 @@
 {% extends 'app/base.html' %}
 {% load static %}
 
-{# Page title for currency recognition feature #}
 {% block title %}Real-time Currency Recognition - Cash Scan Explore{% endblock %}
 
-{# Include custom CSS for recognition page #}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'app/styles/image_recognition.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="content-wrapper">
-    {# Main page heading #}
     <h1 class="page-title">Real-time Currency Recognition</h1>
     
-    {# Main container for recognition feature #}
     <div class="recognition-container">
-        {# Camera controls section #}
+        <!-- Exchange rate display -->
+        <div id="rateDisplay"></div>
+        
+        <!-- Camera controls -->
         <div class="controls">
-            {# Camera selection dropdown #}
             <select id="cameraSelect">
                 <option value="">Select a camera</option>
             </select>
-            {# Camera start button #}
-            <button id="startButton" onclick="startCamera()">Start Camera</button>
+            <button id="startButton" onclick="toggleCamera()">Start Camera</button>
         </div>
 
-        {# Video display container with two panels #}
+        <!-- Video display container -->
         <div class="video-container">
-            {# Live camera feed panel #}
             <div class="video-box">
                 <h3>Camera Feed</h3>
                 <video id="video_preview" autoplay playsinline></video>
             </div>
-            {# Processed video with recognition results #}
             <div class="video-box">
                 <h3>Recognition Results</h3>
                 <img id="processed_video">
             </div>
         </div>
 
-        {# Results display section #}
+        <!-- Detection results -->
         <div class="detection-results">
-            {# Currency totals counter #}
             <div class="money-counter">
-                <div>Total Amount (Japanese Yen): <span id="jpyTotal">0</span> JPY</div>
-                <div>Total Amount (Taiwan Dollar): <span id="twdTotal">0</span> TWD</div>
+                <div>Total Amount (JPY): <span id="jpyTotal">0</span> JPY</div>
+                <div>Total Amount (TWD): <span id="twdTotal">0</span> TWD</div>
             </div>
             <div id="conversionResults"></div>
-        </div>
-        <div class="detected-items" id="detectedItems"></div>
+            <div class="detected-items" id="detectedItems"></div>
         </div>
 
-        {# Error message display area #}
+        <!-- Error messages -->
         <div id="errorMessage"></div>
     </div>
-    {# Hidden canvas for image processing #}
+    
+    <!-- Hidden canvas -->
     <canvas id="canvas"></canvas>
 </div>
 {% endblock %}
 
-{# Include JavaScript for currency recognition functionality #}
 {% block extra_js %}
 <script src="{% static 'app/scripts/image_recognition.js' %}"></script>
 {% endblock %}
