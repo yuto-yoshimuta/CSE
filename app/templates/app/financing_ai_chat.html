@@ -7,6 +7,7 @@
 {# Add meta tag for the ask endpoint URL #}
 {% block extra_head %}
 <meta name="ask-url" content="{% url 'app:ask' %}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 {% endblock %}
 
 {# Load additional CSS files #}
@@ -19,20 +20,32 @@
 {% block content %}
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 <div class="chat-wrapper">
-    {# Sidebar with new chat button #}
-    <div class="sidebar">
+    {# Mobile header with menu toggle #}
+    <div class="mobile-header">
+        <button class="menu-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+        <h1 class="mobile-title">Financing AI Chat</h1>
+    </div>
+    
+    {# Sidebar with refresh button #}
+    <div class="sidebar" id="sidebar">
         <div class="sidebar-button" onclick="refreshChat()">
             <i class="fas fa-plus"></i>
-            New Chat
+            refresh
         </div>
     </div>
+    
     {# Main chat interface #}
     <div class="main-content">
         <div class="chat-container" id="chat"></div>
         <div class="input-area">
             <div class="input-container">
                 <textarea id="input" class="input-box" placeholder="Enter your message..." rows="1"></textarea>
-                <button id="send" class="send-button">Send</button>
+                <button id="send" class="send-button">
+                    <i class="fas fa-paper-plane"></i>
+                    <span class="send-text">Send</span>
+                </button>
                 <span id="loading" class="loading typing" style="display: none">Typing</span>
             </div>
         </div>
@@ -46,6 +59,21 @@
 <script>
     window.ASK_URL = "{% url 'app:ask' %}";
     window.INITIAL_MESSAGE = "{{ initial_message|escapejs }}";
+    
+    // Toggle sidebar for mobile
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('active');
+    }
+    
+    // Close sidebar when clicking outside
+    document.addEventListener('click', (e) => {
+        const sidebar = document.getElementById('sidebar');
+        const menuToggle = document.querySelector('.menu-toggle');
+        if (!sidebar.contains(e.target) && !menuToggle.contains(e.target) && sidebar.classList.contains('active')) {
+            sidebar.classList.remove('active');
+        }
+    });
 </script>
 <script src="{% static 'app/scripts/financing_ai_chat.js' %}"></script>
 {% endblock %}
