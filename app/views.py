@@ -64,8 +64,8 @@ class ExchangeRateService:
         """
         try:
             # Set up date range for the past year in Japan timezone
-            jst = pytz.timezone('Asia/Tokyo')
-            end = datetime.now(jst).date()
+            tst = pytz.timezone('Asia/Taipei')
+            end = datetime.now(tst).date()
             start = end - timedelta(days=365)
             currency_pair = 'TWDJPY'
             
@@ -125,8 +125,8 @@ class GraphService:
             
             # Create new figure and axis for the graph
             fig, ax = plt.subplots(figsize=(10, 5), dpi=100)
-            jst = pytz.timezone('Asia/Taipei')
-            current_datetime = datetime.now(jst).strftime("%Y-%m-%d %H:%M:%S")
+            tst = pytz.timezone('Asia/Taipei')
+            current_datetime = datetime.now(tst).strftime("%Y-%m-%d %H:%M:%S")
             
             # Extract dates and rates from the data
             dates = [rate.date for rate in rates]
