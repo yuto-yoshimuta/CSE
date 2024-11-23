@@ -52,30 +52,26 @@
    ```
    うまくできない場合はユーザー設定ができていない可能性があるため自分で調べてユーザー名とメールアドレス設定を行う
    うまくクローン出来ればroot/CSEとpathがなっているはず
-8.以下のコードを実行
+
+8. .envをCSEフォルダー配下に設置
+
+9. 以下のコードを実行
    ```
-   python manage.py makemigrations
    python manage.py migrate
    ```
 
-9. mainProject実行
+10. mainProject実行
    path:CSE_Project配下で実行
    ```
    python manage.py runserver
    ```
    出力されるローカルホストにアクセスすれば完了
 
-10. 携帯などで操作する場合、（仮デプロイ）
+11. 携帯などで操作する場合、（仮デプロイ）
     前提: ngrokをインストール, ngrokアカウント作成
    出てきたローカルホストURLを○○と定義して以下のコマンドを実行
    ```
    ngrok http ○○
-   ```
-
-11. Docker down
-   作業が終了すれば以下のコマンドでコンテナを停止することが可能
-   ```
-   docker-compose down
    ```
 
 ### ※注意点
@@ -259,36 +255,26 @@ Hover over the running container, and a → icon will appear. Click on it and se
    ```
    If the cloning fails, it might be due to user settings not being configured. In that case, investigate and set your username and email address in Git.
    If the cloning is successful, the path should be root/CSE.
+
+8. Place the .env file under the CSE folder.
    
-   
-8.Run the following code
+9. Run the following code
    ```
-   python manage.py makemigrations
    python manage.py migrate
    ```
 
-9. Run the main project
+10. Run the main project
    Execute under the path: CSE_Project
    ```
    python manage.py runserver
    ```
    Access the generated localhost URL to complete the process.
 
-10. For mobile access (temporary deployment)
+11. For mobile access (temporary deployment)
     Prerequisites: Install ngrok and create an ngrok account.
    Define the generated localhost URL as ○○ and run the following command
    ```
    ngrok http ○○
-   ```
-
-11. Docker down
-   Launch the Docker Desktop application on your machine and stop the container.
-
-   or
-
-   Once the work is completed, you can stop the container using the following command
-   ```
-   docker-compose down
    ```
 
 ### ※Notes
