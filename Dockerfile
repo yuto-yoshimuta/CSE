@@ -1,10 +1,10 @@
-# ベースイメージの指定
+# Base image
 FROM python:3.9-slim
 
-# 作業ディレクトリの設定
+# Set working directory
 WORKDIR /app
 
-# 必要なパッケージのインストール（日本語フォントを追加）
+# Install necessary packages (including Japanese fonts)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgl1-mesa-glx \
     libglib2.0-0 \
@@ -17,20 +17,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fonts-noto-cjk \
     && rm -rf /var/lib/apt/lists/*
 
-# matplotlibの設定ファイルを作成
+# Configure matplotlib
 RUN mkdir -p /root/.config/matplotlib && \
     echo "backend : Agg" > /root/.config/matplotlib/matplotlibrc
 
-# Python依存関係のインストール
+# Install Python dependencies
 COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# プロジェクトファイルのコピー
+# Copy project files
 COPY . .
 
-# ポートの公開
+# Expose port
 EXPOSE 8080
 
-# 起動コマンド
+# Add health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8080/ || exit 1
+
+# Startup command with proper error handling
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
