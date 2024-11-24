@@ -83,9 +83,9 @@ class ExchangeRateService:
             # Convert the downloaded data into ExchangeRate objects
             bulk_create_list = [
                 ExchangeRate(
-                    date=index.tz_localize('UTC').tz_convert('Asia/Tokyo').date() 
+                    date=index.tz_localize('UTC').tz_convert('Asia/Taipei').date() 
                         if isinstance(index, pd.Timestamp) and index.tz is None 
-                        else index.tz_convert('Asia/Tokyo').date() 
+                        else index.tz_convert('Asia/Taipei').date() 
                         if isinstance(index, pd.Timestamp) 
                         else index.date(),
                     rate=float(row['Close'].iloc[0]) if isinstance(row['Close'], pd.Series) 
